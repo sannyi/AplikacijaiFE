@@ -7,10 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <StackPanel>
-        <StackPanel>
+        <StackPanel Height="471">
             <CaptureElement x:Name="camera_preview" Stretch="Uniform"/>
         </StackPanel>
-        <StackPanel>
+        <StackPanel Height="525">
             
         </StackPanel>
     </StackPanel>
