@@ -6,12 +6,36 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <StackPanel>
-        <StackPanel Height="471">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="0,0,0,0">
+        <StackPanel Height="471" Margin="0,0,0,0">
             <CaptureElement x:Name="camera_preview" Stretch="Uniform"/>
         </StackPanel>
+        <!--Višina in dolžina stackpanela naj bosta enaka rezoluciji   -->
+
         <StackPanel Height="525">
-            
+            <Button x:Name="take_photo" Content="Fotografiraj" HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="100,0,167,0" Click="take_photo_Click"/>
+            <TextBlock TextWrapping="Wrap" Text="Izberi v prostor v katerem je nastala težava"/>
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,50,10,10">
+                <ComboBoxItem Content="Edit Lab"/>
+                <ComboBoxItem Content="Net Lab"/>
+                <ComboBoxItem Content="Studio"/>
+                <ComboBoxItem Content="App Lab"/>
+                <ComboBoxItem Content="Predavalnica10"/>
+            </ComboBox>
+            <TextBlock x:Name="description" TextWrapping="Wrap" Text="Vnesi opis škode" Margin="10,10,50,0"/>
+
+            <TextBox x:Name="text_box_for_description"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     ></TextBox>
         </StackPanel>
+
+
+
+        <Frame></Frame>
+
+
     </StackPanel>
+    </ScrollViewer>
 </Page>

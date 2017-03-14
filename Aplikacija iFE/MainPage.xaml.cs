@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite.Net.Attributes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,15 @@ namespace Aplikacija_iFE
         public MainPage()
         {
             this.InitializeComponent();
+        /*    if (!File.Exists(Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "lokalna_ife_baza.db")))
+            {
+                
+                local_sqlite_database new_base = new local_sqlite_database();
+                new_base.create();
+            }
+            */
 
+            
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -40,8 +49,14 @@ namespace Aplikacija_iFE
 
         private void Camera_click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(camera_report));
+         Frame.Navigate(typeof(camera_report));
+        }
 
+       
+
+        private void Menu_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(todays_menu));
         }
     }
 }

@@ -14,6 +14,7 @@
             <Button x:Name="Naprej" Content="Naprej" Margin="40,20,10,10" Click="Domov_Click"/>
             <!-- Gumb za poročilo o škodi -->
             <Button x:Name="Camerareport" Content="Camera_report" Margin="50,20,0,10" Click="Camera_click"/>
+            <Button x:Name="Menu" Content="Jedilnik" Margin="60,20,0,10" Click="Menu_Click"/>
 
         </StackPanel>
         <Frame></Frame>

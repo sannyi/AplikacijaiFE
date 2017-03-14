@@ -110,13 +110,13 @@
       <DependentUpon>profile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="sensors.cs" />
     <Compile Include="staff.xaml.cs">
       <DependentUpon>staff.xaml</DependentUpon>
     </Compile>
     <Compile Include="todays_menu.xaml.cs">
       <DependentUpon>todays_menu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="tools.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

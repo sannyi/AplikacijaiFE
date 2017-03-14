@@ -8,6 +8,25 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Pivot x:Name="jedilnik" Title="Jedilnik">
+            <PivotItem Header="mesni meni1">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="mesni meni2">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="mesni meni3">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="testenine, njoki, lazanje, rižote">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="solata">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="jed na žlico">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>
