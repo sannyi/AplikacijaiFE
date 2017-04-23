@@ -26,37 +26,69 @@ namespace Aplikacija_iFE
         public MainPage()
         {
             this.InitializeComponent();
-        /*    if (!File.Exists(Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "lokalna_ife_baza.db")))
+           if (!File.Exists(Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "student.xml")))
             {
-                
-                local_sqlite_database new_base = new local_sqlite_database();
-                new_base.create();
+
+                tools a = new tools();
+                a.create_XML_file();
             }
-            */
+            
 
             
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-        
-        }
-
-        private void Domov_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+        #region GUMBI
         private void Camera_click(object sender, RoutedEventArgs e)
         {
-         Frame.Navigate(typeof(camera_report));
+            navigiraj_po_straneh(1);
         }
-
-       
-
         private void Menu_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(todays_menu));
+            navigiraj_po_straneh(2);
         }
+        #endregion
+
+
+
+
+        #region FUNKCIJE IN METODE
+        private void navigiraj_po_straneh(byte stran)
+        {
+           if(new tools().connected_net())
+            {
+                switch(stran)
+                {
+                    case 1:
+                        // go to camera report
+                        Frame.Navigate(typeof(camera_report));
+                        break;
+                    case 2:
+                        Frame.Navigate(typeof(todays_menu));
+                        break;
+                    case 3:
+                        //profesorji
+                        break;
+                    case 4:
+                        //moj profil
+                        break;
+                    case 5:
+                        //navigacija
+                        break;
+                    case 6:
+                        //settings
+                        break;
+                    default:
+                        break;
+                }
+            }
+           else
+            {
+                //preveri, če se lahko povežeš preko wifi-ja
+                //če so wifi točke vklopljene potem idi v nastavitve wifi
+             //ce ne poglej če lahko greš na mobilne podatke, če je 
+             // vklopi mobilne podatke
+            }
+        }
+        #endregion
     }
 }

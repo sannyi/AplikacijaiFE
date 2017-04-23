@@ -25,6 +25,21 @@ namespace Aplikacija_iFE
         public todays_menu()
         {
             this.InitializeComponent();
+            if(!(new tools().connected_net()))
+            {
+                Frame.GoBack();
+            }
+            else
+            {
+                TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1};
+                byte counter = 0;
+                foreach( TextBlock text in a)
+                {
+                  //  text.Name=
+                   // counter++;
+                }
+
+            }
         }
     }
 }

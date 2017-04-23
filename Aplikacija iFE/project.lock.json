@@ -2,6 +2,15 @@
   "version": 2,
   "targets": {
     "UAP,Version=v10.0": {
+      "HtmlAgilityPack/1.4.9.5": {
+        "type": "package",
+        "compile": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -275,6 +284,45 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "SQLite/3.13.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libsqlite3.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libsqlite3.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll": {
+            "assetType": "native",
+            "rid": "win10-arm"
+          },
+          "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll": {
+            "assetType": "native",
+            "rid": "win10-x64"
+          },
+          "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll": {
+            "assetType": "native",
+            "rid": "win10-x86"
+          },
+          "runtimes/win7-x64/native/sqlite3.dll": {
+            "assetType": "native",
+            "rid": "win7-x64"
+          },
+          "runtimes/win7-x86/native/sqlite3.dll": {
+            "assetType": "native",
+            "rid": "win7-x86"
+          }
         }
       },
       "SQLite.Net-PCL/3.1.1": {
@@ -1900,6 +1948,15 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
+      "HtmlAgilityPack/1.4.9.5": {
+        "type": "package",
+        "compile": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -2174,6 +2231,18 @@
           "runtimes/win8-arm/native/mscordbi.dll": {},
           "runtimes/win8-arm/native/mscorrc.debug.dll": {},
           "runtimes/win8-arm/native/mscorrc.dll": {}
+        }
+      },
+      "SQLite/3.13.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "native": {
+          "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "SQLite.Net-PCL/3.1.1": {
@@ -3664,6 +3733,15 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
+      "HtmlAgilityPack/1.4.9.5": {
+        "type": "package",
+        "compile": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -3916,6 +3994,18 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
+        }
+      },
+      "SQLite/3.13.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "native": {
+          "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "SQLite.Net-PCL/3.1.1": {
@@ -5385,6 +5475,15 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
+      "HtmlAgilityPack/1.4.9.5": {
+        "type": "package",
+        "compile": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -5668,6 +5767,18 @@
           "runtimes/win7-x64/native/mscordbi.dll": {},
           "runtimes/win7-x64/native/mscorrc.debug.dll": {},
           "runtimes/win7-x64/native/mscorrc.dll": {}
+        }
+      },
+      "SQLite/3.13.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "native": {
+          "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "SQLite.Net-PCL/3.1.1": {
@@ -7158,6 +7269,15 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
+      "HtmlAgilityPack/1.4.9.5": {
+        "type": "package",
+        "compile": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -7410,6 +7530,18 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
+        }
+      },
+      "SQLite/3.13.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "native": {
+          "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "SQLite.Net-PCL/3.1.1": {
@@ -8879,6 +9011,15 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
+      "HtmlAgilityPack/1.4.9.5": {
+        "type": "package",
+        "compile": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -9162,6 +9303,18 @@
           "runtimes/win7-x86/native/mscordbi.dll": {},
           "runtimes/win7-x86/native/mscorrc.debug.dll": {},
           "runtimes/win7-x86/native/mscorrc.dll": {}
+        }
+      },
+      "SQLite/3.13.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "native": {
+          "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "SQLite.Net-PCL/3.1.1": {
@@ -10652,6 +10805,15 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
+      "HtmlAgilityPack/1.4.9.5": {
+        "type": "package",
+        "compile": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/NetCore45/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -10904,6 +11066,18 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
+        }
+      },
+      "SQLite/3.13.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "native": {
+          "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "SQLite.Net-PCL/3.1.1": {
@@ -12374,6 +12548,40 @@
     }
   },
   "libraries": {
+    "HtmlAgilityPack/1.4.9.5": {
+      "sha512": "i5di/J7GO4y2kx/hhVzctPrBI8G2cefWZDMDU/FdOUD3iVkiidN1q1NDZ0FvqrhB28LSaYaM4Z0hs86Tnp0IzA==",
+      "type": "package",
+      "path": "htmlagilitypack/1.4.9.5",
+      "files": [
+        "HAPIcon.png",
+        "htmlagilitypack.1.4.9.5.nupkg.sha512",
+        "htmlagilitypack.nuspec",
+        "lib/Net20/HtmlAgilityPack.dll",
+        "lib/Net20/HtmlAgilityPack.pdb",
+        "lib/Net20/HtmlAgilityPack.xml",
+        "lib/Net40-client/HtmlAgilityPack.dll",
+        "lib/Net40-client/HtmlAgilityPack.pdb",
+        "lib/Net40-client/HtmlAgilityPack.xml",
+        "lib/Net40/HtmlAgilityPack.XML",
+        "lib/Net40/HtmlAgilityPack.dll",
+        "lib/Net40/HtmlAgilityPack.pdb",
+        "lib/Net45/HtmlAgilityPack.XML",
+        "lib/Net45/HtmlAgilityPack.dll",
+        "lib/Net45/HtmlAgilityPack.pdb",
+        "lib/NetCore45/HtmlAgilityPack.dll",
+        "lib/NetCore45/HtmlAgilityPack.pdb",
+        "lib/NetCore45/HtmlAgilityPack.pri",
+        "lib/NetCore45/HtmlAgilityPack.xml",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
+        "lib/sl5/HtmlAgilityPack.XML",
+        "lib/sl5/HtmlAgilityPack.dll",
+        "lib/sl5/HtmlAgilityPack.pdb",
+        "readme.txt"
+      ]
+    },
     "Microsoft.CSharp/4.0.0": {
       "sha512": "oWqeKUxHXdK6dL2CFjgMcaBISbkk+AqEg+yvJHE4DElNzS4QaTsCflgkkqZwVlWby1Dg9zo9n+iCAMFefFdJ/A==",
       "type": "package",
@@ -13058,6 +13266,25 @@
         "runtimes/win8-arm/native/mscordbi.dll",
         "runtimes/win8-arm/native/mscorrc.debug.dll",
         "runtimes/win8-arm/native/mscorrc.dll"
+      ]
+    },
+    "SQLite/3.13.0": {
+      "sha512": "MJfRiz2p6aMVOxrxGMdVzhpzI0oxTgZSwC8eVuOpV8L7yYaFUu8q/OFYwv9P0/aZ/pdEu24O6gma6wZJMTun9A==",
+      "type": "package",
+      "path": "sqlite/3.13.0",
+      "files": [
+        "build/net45/SQLite.props",
+        "lib/netstandard1.0/_._",
+        "runtimes/linux-x64/native/libsqlite3.so",
+        "runtimes/osx-x64/native/libsqlite3.dylib",
+        "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll",
+        "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll",
+        "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll",
+        "runtimes/win7-x64/native/sqlite3.dll",
+        "runtimes/win7-x86/native/sqlite3.dll",
+        "sqlite-version.txt",
+        "sqlite.3.13.0.nupkg.sha512",
+        "sqlite.nuspec"
       ]
     },
     "SQLite.Net-PCL/3.1.1": {
@@ -15781,8 +16008,10 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "HtmlAgilityPack >= 1.4.9.5",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0",
-      "SQLite.Net-PCL >= 3.1.1"
+      "SQLite.Net-PCL >= 3.1.1",
+      "sqlite >= 3.13.0"
     ],
     "UAP,Version=v10.0": []
   },
@@ -15791,15 +16020,20 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "G:\\OneDrive\\Aplikacija-iFE\\Aplikacija iFE\\Aplikacija iFE.csproj",
+      "projectUniqueName": "D:\\Dokumenti\\GitHub\\Aplikacija-iFE\\Aplikacija iFE\\Aplikacija iFE.csproj",
       "projectName": "Aplikacija iFE",
-      "projectPath": "G:\\OneDrive\\Aplikacija-iFE\\Aplikacija iFE\\Aplikacija iFE.csproj",
-      "projectJsonPath": "G:\\OneDrive\\Aplikacija-iFE\\Aplikacija iFE\\project.json",
+      "projectPath": "D:\\Dokumenti\\GitHub\\Aplikacija-iFE\\Aplikacija iFE\\Aplikacija iFE.csproj",
+      "projectJsonPath": "D:\\Dokumenti\\GitHub\\Aplikacija-iFE\\Aplikacija iFE\\project.json",
       "projectStyle": "ProjectJson"
     },
     "dependencies": {
+      "HtmlAgilityPack": "1.4.9.5",
       "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-      "SQLite.Net-PCL": "3.1.1"
+      "SQLite.Net-PCL": "3.1.1",
+      "sqlite": {
+        "target": "Package",
+        "version": "[3.13.0, )"
+      }
     },
     "frameworks": {
       "uap10.0": {}

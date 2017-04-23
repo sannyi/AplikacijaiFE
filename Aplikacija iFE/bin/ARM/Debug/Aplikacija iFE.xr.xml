@@ -7,7 +7,12 @@
     <RootType FullName="Windows.UI.Xaml.Controls.Page">
       <RootProperty Name="Content" />
     </RootType>
+    <RootType FullName="Windows.UI.Xaml.Controls.ScrollViewer">
+      <RootProperty Name="VerticalScrollBarVisibility" />
+      <RootProperty Name="Content" />
+    </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.StackPanel">
+      <RootProperty Name="Margin" />
       <RootProperty Name="Children" />
       <RootProperty Name="Height" />
     </RootType>
@@ -56,6 +61,7 @@
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.PivotItem">
       <RootProperty Name="Header" />
+      <RootProperty Name="Content" />
     </RootType>
     <RootType FullName="Aplikacija_iFE.todays_menu" />
   </Roots.RootTypes>

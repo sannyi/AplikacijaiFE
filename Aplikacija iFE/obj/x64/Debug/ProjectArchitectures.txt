@@ -1,1 +1,1 @@
-G:\OneDrive\Aplikacija-iFE\Aplikacija iFE\Aplikacija iFE.csproj;x64
+D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\Aplikacija iFE.csproj;x64

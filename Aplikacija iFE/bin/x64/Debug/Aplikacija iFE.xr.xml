@@ -61,6 +61,7 @@
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.PivotItem">
       <RootProperty Name="Header" />
+      <RootProperty Name="Content" />
     </RootType>
     <RootType FullName="Aplikacija_iFE.todays_menu" />
   </Roots.RootTypes>

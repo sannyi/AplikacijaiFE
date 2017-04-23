@@ -9,15 +9,15 @@
 
     <StackPanel>
         <StackPanel Height="559">
-            <Button x:Name="Domov" Content="Domov" Margin="20,20,10,10" Click="Domov_Click"/>
-            <Button x:Name="Nazaj" Content="Nazaj" Margin="30,20,0,10" Click="Domov_Click"/>
-            <Button x:Name="Naprej" Content="Naprej" Margin="40,20,10,10" Click="Domov_Click"/>
-            <!-- Gumb za poročilo o škodi -->
-            <Button x:Name="Camerareport" Content="Camera_report" Margin="50,20,0,10" Click="Camera_click"/>
-            <Button x:Name="Menu" Content="Jedilnik" Margin="60,20,0,10" Click="Menu_Click"/>
+
+            <Button x:Name="Camerareport" Content="Camera_report" Margin="50,20,0,10" Click="Camera_click" Width="120" Height="30"/>
+            <Button x:Name="Navigacija" Content="Navigacija" HorizontalAlignment="Left"  Margin="200,0,0,0" Width="120" Height="30"/>
+            <Button x:Name="Menu" Content="Jedilnik" Margin="50,20,0,10" Click="Menu_Click" Width="120" Height="30"/>
+            <Button Content="Profesorji" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200,20,40,10" Width="120" Height="30"/>
+            <Button Content="Profesorji" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="50,20,40,10" Width="120" Height="30"/>
 
         </StackPanel>
-        <Frame></Frame>
+        <Frame/>
     </StackPanel>
-    
+
 </Page>
