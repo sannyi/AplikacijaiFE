@@ -115,7 +115,7 @@
     <Compile Include="todays_menu.xaml.cs">
       <DependentUpon>todays_menu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="tools.cs" />
+    <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
