@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="Aplikacija_iFE.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Aplikacija_iFE"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel>
+        <StackPanel Height="559">
+
+            <Button x:ConnectionId='1' x:Name="Camerareport" Content="Camera_report" Margin="50,20,0,10"                      Width="120" Height="30"/>
+            <Button x:ConnectionId='2' x:Name="Navigacija" Content="Navigacija" HorizontalAlignment="Left"  Margin="200,0,0,0" Width="120" Height="30"/>
+            <Button x:ConnectionId='3' x:Name="Menu" Content="Jedilnik" Margin="50,20,0,10"                    Width="120" Height="30"/>
+            <Button Content="Profesorji" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200,20,40,10" Width="120" Height="30"/>
+            <Button Content="Profesorji" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="50,20,40,10" Width="120" Height="30"/>
+
+        </StackPanel>
+        <Frame/>
+    </StackPanel>
+
+</Page>
+
