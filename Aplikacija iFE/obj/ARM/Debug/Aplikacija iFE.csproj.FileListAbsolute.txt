@@ -216,3 +216,8 @@ D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\obj\ARM\Debug\qualifiers.txt
 D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\obj\ARM\Debug\qualifiers.txt.intermediate
 D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\obj\ARM\Debug\MultipleQualifiersPerDimensionFound.txt
 D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\obj\ARM\Debug\ProjectArchitectures.txt
+D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\bin\ARM\Debug\HtmlAgilityPack.dll
+D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\bin\ARM\Debug\HtmlAgilityPack.pdb
+D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\bin\ARM\Debug\sqlite3.dll
+D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\obj\ARM\Debug\Aplikacija iFE.csprojResolveAssemblyReference.cache
+D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\obj\ARM\Debug\HtmlAgilityPack.pri.xml

@@ -31,7 +31,7 @@ namespace Aplikacija_iFE
             }
             else
             {
-                TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1};
+                TextBlock[] a = new TextBlock[] {meso1, meso2, meso3, testenine, zlica, solata1};
                 byte counter = 0;
                 foreach( TextBlock text in a)
                 {
