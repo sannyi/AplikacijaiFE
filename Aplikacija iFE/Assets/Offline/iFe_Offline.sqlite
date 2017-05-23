@@ -1,0 +1,22 @@
+--NASTAVITVE
+CREATE  TABLE  IF NOT EXISTS "main"."Nastavitve"
+ (
+ "SamoWiFi" BOOL NOT NULL  DEFAULT 1,
+ "Jezik" CHAR(2) NOT NULL  DEFAULT si, 
+ "Certifikat" CHAR(40) NOT NULL  DEFAULT c:,
+ "SHA1Certifikata" CHAR(40) NOT NULL  DEFAULT sha1
+ --SHA1 se da enostavno zlomit (uporabljeno samo za uène namene)
+ )
+ CREATE  TABLE IF NOT EXISTS "main"."Uporabnik"
+ (
+ "ID" INTEGER NOT NULL ,
+ "Priimek" CHAR(45) NOT NULL ,
+ "Ime" CHAR(45) NOT NULL ,
+ "E-posta" CHAR(6) NOT NULL ,
+ "Geslo" CHAR(40) NOT NULL
+  --SHA1 se da enostavno zlomit (uporabljeno samo za uène namene)
+ )
+ UPDATE "Uporabnik"
+ SET ID = 0, Priimek = '', Ime = '', E-posta = '', Geslo = '';
+ UPDATE "Nastavitve"
+ SET SamoWifi = 1, Jezik = 'si', Certifikat = 'c:', SHA1Certifikata = 'sha1';

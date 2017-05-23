@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="Aplikacija_iFE.todays_menu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Aplikacija_iFE"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Pivot x:ConnectionId='1' x:Name="jedilnik" Title="Jedilnik">
+            <PivotItem Header="mesni meni1">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="mesni meni2">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="mesni meni3">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="testenine, njoki, lazanje, rižote">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="solata">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+            <PivotItem Header="jed na žlico">
+                <!-- TU gre notri branje podatkov z interneta za meni 1-->
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>
+
