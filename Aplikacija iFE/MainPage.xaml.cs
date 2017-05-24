@@ -1,44 +1,44 @@
-﻿using SQLite.Net.Attributes;
-using System;
-using System.Data.SqlClient;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using System.IO;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
+using Windows.UI.Xaml.Controls;
+
+using Windows.UI.Xaml.Navigation;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Aplikacija_iFE
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class MainPage : Page
     {
         public MainPage()
         {
-            
             this.InitializeComponent();
-           if (!File.Exists(Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "student.xml")))
+            string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,"iFE.sqlite");
+   
+           if (!File.Exists(path))
             {
 
-                tools a = new tools();
-        
-            }
-            
-
-            
+                SQLite offline_baza = new SQLite();
+                SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
+            }            
         }
-
+#region NAVIGACIJA MED STRANMI
+        private void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame == null)
+            {
+                return;
+            }
+            if ((rootFrame.CanGoBack) && (!e.Handled))
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+        }
+#endregion
         #region GUMBI
         private void Camera_click(object sender, RoutedEventArgs e)
         {
@@ -53,10 +53,6 @@ namespace Aplikacija_iFE
             Navigiraj_po_straneh(3);
         }
         #endregion
-
-
-
-
         #region FUNKCIJE IN METODE
         private void Navigiraj_po_straneh(byte stran)
         {
@@ -97,6 +93,6 @@ namespace Aplikacija_iFE
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
 
-        }
+        } 
     }
 }

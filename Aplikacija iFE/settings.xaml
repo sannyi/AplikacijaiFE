@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
@@ -14,27 +13,22 @@
                 <StackPanel Height="618" RenderTransformOrigin="0.5,0.5">
                     <Grid Height="100" Margin="0,30,0,0">
                         <TextBlock x:Name="Wifi" Margin="0,0,159,0" />
-                        <ToggleSwitch Header="ToggleSwitch" HorizontalAlignment="Left" Margin="206,0,0,0" VerticalAlignment="Top" Width="154" Height="80"/>
+                        <ToggleSwitch Header="ToggleSwitch" HorizontalAlignment="Left" Margin="206,0,0,0" VerticalAlignment="Top" Width="154" Height="80" Toggled="ToggleSwitch_Toggled"/>
                     </Grid>
-                    <Grid Height="150
-                          " Margin="0,30,0,0">
-
+                    <Grid Height="150" Margin="0,30,0,0">
                         <TextBlock x:Name="Language1" Margin="0,0,0,65" />
-                        <ComboBox  Margin="0,110,0,0" VerticalAlignment="Top" Width="360" Height="30">
-                            <ComboBoxItem Content="Slovenščina"></ComboBoxItem>
-                            <ComboBoxItem Content="Deutsch"></ComboBoxItem>
-                            <ComboBoxItem Content="English"></ComboBoxItem>
+                        <ComboBox  Margin="0,110,0,0" VerticalAlignment="Top" Width="360" Height="30" SelectionChanged="ComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Slovenščina"/>
+                            <ComboBoxItem Content="Deutsch"/>
+                            <ComboBoxItem Content="English"/>
                         </ComboBox>
                     </Grid>
                     <Grid Height="100" Margin="0,30,0,0">
-                        <Button x:Name="Save" Content="Shrani nastavitve"  Height="46" Margin="10,44,10,10" Width="350">
-                            
-                        </Button>
+                        <Button x:Name="Save" Content="Shrani nastavitve"  Height="46" Margin="10,44,10,10" Width="350"/>
+
                     </Grid>
                     <Grid Height="100" Margin="0,30,0,0">
-                        <Button x:Name="Privzeto" Content="Pobriši "  Height="46" Margin="10,44,10,10" Width="350">
-
-                        </Button>
+                        <Button x:Name="Privzeto" Content="Pobriši "  Height="46" Margin="10,44,10,10" Width="350" Click="Privzeto_Click"/>
                     </Grid>
                 </StackPanel>
             </StackPanel>

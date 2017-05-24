@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.UI.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,6 +26,16 @@ namespace Aplikacija_iFE
         public profile()
         {
             this.InitializeComponent();
+            SystemNavigationManager.GetForCurrentView().BackRequested += Profile_BackRequested;
+        }
+
+        private void Profile_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+                e.Handled = true;
+            }
         }
     }
 }

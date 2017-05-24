@@ -98,11 +98,9 @@
     <Compile Include="camera_report.xaml.cs">
       <DependentUpon>camera_report.xaml</DependentUpon>
     </Compile>
-    <Compile Include="communication.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="podatkovna_baza.cs" />
     <Compile Include="profile.xaml.cs">
       <DependentUpon>profile.xaml</DependentUpon>
     </Compile>
@@ -126,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SQL SERVER QUERY\TextFile1.txt" />
+    <Content Include="Assets\TextFile1.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

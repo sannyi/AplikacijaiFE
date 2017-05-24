@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Devices.Enumeration;
@@ -12,28 +13,27 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.System.Display;
+using Chilkat; //Preveri kako je s to licenco!!!!!!
 
 namespace Aplikacija_iFE
 {
    
     public sealed partial class camera_report : Page
     {
-        #region VIRI
-        /*https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/simple-camera-preview-access - dostop do predogleda fotoaparata
-       https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/capture-photos-and-video-with-cameracaptureui
-        */
-        #endregion
         #region SPREMENLJIVKE
         MediaCapture _capturingPreview;
-        bool _isPreviewing;
+       private bool _isPreviewing;
         DisplayRequest _request_to_display;
-        #endregion
+            private string File;
+        private long size;
+        #endregion       
         #region KONSTRUKTORJI
         public camera_report()
         {
             this.InitializeComponent();
-
+            SystemNavigationManager.GetForCurrentView().BackRequested += Camera_report_BackRequested;
             if (!Camera_present().Result)
             {
                 Frame.GoBack();
@@ -43,13 +43,23 @@ namespace Aplikacija_iFE
                 StartPreviewAsync();
                 _request_to_display = new DisplayRequest();
                 //Strechiraj fotoaparat na 
+            
                 Application.Current.Suspending += Application_Suspending;
             }          
+        }
+
+        private void Camera_report_BackRequested(object sender, BackRequestedEventArgs e)
+        {      
+                if (Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                    e.Handled = true;
+                }  
         }
         #endregion
         #region PREDOGLED
         //Zaženemo predogled
-       private async void StartPreviewAsync()
+        private async void StartPreviewAsync()
         {
             //zazenemo delo za prikaz previewa fotoaparata
             try
@@ -117,23 +127,23 @@ namespace Aplikacija_iFE
             }
         }
             //Uničenje objekta v primeru, da se odločimo za izhod iz strani
-            protected async override void OnNavigatedFrom(NavigationEventArgs e)
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
             {
                await CleanupCameraAsync();
             }
         //Uničenje objekta v primeru, da se odločimo za izhod iz aplikacije
-            private async void Application_Suspending(object sender,SuspendingEventArgs e)
+        private async void Application_Suspending(object sender,SuspendingEventArgs e)
            {
                 if(Frame.CurrentSourcePageType==typeof(camera_report))
                          {
-                            var deferral = e.SuspendingOperation.GetDeferral();
-                            await CleanupCameraAsync();
-                           deferral.Complete();
-                            }
+                          var deferral = e.SuspendingOperation.GetDeferral();
+                          await CleanupCameraAsync();
+                          deferral.Complete();
+                          }
                 else
                         {
                           await CleanupCameraAsync();
-                         }
+                        }
              }
         #endregion
         #region ZAJEM IN PROCESIRANJE (POŠILJANJE SLIKE)
@@ -150,14 +160,78 @@ namespace Aplikacija_iFE
                 //obvesti uporabnika, da je preklical zajem fotografije
                 return;
             }
-           
-         
-                //prepiši te funkcije v tools
+            else
+            {
+                string filename = "Poskodba_na_fakulteti" + DateTime.Now.ToString() + ".jpg";
+                BasicProperties pro = await photo.GetBasicPropertiesAsync();
+                size = Convert.ToInt64(pro.Size);
                 StorageFolder destination_folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Poskodbe na fakulteti");
-                await photo.CopyAsync(destination_folder, "Poskodba_na_fakulteti.jpg", NameCollisionOption.ReplaceExisting);
-                await photo.DeleteAsync();
+                await photo.CopyAsync(destination_folder, filename, NameCollisionOption.ReplaceExisting);
+                File = Path.Combine(destination_folder.DisplayName, filename);
+                bool success;
+                Ftp2 ftp = new Ftp2();
+                success = ftp.UnlockComponent("Anything for 30-day trial");
 
-            
+                if (!success)
+                {
+                    Debug.WriteLine(ftp.LastErrorText);
+                    return;
+                }
+                ftp.ClientIpAddress = "83.212.126.172";
+                ftp.Username = "Administrator";
+                ftp.Password = "8KINtGoV7s";
+                ftp.Port = 1026;
+                success = await ftp.ConnectAsync();
+                if (!success)
+                {
+                    Debug.WriteLine(ftp.LastErrorText);
+                    return;
+                }
+
+                success = await ftp.ChangeRemoteDirAsync("Shares/SlikeZaSkodo");
+                if (!success)
+                {
+                    Debug.WriteLine(ftp.LastErrorText);
+                }
+                string file2 = File;
+                success = await ftp.PutFileAsync(File, file2);
+                if (!success)
+                {
+                    Debug.WriteLine(ftp.LastErrorText);
+                }
+                while (ftp.AsyncBytesSent64 != size)
+                {
+                    Debug.WriteLine(Convert.ToString(ftp.AsyncBytesSent64) + " bytes sent");
+                    Debug.WriteLine(Convert.ToString(ftp.UploadTransferRate) + " bytes per second");
+
+                    ftp.SleepMs(1000);
+                }
+                if (ftp.LastMethodSuccess == true)
+                {
+                    Debug.WriteLine("File Uploaded!");
+                    
+                  
+                }
+                else
+                {
+                        Debug.WriteLine(ftp.LastErrorText);
+                }
+
+                success = await ftp.DisconnectAsync();
+
+            }
+
+            //prepiši te funkcije v tools
+
+
+
+
+
+
+        }
+        private void SendToShare()
+        {
+
         }
         #endregion
         #region GUMBI IN HANDLERJI
@@ -176,16 +250,7 @@ namespace Aplikacija_iFE
                 ;
             }
         }
-        /*
-        private void OnHardwareButtonsBackPressed(object sender, BackClickEventArgs e)
-        {
-            if(Frame.CanGoBack)
-            {
-                Frame.GoBack();
-                e.Handled = true;
-            }
-        }
-        */
+      
         private async Task<bool> Camera_present()
         {
             bool is_camera_present=false;
@@ -198,12 +263,10 @@ namespace Aplikacija_iFE
 
             return is_camera_present;
         }
-        private void Take_photo_Click(object sender, RoutedEventArgs e)
+        private async void Take_photo_Click(object sender, RoutedEventArgs e)
         {
-            CleanupCameraAsync();
-            Take_photo_of_damaged_proprerty();
-
-
+           CleanupCameraAsync();
+      Take_photo_of_damaged_proprerty();
 
             //sendmail
             //notification for mail
@@ -211,6 +274,7 @@ namespace Aplikacija_iFE
         }
         #endregion
     }
+
 
 }
 

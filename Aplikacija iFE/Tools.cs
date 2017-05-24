@@ -1,18 +1,13 @@
-﻿using SQLite.Net.Attributes;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite.Internal;
+
 using System;
 
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
+
 using System.IO;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
-
-
-using System.Xml;
-using Windows.Storage;
 
 namespace Aplikacija_iFE
 {
@@ -22,9 +17,7 @@ namespace Aplikacija_iFE
         byte counter=0;
         #endregion
         
-        #region XML FILE
-      
-        #endregion
+   
         #region DELO S HRAMBO
         #endregion
         #region DELO S PODATKOVNO BAZO
@@ -137,7 +130,7 @@ public class Student
         
 
         SqlConnection cs = new SqlConnection("Data Source=tcp:83.212.126.172;Initial Catalog=iFE;User ID=sa;Password=iFE2016");
-
+        
         public List<string> ReturnTypeOfStaff()
         { 
           
@@ -169,6 +162,53 @@ public class Student
     }
  public class SQLite
     {
+        #region SPREMENLJIVKE
+      
+       SqliteConnection conn = new SqliteConnection("Filename="+Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "iFE.sqlite"));
+        private string[] queries;
+       
 
+        #endregion
+        #region KONSTRUKTORJI
+        public SQLite()
+        {
+            SqliteEngine.UseWinSqlite3();
+            string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "iFE.sqlite");
+            if (!File.Exists(path))
+            {
+                CreateDatabase();
+            }
+        }
+        #endregion
+        #region METODE
+        public void CreateDatabase()
+        {
+            queries = new string[] {
+                    "CREATE TABLE IF NOT EXISTS Settings (OnlyWifi BOOL NOT NULL DEFAULT, Language varchar(2) NOT NULL DEFAULT si, Certificate varchar(40) NOT NULL DEFAULT c:,SHA1Certif char(40) NOT NULL DEAFAULT sha1)",
+                    "CREATE TABLE IF NOT EXISTS User( ID INTEGER NOT NULL, Surname CHAR(50) NOT NULL, Name CHAR(50) NOT NULL, Email CHAR(20) NOT NULL, Password CHAR(40) NOT NULL)" };
+
+            foreach (string a in queries)
+            {
+                conn.Open();
+                SqliteCommand command = new SqliteCommand(a, conn);
+                try{command.ExecuteReader();}
+                catch(SqliteException e){  conn.Close();}  
+            }
+            conn.Close();
+        }
+        public void SetAllToDefault()
+        {
+            queries = new string[] {"UPDATE User SET ID = 0, Surname = '', Name = '', Email = '', Password = '';","UPDATE Settings  SET OnlyWifi= 1, Language = 'si', Certificate = 'c:', SHA1Certif = 'sha1';"};
+            SqliteCommand command = new SqliteCommand();
+            command.Connection = conn;
+            conn.Open();
+            foreach (string a in queries)
+            {
+                command.CommandText = a;
+                try { command.ExecuteReader(); } catch { conn.Close(); }
+            }
+            conn.Close();
+        }
+        #endregion
     }
 }

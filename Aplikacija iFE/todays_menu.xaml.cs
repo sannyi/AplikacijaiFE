@@ -1,7 +1,7 @@
 ﻿using System;
-
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Resources;
+using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -19,10 +19,10 @@ namespace Aplikacija_iFE
         public todays_menu()
         {   
             this.InitializeComponent();
-
+            SystemNavigationManager.GetForCurrentView().BackRequested += Todays_menu_BackRequested;
             if (!(tools_for_menu.Connected_net()))
             {
-                Frame.GoBack();
+
                 
             }
             else
@@ -40,6 +40,15 @@ namespace Aplikacija_iFE
             }
    
         }
+
+        private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+                e.Handled = true;
+            }
+        }
         #region METODE V PRIDAJOČEM CLASS-u
         private void Refresh_menu(string day)
         {
@@ -55,8 +64,24 @@ namespace Aplikacija_iFE
         #endregion
 
         #region GUMBI
-        private void Dnevi_za_prikaz_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void Dnevi_za_prikaz_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            int get_item_count = Dnevi_za_prikaz.Items.Count-1;
+            if(Dnevi_za_prikaz.SelectedIndex==get_item_count)
+            {
+                var URI = new Uri(@"http://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/");
+                var URIlaunched = await Launcher.LaunchUriAsync(URI);
+                if(!URIlaunched)
+                {
+                    URI = new Uri(@"https://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/");
+                    URIlaunched = await Launcher.LaunchUriAsync(URI);
+                    if(!URIlaunched)
+                    {
+                        var message = new MessageDialog("Do spletne strani trenutno ni mogoče dostopati ");
+                    }
+                }
+
+            }
             //refresh_menu(dnevi_za_prikaz.);
         }
         #endregion

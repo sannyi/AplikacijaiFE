@@ -6,10 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
     <StackPanel>
         <Grid Height="100">
-            <ComboBox x:Name="TipZaposlenih" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="340" Height="37">
+            <ComboBox x:Name="TipZaposlenih" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="340" Height="37" SelectionChanged="TipZaposlenih_SelectionChanged">
                 <ComboBoxItem Content="Vsi zaposleni"></ComboBoxItem>
                 <ComboBoxItem Content="Profesorji"></ComboBoxItem>
                 <ComboBoxItem Content="Tehnično osebje"></ComboBoxItem>
@@ -19,16 +18,11 @@
         </Grid>
         <Grid Height="538">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ListView x:Name="Zaposleni">
+                <ListView x:Name="Zaposleni" SelectionChanged="Zaposleni_SelectionChanged">
                     <ListViewItem Content="Janez Bešter"></ListViewItem>
                     <ListViewItem Content="Klemen Pečnik"></ListViewItem>
                 </ListView>
-
-
             </ScrollViewer>
         </Grid>
-
-
-
     </StackPanel>
 </Page>
