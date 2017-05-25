@@ -22,7 +22,7 @@ namespace WCFServiszaabazo
 
         SqlConnection conn = new SqlConnection("Data Source=tcp:83.212.126.172;Initial Catalog=iFE;User ID=sa;Password=iFE2016");
        
-        public Dataset querysql(out bool queryparam)
+        public DataSet Profesorji(out bool queryparam)
         {
                 try
             {
@@ -33,6 +33,10 @@ namespace WCFServiszaabazo
                 DataTable dr = new DataTable();
                 SqlCommand cmd = new SqlCommand();
                 SqlDataAdapter SqlDa = new SqlDataAdapter();
+
+                cmd.CommandType = CommandType.TableDirect;
+                cmd.CommandText = "dbo.fnDobiVseZaposlene";
+
                 /*
                  *   cmd = new SqlCommand("RETRIEVE_EMPLOYEE", pl.ConnOpen());
                  cmd.Parameters.Add(new SqlParameter("@EMPLOYEENO", employeeNo));
