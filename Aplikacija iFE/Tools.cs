@@ -40,41 +40,7 @@ namespace Aplikacija_iFE
          }
         #endregion
     }
-    public class SQLServer
-    {
-        
-
-        SqlConnection cs = new SqlConnection("Data Source=tcp:83.212.126.172;Initial Catalog=iFE;User ID=sa;Password=iFE2016");
-        
-        public List<string> ReturnTypeOfStaff()
-        { 
-          
-            List<string> a = new List<string>();
-            SqlCommand cmd = new SqlCommand("SELECT iFE.dbo.fnDobiVseTipeZaposlenih",cs);
-            SqlDataReader reader;
-           
-            cmd.Connection = cs;
-            try
-            {
-                cs.Open();
-                reader = cmd.ExecuteReader();
-
-                    while(reader.Read())
-                    {
-                    var TypeOfStaff = reader.GetString(0);
-                    a.Add(TypeOfStaff);
-                    }
-            }
-        
-            finally
-            {
-                cs.Close();
-            }
-    
-            return a;
-        }
-             
-    }
+  
  public class SQLite
     {
         #region SPREMENLJIVKE
