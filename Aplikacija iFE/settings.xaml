@@ -13,7 +13,7 @@
                 <StackPanel Height="618" RenderTransformOrigin="0.5,0.5">
                     <Grid Height="100" Margin="0,30,0,0">
                         <TextBlock x:Name="Wifi" Margin="0,0,159,0" />
-                        <ToggleSwitch Header="ToggleSwitch" HorizontalAlignment="Left" Margin="206,0,0,0" VerticalAlignment="Top" Width="154" Height="80" Toggled="ToggleSwitch_Toggled"/>
+                        <ToggleSwitch x:Name="WiFi" IsOn="True"  Header="ToggleSwitch" HorizontalAlignment="Left" Margin="206,0,0,0" VerticalAlignment="Top" Width="154" Height="80" Toggled="ToggleSwitch_Toggled"/>
                     </Grid>
                     <Grid Height="150" Margin="0,30,0,0">
                         <TextBlock x:Name="Language1" Margin="0,0,0,65" />

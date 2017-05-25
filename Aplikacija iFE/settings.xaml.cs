@@ -14,7 +14,7 @@ namespace Aplikacija_iFE
             SystemNavigationManager.GetForCurrentView().BackRequested += Settings_BackRequested;
             Wifi.Text = "Podatki se bodo prenasali" + Environment.NewLine + "tudi preko podatkovne" +Environment.NewLine+" povezave.";
             Language1.Text = "Izberite jezik." + Environment.NewLine + "Choose a language." + Environment.NewLine + "Sprache wählen.";
-
+           
         }
 #region EVENTI
         private void Settings_BackRequested(object sender, BackRequestedEventArgs e)
@@ -33,7 +33,30 @@ namespace Aplikacija_iFE
 
         private void ToggleSwitch_Toggled(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            //update wifi
+            if(WiFi!=null)
+            {
+                try
+                {
+                    if (WiFi.IsOn)
+                    {
+                        WiFi.IsOn = false;
+                        new SQLite().UpdateSettings(0, "false");
+                        
+                    }
+                    else
+                    {
+                        new SQLite().UpdateSettings(0, "true");
+                        WiFi.IsOn = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+
+
+            }
+         
         }
         #endregion
 

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿
+using Microsoft.Data.Sqlite.Internal;
+using System.IO;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
@@ -19,7 +21,7 @@ namespace Aplikacija_iFE
    
            if (!File.Exists(path))
             {
-
+                SqliteEngine.UseWinSqlite3();
                 SQLite offline_baza = new SQLite();
                 SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
             }            
@@ -48,7 +50,11 @@ namespace Aplikacija_iFE
         {
             Navigiraj_po_straneh(2);
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Nastavitve_Click(object sender, RoutedEventArgs e)
+        {
+            Navigiraj_po_straneh(6);
+        }
+        private void Profesorji_Click(object sender, RoutedEventArgs e)
         {
             Navigiraj_po_straneh(3);
         }
@@ -56,7 +62,7 @@ namespace Aplikacija_iFE
         #region FUNKCIJE IN METODE
         private void Navigiraj_po_straneh(byte stran)
         {
-           if(new tools().Connected_net())
+           if(new tools().Connected_net()  )
             {
                 switch(stran)
                 {
@@ -78,7 +84,7 @@ namespace Aplikacija_iFE
                     case 6:
                         Frame.Navigate(typeof(settings));
                         break;
-                    default:
+                    default: 
                         break;
                 }
             }
@@ -90,9 +96,6 @@ namespace Aplikacija_iFE
 
         #endregion
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        } 
+      
     }
 }

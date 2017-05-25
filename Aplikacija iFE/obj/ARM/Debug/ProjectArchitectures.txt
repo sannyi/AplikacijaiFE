@@ -1,1 +1,1 @@
-D:\Dokumenti\GitHub\Aplikacija-iFE\Aplikacija iFE\Aplikacija iFE.csproj;arm
+D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Aplikacija iFE.csproj;arm
