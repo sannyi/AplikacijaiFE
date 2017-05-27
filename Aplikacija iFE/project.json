@@ -2,7 +2,9 @@
   "dependencies": {
     "Chilkat.uwp": "9.5.0.65",
     "Microsoft.Data.Sqlite": "1.1.1",
+    "Microsoft.Net.Http": "2.2.29",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
+    "Newtonsoft.Json": "10.0.2",
     "System.Data.SqlClient": "4.4.0-preview1-25305-02"
   },
   "frameworks": {

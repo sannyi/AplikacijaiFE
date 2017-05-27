@@ -132,25 +132,27 @@ namespace Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo
 
         private void InitTypeTables()
         {
-            _typeNameTable = new string[8];
+            _typeNameTable = new string[9];
             _typeNameTable[0] = "Aplikacija_iFE.camera_report";
             _typeNameTable[1] = "Windows.UI.Xaml.Controls.Page";
             _typeNameTable[2] = "Windows.UI.Xaml.Controls.UserControl";
             _typeNameTable[3] = "Aplikacija_iFE.MainPage";
-            _typeNameTable[4] = "Aplikacija_iFE.profile";
-            _typeNameTable[5] = "Aplikacija_iFE.settings";
-            _typeNameTable[6] = "Aplikacija_iFE.staff";
-            _typeNameTable[7] = "Aplikacija_iFE.todays_menu";
+            _typeNameTable[4] = "Aplikacija_iFE.Professors";
+            _typeNameTable[5] = "Aplikacija_iFE.profile";
+            _typeNameTable[6] = "Aplikacija_iFE.settings";
+            _typeNameTable[7] = "Aplikacija_iFE.staff";
+            _typeNameTable[8] = "Aplikacija_iFE.todays_menu";
 
-            _typeTable = new global::System.Type[8];
+            _typeTable = new global::System.Type[9];
             _typeTable[0] = typeof(global::Aplikacija_iFE.camera_report);
             _typeTable[1] = typeof(global::Windows.UI.Xaml.Controls.Page);
             _typeTable[2] = typeof(global::Windows.UI.Xaml.Controls.UserControl);
             _typeTable[3] = typeof(global::Aplikacija_iFE.MainPage);
-            _typeTable[4] = typeof(global::Aplikacija_iFE.profile);
-            _typeTable[5] = typeof(global::Aplikacija_iFE.settings);
-            _typeTable[6] = typeof(global::Aplikacija_iFE.staff);
-            _typeTable[7] = typeof(global::Aplikacija_iFE.todays_menu);
+            _typeTable[4] = typeof(global::Aplikacija_iFE.Professors);
+            _typeTable[5] = typeof(global::Aplikacija_iFE.profile);
+            _typeTable[6] = typeof(global::Aplikacija_iFE.settings);
+            _typeTable[7] = typeof(global::Aplikacija_iFE.staff);
+            _typeTable[8] = typeof(global::Aplikacija_iFE.todays_menu);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -187,10 +189,11 @@ namespace Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo
 
         private object Activate_0_camera_report() { return new global::Aplikacija_iFE.camera_report(); }
         private object Activate_3_MainPage() { return new global::Aplikacija_iFE.MainPage(); }
-        private object Activate_4_profile() { return new global::Aplikacija_iFE.profile(); }
-        private object Activate_5_settings() { return new global::Aplikacija_iFE.settings(); }
-        private object Activate_6_staff() { return new global::Aplikacija_iFE.staff(); }
-        private object Activate_7_todays_menu() { return new global::Aplikacija_iFE.todays_menu(); }
+        private object Activate_4_Professors() { return new global::Aplikacija_iFE.Professors(); }
+        private object Activate_5_profile() { return new global::Aplikacija_iFE.profile(); }
+        private object Activate_6_settings() { return new global::Aplikacija_iFE.settings(); }
+        private object Activate_7_staff() { return new global::Aplikacija_iFE.staff(); }
+        private object Activate_8_todays_menu() { return new global::Aplikacija_iFE.todays_menu(); }
 
         private global::Windows.UI.Xaml.Markup.IXamlType CreateXamlType(int typeIndex)
         {
@@ -224,30 +227,37 @@ namespace Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 4:   //  Aplikacija_iFE.profile
+            case 4:   //  Aplikacija_iFE.Professors
                 userType = new global::Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_4_profile;
+                userType.Activator = Activate_4_Professors;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 5:   //  Aplikacija_iFE.settings
+            case 5:   //  Aplikacija_iFE.profile
                 userType = new global::Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_5_settings;
+                userType.Activator = Activate_5_profile;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 6:   //  Aplikacija_iFE.staff
+            case 6:   //  Aplikacija_iFE.settings
                 userType = new global::Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_6_staff;
+                userType.Activator = Activate_6_settings;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 7:   //  Aplikacija_iFE.todays_menu
+            case 7:   //  Aplikacija_iFE.staff
                 userType = new global::Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_7_todays_menu;
+                userType.Activator = Activate_7_staff;
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 8:   //  Aplikacija_iFE.todays_menu
+                userType = new global::Aplikacija_iFE.Aplikacija_iFE_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_8_todays_menu;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
