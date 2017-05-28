@@ -31,7 +31,11 @@
       <RootProperty Name="TextWrapping" />
       <RootProperty Name="Text" />
       <RootProperty Name="Margin" />
+      <RootProperty Name="HorizontalAlignment" />
+      <RootProperty Name="VerticalAlignment" />
+      <RootProperty Name="Width" />
       <RootProperty Name="Height" />
+      <RootEvent Name="SelectionChanged" />
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.ComboBox">
       <RootProperty Name="HorizontalAlignment" />
@@ -62,6 +66,7 @@
     </RootType>
     <RootType FullName="Aplikacija_iFE.MainPage" />
     <RootType FullName="Microsoft.Xaml.DirectUI.ProxyTypes.ThemeResourceExtension" />
+    <RootType FullName="Aplikacija_iFE.Professors" />
     <RootType FullName="Aplikacija_iFE.profile" />
     <RootType FullName="Windows.UI.Xaml.Controls.ToggleSwitch">
       <RootProperty Name="IsOn" />

@@ -3,6 +3,10 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
+using Newtonsoft.Json;
+using System.Net.Http;
+using Windows.UI.Xaml.Navigation;
+
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -43,10 +47,29 @@ namespace Aplikacija_iFE
         {
 
         }
-
+                  
         private void Zaposleni_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            HttpClient client = new HttpClient();
+            var JsonResponse = await client.GetStreamAsync();
+            var staffResult = JsonConvert.DeserializeObject<List<staff>>(JsonResponse);
+            Zaposleni.ItemsSource = staffResult;
+
+
+
+
+        }
+        //WTF
+        
+
+        
+
+
+
+       
     }
 }

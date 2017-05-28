@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Machine>ALEKSANDER</Machine>
+    <Machine>DESKTOP-380D90B</Machine>
     <WindowsUser>Aleksander</WindowsUser>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetOsVersion>10.0</TargetOsVersion>
@@ -10,7 +10,7 @@
     <PackageArchitecture>x64</PackageArchitecture>
     <PackageIdentityName>e8b9f9db-d92f-4dbb-8ca8-f23a8f350a86</PackageIdentityName>
     <PackageIdentityPublisher>CN=Aleksander</PackageIdentityPublisher>
-    <IntermediateOutputPath>D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\obj\x64\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\obj\x64\Debug\</IntermediateOutputPath>
     <RemoteDeploymentType>
     </RemoteDeploymentType>
     <PackageRegistrationPath>
@@ -18,8 +18,8 @@
     <RemoveNonLayoutFiles>true</RemoveNonLayoutFiles>
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
-    <LayoutDir>D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\AppX</LayoutDir>
-    <RegisteredManifestChecksum>ECB5AB9ACB13D83A20326FCF1E5C6F4BB55F70140454A05C2C6171AA3A088CDF</RegisteredManifestChecksum>
+    <LayoutDir>D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\AppX</LayoutDir>
+    <RegisteredManifestChecksum>CA52F964E2BDC233FDC22BDD7FF2FF8C5FE53E77D17DF0E7D4E6A93E5553A966</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>e8b9f9db-d92f-4dbb-8ca8-f23a8f350a86_1.0.0.0_x64__313ea4bdv6vtm</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>e8b9f9db-d92f-4dbb-8ca8-f23a8f350a86_313ea4bdv6vtm!App</RegisteredUserModeAppID>
     <RegisteredPackageID>e8b9f9db-d92f-4dbb-8ca8-f23a8f350a86</RegisteredPackageID>
@@ -28,16 +28,16 @@
     <JitOptimizationSuppressed>True</JitOptimizationSuppressed>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Core\AppxManifest.xml">
+    <AppXManifest Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2017-05-24T20:33:32.371</Modified>
+      <Modified>2017-05-27T12:30:17.104</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Aplikacija iFE.exe">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Aplikacija iFE.exe">
       <PackagePath>entrypoint\Aplikacija iFE.exe</PackagePath>
-      <Modified>2017-05-24T20:33:32.101</Modified>
+      <Modified>2017-05-27T12:30:07.960</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Aleksander\.nuget\packages\Chilkat.uwp\9.5.0.65\runtimes\win10-x64\native\Chilkat.dll">
       <PackagePath>Chilkat.dll</PackagePath>
@@ -531,68 +531,68 @@
       <PackagePath>Chilkat.winmd</PackagePath>
       <Modified>2016-12-29T11:03:34.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\SQL SERVER QUERY\TextFile1.txt">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\SQL SERVER QUERY\TextFile1.txt">
       <PackagePath>Assets\SQL SERVER QUERY\TextFile1.txt</PackagePath>
-      <Modified>2017-05-22T19:17:22.191</Modified>
+      <Modified>2017-05-27T12:28:14.562</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\TextFile1.txt">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\TextFile1.txt">
       <PackagePath>Assets\TextFile1.txt</PackagePath>
-      <Modified>2017-05-24T17:34:11.995</Modified>
+      <Modified>2017-05-27T12:28:14.564</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Properties\Default.rd.xml">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
-      <Modified>2017-05-23T21:55:03.695</Modified>
+      <Modified>2017-05-27T12:28:16.278</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\LockScreenLogo.scale-200.png">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\LockScreenLogo.scale-200.png">
       <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
-      <Modified>2015-09-20T16:30:08.000</Modified>
+      <Modified>2017-05-27T12:28:14.557</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\SplashScreen.scale-200.png">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2015-09-20T16:30:08.000</Modified>
+      <Modified>2017-05-27T12:28:14.560</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\Square150x150Logo.scale-200.png">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\Square150x150Logo.scale-200.png">
       <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2015-09-20T16:30:08.000</Modified>
+      <Modified>2017-05-27T12:28:14.562</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\Square44x44Logo.scale-200.png">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\Square44x44Logo.scale-200.png">
       <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2015-09-20T16:30:08.000</Modified>
+      <Modified>2017-05-27T12:28:14.562</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2015-09-20T16:30:08.000</Modified>
+      <Modified>2017-05-27T12:28:14.563</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\StoreLogo.png">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2015-09-20T16:30:08.000</Modified>
+      <Modified>2017-05-27T12:28:14.563</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\Assets\Wide310x150Logo.scale-200.png">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\Assets\Wide310x150Logo.scale-200.png">
       <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2015-09-20T16:30:08.000</Modified>
+      <Modified>2017-05-27T12:28:14.565</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Aplikacija iFE.xr.xml">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Aplikacija iFE.xr.xml">
       <PackagePath>Aplikacija iFE.xr.xml</PackagePath>
-      <Modified>2017-05-24T20:13:20.883</Modified>
+      <Modified>2017-05-27T12:28:16.024</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
-      <Modified>2017-05-24T14:26:43.728</Modified>
+      <Modified>2017-04-08T14:50:27.131</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\resources.pri">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2017-05-24T20:14:25.221</Modified>
+      <Modified>2017-05-27T12:30:10.089</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="D:\Dokumenti\GitHub\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Core\Aplikacija iFE.exe">
+    <AppxPackagedFile Include="D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\bin\x64\Debug\Core\Aplikacija iFE.exe">
       <PackagePath>Aplikacija iFE.exe</PackagePath>
-      <Modified>2017-05-24T20:33:32.360</Modified>
+      <Modified>2017-05-27T12:30:17.083</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,11 @@
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
     <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+<<<<<<< HEAD
     <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">D:\Dokumenti\GitHub\iFE\AplikacijaiFE\Aplikacija iFE\project.lock.json</ProjectAssetsFile>
+=======
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">D:\Dokumenti\AplikacijaiFE\Aplikacija iFE\project.lock.json</ProjectAssetsFile>
+>>>>>>> master
     <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
     <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\Aleksander\.nuget\packages\</NuGetPackageFolders>
     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">ProjectJson</NuGetProjectStyle>
