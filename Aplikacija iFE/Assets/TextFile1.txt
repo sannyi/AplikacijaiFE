@@ -1,0 +1,6 @@
+﻿VIRI:
+Navigacija:	https://stackoverflow.com/questions/31832309/handling-back-navigation-windows-10-uwp
+Predogled za kamero: 
+https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/simple-camera-preview-access 
+       https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/capture-photos-and-video-with-cameracaptureui
+	   Prenašanje argumentov: https://stackoverflow.com/questions/35304615/pass-some-parameters-between-pages-in-uwp
