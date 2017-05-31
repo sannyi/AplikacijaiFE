@@ -15,6 +15,7 @@ namespace AplikacijaiFEWinForms
     {
         public bool Uspeh { get; set; }
         public Exception ex {get; set; }
+        public List<int> IDZaposlenih { get; set; }
 
         SqlConnection povezava = new SqlConnection("Data Source=83.212.126.172\\SQLEXPRESS;Initial Catalog=iFE;User id=sa;Password=iFE2016");
         SqlCommand cmd;
@@ -27,27 +28,34 @@ namespace AplikacijaiFEWinForms
 
             return a;
         }
-        public List<string> ImeInPriimekZaposlenega()
+        public List<string> ImeInPriimekZaposlenega(string tipzaposlenega)
         {
             List<string> a = new List<string>();
-           cmd = new SqlCommand("dbo.", povezava);
+           cmd = new SqlCommand("SELECT * FROM dbo.fnDobiVseZaposlene()", povezava);
+            cmd.CommandType = CommandType.Text;
 
             try
             {
                 povezava.Open();
-                SqlDataReader reader;
-                reader = cmd.ExecuteReader();
-           
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                { 
+
+                    while (reader.Read())
+                    {
+                        a.Add(reader.GetString(0));
+                        IDZaposlenih.Add(reader.GetInt32(1));
+                    }
+
+                    reader.Close();
+                }
+               
 
                 //DEFINIRAJ UKAZ
-                while (reader.Read())
-                {
-                 //   a.Add(reader.GetValues());
-                }
+              
             }
             catch (Exception e)
             {
-                e.ToString();
+                ex = e;
             }
             finally
             {
@@ -56,16 +64,18 @@ namespace AplikacijaiFEWinForms
             }
             return a;
 
+
         }
-        public List<string> ImeInPriimekZaposlenega(string TipZaposlenega)
-        {
-            List<string> a = new List<string>();
+      
+        /* public List<string> ImeInPriimekZaposlenega(string TipZaposlenega)
+         {
+             List<string> a = new List<string>();
 
 
 
 
-            return a;
-        }
+             return a;
+         }*/
         public List<string> PodatkiZaposlenega(string TipZaposlenega)
         {
             List<string> a = new List<string>();
@@ -89,9 +99,17 @@ namespace AplikacijaiFEWinForms
 
               //zenkra ne bo časa za ftp -> posodobi proceduro, posodobi to metodo      
             povezava.Open();
-            try{ Uspeh = true; cmd.ExecuteNonQuery();}
-            catch (Exception e) { ex = e; Uspeh = false; }
-            finally { povezava.Close(); }
+            try{
+                Uspeh = true;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                ex = e; Uspeh = false;
+            }
+            finally {
+                povezava.Close();
+            }
         }
     }
 }

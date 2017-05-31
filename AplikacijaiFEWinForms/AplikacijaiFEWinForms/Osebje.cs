@@ -15,7 +15,19 @@ namespace AplikacijaiFEWinForms
         public Osebje()
         {
             InitializeComponent();
+            listBox1.SelectedIndex = 0;
+            SQLServer s = new SQLServer();
+            List<string> ImenaInPriimki = new List<string>();
+            List<int> identitete = new List<int>();
+            ImenaInPriimki = s.ImeInPriimekZaposlenega(string tipZaposlega);
+            identitete = s.IDZaposlenih;
+            foreach (var a in ImenaInPriimki)
+            {
+                listBox1.Items.Add(a.ToString());
+
+            }
         }
+
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -23,16 +35,19 @@ namespace AplikacijaiFEWinForms
             // pokliči 
             SQLServer s = new SQLServer();
             List<string> ImenaInPriimki= new List<string>();
-            
             List<int> identitete = new List<int>();
 
+            ImenaInPriimki = s.ImeInPriimekZaposlenega();
+            identitete = s.IDZaposlenih;
+            
+         
+
             //imena_in_priimki = s.ImeInPriimekZaposlenega(comboBox1.SelectedItem.ToString());
-        /*    foreach( var a in imena)
+            foreach( var a in ImenaInPriimki)
             {
                 listBox1.Items.Add(a.ToString());
                
             }
-*/
             
       
         }
