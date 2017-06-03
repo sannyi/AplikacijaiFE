@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AplikacijaiFEWinForms
@@ -21,6 +14,7 @@ namespace AplikacijaiFEWinForms
         {
             Navigiraj(3);
         }
+     
         private void Navigiraj(byte izbira)
         {
             switch(izbira)
@@ -78,5 +72,11 @@ namespace AplikacijaiFEWinForms
         {
             Navigiraj(6);
         }
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Navigiraj(7);
+        }
+      
+             
     }
 }

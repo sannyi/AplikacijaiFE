@@ -19,7 +19,7 @@ namespace AplikacijaiFEWinForms
             SQLServer s = new SQLServer();
             List<string> ImenaInPriimki = new List<string>();
             List<int> identitete = new List<int>();
-            ImenaInPriimki = s.ImeInPriimekZaposlenega(string tipZaposlega);
+      //      ImenaInPriimki = s.ImeInPriimekZaposlenega(string tipZaposlega);
             identitete = s.IDZaposlenih;
             foreach (var a in ImenaInPriimki)
             {
@@ -37,7 +37,7 @@ namespace AplikacijaiFEWinForms
             List<string> ImenaInPriimki= new List<string>();
             List<int> identitete = new List<int>();
 
-            ImenaInPriimki = s.ImeInPriimekZaposlenega();
+      //      ImenaInPriimki = s.ImeInPriimekZaposlenega();
             identitete = s.IDZaposlenih;
             
          
