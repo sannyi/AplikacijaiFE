@@ -1,55 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AplikacijaiFEWinForms
 {
     public partial class Osebje : Form
     {
+        List<string> ImenaPriimkiInIdentitete = new List<string>();
+        List<int> identitete = new List<int>();
+        SQLServer s;
+
         public Osebje()
         {
             InitializeComponent();
-            listBox1.SelectedIndex = 0;
-            SQLServer s = new SQLServer();
-            List<string> ImenaInPriimki = new List<string>();
-            List<int> identitete = new List<int>();
-      //      ImenaInPriimki = s.ImeInPriimekZaposlenega(string tipZaposlega);
-            identitete = s.IDZaposlenih;
-            foreach (var a in ImenaInPriimki)
+            s = new SQLServer();
+           // listBox1.SelectedIndex = 0;
+            ImenaPriimkiInIdentitete = s.ImePriimekInIdZaposlenega(comboBox1.GetItemText(comboBox1.SelectedItem));
+         
+            foreach (string a in ImenaPriimkiInIdentitete)
             {
-                listBox1.Items.Add(a.ToString());
-
+                    identitete.Add(int.Parse(a.Split('ő')[1]));
             }
+           
+          
+            foreach (string a in ImenaPriimkiInIdentitete)
+            {
+                    listBox1.Items.Add(a.Split('ő')[0]);
+            }
+            ImenaPriimkiInIdentitete.Clear();
         }
-
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
-            // pokliči 
-            SQLServer s = new SQLServer();
-            List<string> ImenaInPriimki= new List<string>();
-            List<int> identitete = new List<int>();
+            s = new SQLServer();
 
-      //      ImenaInPriimki = s.ImeInPriimekZaposlenega();
-            identitete = s.IDZaposlenih;
-            
-         
+            ImenaPriimkiInIdentitete.Clear();
+            identitete.Clear();
+            ImenaPriimkiInIdentitete = s.ImePriimekInIdZaposlenega(comboBox1.GetItemText(comboBox1.SelectedItem));
 
-            //imena_in_priimki = s.ImeInPriimekZaposlenega(comboBox1.SelectedItem.ToString());
-            foreach( var a in ImenaInPriimki)
+            foreach (string a in ImenaPriimkiInIdentitete)
             {
-                listBox1.Items.Add(a.ToString());
-               
+                listBox1.Items.Add(a.Split('ő')[0]);
             }
-            
-      
+            foreach (string a in ImenaPriimkiInIdentitete)
+            {
+                identitete.Add(int.Parse(a.Split('ő')[1]));
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string priimek = listBox1.GetItemText(listBox1.SelectedItem);
+            if (priimek=="" || priimek==" " || priimek==null) { return; }
+            int ID = identitete[listBox1.SelectedIndex];
+            Zaposleni z = new Zaposleni(ID);
+            z.Show();
+
         }
     }
 }

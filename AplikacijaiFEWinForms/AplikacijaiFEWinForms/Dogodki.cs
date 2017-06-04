@@ -72,14 +72,8 @@ namespace AplikacijaiFEWinForms
             foreach (Label a in array_label)
             {
                 a.Text = ime_dogodka.Split('ő')[i];
-                
-
                 i++;
             }
-           
-            
-
-
         }
     }
 }

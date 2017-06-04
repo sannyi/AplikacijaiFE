@@ -23,40 +23,25 @@ namespace AplikacijaiFEWinForms
         DataTable dt;
         SqlDataAdapter da;
 
-
-        public List<int> DobiIdZaposlenega(string ime,string priimek)
+        public List<string> ImePriimekInIdZaposlenega(string tipzaposlenega)
         {
+            s = new List<string>();
             Uspeh = true;
-            List<int> a = new List<int>();
-            
-
-            return a;
-        }
-        public List<string> ImeInPriimekZaposlenega(string tipzaposlenega)
-        {
-            List<string> a = new List<string>();
-            Uspeh = true;
-           cmd = new SqlCommand("SELECT * FROM dbo.fnDobiVseZaposlene()", povezava);
+           cmd = new SqlCommand("SELECT * FROM dbo.fnZaposleniPoTipu(@TipZaposlenega)", povezava);
+            cmd.Parameters.AddWithValue("@TipZaposlenega", tipzaposlenega);
             cmd.CommandType = CommandType.Text;
 
             try
             {
                 povezava.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                { 
-
-                    while (reader.Read())
-                    {
-                        a.Add(reader.GetString(0));
-                        IDZaposlenih.Add(reader.GetInt32(1));
-                    }
-
-                    reader.Close();
+                dt = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    s.Add(dr["ImeInPriimek"].ToString() + "ő" + dr["ID"].ToString());
                 }
-               
 
-                //DEFINIRAJ UKAZ
-              
             }
             catch (Exception e)
             {
@@ -67,29 +52,49 @@ namespace AplikacijaiFEWinForms
                 povezava.Close();
                
             }
-            return a;
-
-
+            return s;
         }
       
-        /* public List<string> ImeInPriimekZaposlenega(string TipZaposlenega)
-         {
-             List<string> a = new List<string>();
-
-
-
-
-             return a;
-         }*/
-        public List<string> PodatkiZaposlenega(string TipZaposlenega)
+      
+        public List<string> PodatkiZaposlenega(int id)
         {
             Uspeh = true;
-            List<string> a = new List<string>();
+            s = new List<string>();
+            cmd = new SqlCommand("SELECT * FROM dbo.fnKompletniZaposleni(@ID)", povezava);
+            cmd.Parameters.AddWithValue("@ID", id);
+            cmd.CommandType = CommandType.Text;
 
-
-
-
-            return a;
+            try
+            {
+                povezava.Open();
+                dt = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    s.Add(dr["ImeZaposlenega"].ToString());
+                    s.Add(dr["PriimekZaposlenega"].ToString());
+                    s.Add(dr["Eposta"].ToString());
+                    s.Add(dr["GovorilneUre"].ToString());
+                    s.Add(dr["Prostor"].ToString());
+                    s.Add(dr["Naziv"].ToString());
+                    s.Add(dr["TipZaposlenega"].ToString());
+                    s.Add(dr["Laboratorij"].ToString());
+                    s.Add(dr["Tajnica"].ToString());
+                    s.Add(dr["Vloga"].ToString());
+                    s.Add(dr["Telefonska"].ToString());
+                    break;
+                }
+            }
+            catch(Exception e)
+            {
+                ex = e;
+            }
+            finally
+            {
+                povezava.Close();
+            }
+            return s;
         }
       
         public void VstaviSkodo(string opis, string prostor, int id_prijavitelja)
@@ -157,15 +162,16 @@ namespace AplikacijaiFEWinForms
             s = new List<string>();
             cmd = new SqlCommand("SELECT * FROM dbo.DobiDogodek(@Ime,@Datum)",povezava);
 
-            cmd.CommandType = CommandType.Text;
-            cmd.Parameters.AddWithValue("@Ime", ime);
-            cmd.Parameters.AddWithValue("@Datum", Convert.ToDateTime(datum));
-            dt = new DataTable();
-            da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+          
            
             try
             {
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@Ime", ime);
+                cmd.Parameters.AddWithValue("@Datum", Convert.ToDateTime(datum));
+                dt = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
                 foreach (DataRow dr in dt.Rows)
                 {
                     s.Add(dr["Opis dogodka"].ToString() + "ő" + dr["Lokacija"].ToString() + "ő" + dr["PovezavaDoSpletnegaMesta"].ToString() + "ő"+dr["Ura"].ToString());

@@ -35,16 +35,17 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 39);
+            this.listBox1.Location = new System.Drawing.Point(11, 39);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(260, 264);
             this.listBox1.TabIndex = 0;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "Vsi Zaposleni",
+            "Vsi zaposleni",
             "Redni profesorji",
             "Izredni profesorji",
             "Docenti",
