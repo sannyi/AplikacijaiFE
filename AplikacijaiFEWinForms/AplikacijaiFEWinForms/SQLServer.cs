@@ -152,24 +152,26 @@ namespace AplikacijaiFEWinForms
             }
             
         }
-        public string Dobi_dogodek(string ime,string datum)
+        public List<string> Dobi_dogodek(string ime,string datum)
         {
-            string a="";
+            s = new List<string>();
             cmd = new SqlCommand("SELECT * FROM dbo.DobiDogodek(@Ime,@Datum)",povezava);
 
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.AddWithValue("@Ime", ime);
-            cmd.Parameters.AddWithValue("@Datum", datum);
+            cmd.Parameters.AddWithValue("@Datum", Convert.ToDateTime(datum));
+            dt = new DataTable();
+            da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+           
             try
             {
-                SqlDataReader Reader = cmd.ExecuteReader();
-                while(Reader.Read())
+                foreach (DataRow dr in dt.Rows)
                 {
-
-                    a = Reader.GetString(0)+" "+Reader.GetString(1)+" "+Reader.GetString(3).ToString();
-                    
-                        }
-                    Uspeh = true;
+                    s.Add(dr["Opis dogodka"].ToString() + "ő" + dr["Lokacija"].ToString() + "ő" + dr["PovezavaDoSpletnegaMesta"].ToString() + "ő"+dr["Ura"].ToString());
+                }
+            
+                Uspeh = true;
             }
             catch (Exception e)
             {
@@ -180,7 +182,7 @@ namespace AplikacijaiFEWinForms
                 povezava.Close();
             }
 
-            return a;
+            return s;
         }
     }
 }

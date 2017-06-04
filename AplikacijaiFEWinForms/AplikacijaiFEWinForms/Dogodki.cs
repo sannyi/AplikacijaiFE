@@ -44,7 +44,7 @@ namespace AplikacijaiFEWinForms
             for (int o = 0; o < (i - 1); o++) l[o] = z[o];
             ime_dogodka = new string(l);
 
-            Label[] array_label = new Label[] {label3, label4, label5 };
+            Label[] array_label = new Label[] {label3, label4, label6, label5};
             l = new char[10];
             string datum;
             i = 0;
@@ -62,21 +62,22 @@ namespace AplikacijaiFEWinForms
             }
             datum = new string(l);
 
-            string d;
+            List<string> d = new List<string>();
             SQLServer s = new SQLServer(); d=s.Dobi_dogodek(ime_dogodka, datum);
             
             label1.Text = ime_dogodka;
             label2.Text = datum;
             i = 0;
-            foreach(Label a in array_label)
+            ime_dogodka = String.Join("", d);
+            foreach (Label a in array_label)
             {
-                a.Text = d.Split(' ')[0];
+                a.Text = ime_dogodka.Split('ő')[i];
                 
+
                 i++;
             }
            
             
-
 
 
         }
