@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SQLite;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AplikacijaiFEWinForms
@@ -17,7 +10,7 @@ namespace AplikacijaiFEWinForms
         SQLiteConnection povezava;
         private string geslo;
         private int VpisnaSt;
-        private string Geslo; //nikoli v praksi public
+        private string Geslo; 
         private string Jezik;
         private byte SamoWifi;
 

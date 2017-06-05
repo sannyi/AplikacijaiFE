@@ -75,6 +75,7 @@ namespace AplikacijaiFEWinForms
                     s.Add(dr["ImeZaposlenega"].ToString());
                     s.Add(dr["PriimekZaposlenega"].ToString());
                     s.Add(dr["Eposta"].ToString());
+                    s.Add(dr["Telefonska"].ToString());
                     s.Add(dr["GovorilneUre"].ToString());
                     s.Add(dr["Prostor"].ToString());
                     s.Add(dr["Naziv"].ToString());
@@ -82,7 +83,8 @@ namespace AplikacijaiFEWinForms
                     s.Add(dr["Laboratorij"].ToString());
                     s.Add(dr["Tajnica"].ToString());
                     s.Add(dr["Vloga"].ToString());
-                    s.Add(dr["Telefonska"].ToString());
+                   
+
                     break;
                 }
             }
