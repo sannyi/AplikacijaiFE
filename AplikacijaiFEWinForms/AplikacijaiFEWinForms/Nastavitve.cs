@@ -17,24 +17,13 @@ namespace AplikacijaiFEWinForms
         public Nastavitve()
         {
             InitializeComponent();
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"iFE.db");
-          if(!File.Exists(path))
-            {
-                File.Create(path);
-                SQLite s = new SQLite();
-                s.CreateOrUpdate("CREATE");
-                if(s.Uspeh==false)
-                {
-                    MessageBox.Show(s.ex.ToString());
-                }
-            }
-          //naloži privzete vrednosti
+            SQLServer s = new SQLServer();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
 
-            
+            string a = "";
             // preveri če obstaja uporabnik in vpiši podatke
         }
 

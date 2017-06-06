@@ -93,6 +93,12 @@
     <Compile Include="Osebje.Designer.cs">
       <DependentUpon>Osebje.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pregled.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pregled.Designer.cs">
+      <DependentUpon>Pregled.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Skoda.cs">
@@ -123,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Osebje.resx">
       <DependentUpon>Osebje.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pregled.resx">
+      <DependentUpon>Pregled.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

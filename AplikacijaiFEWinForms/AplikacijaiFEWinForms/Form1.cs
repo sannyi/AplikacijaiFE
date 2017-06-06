@@ -42,6 +42,10 @@ namespace AplikacijaiFEWinForms
                     Dogodki d = new Dogodki();
                     d.Show();
                     break;
+                case 7:
+                    Pregled p = new Pregled();
+                    p.Show();
+                    break;
                 default: throw new NotImplementedException();
             }
 
@@ -80,6 +84,11 @@ namespace AplikacijaiFEWinForms
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button7_Click_1(object sender, EventArgs e)
+        {
+            Navigiraj(7);
         }
     }
 }

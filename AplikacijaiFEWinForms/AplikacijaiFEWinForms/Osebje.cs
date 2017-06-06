@@ -13,21 +13,8 @@ namespace AplikacijaiFEWinForms
         public Osebje()
         {
             InitializeComponent();
+            comboBox1.SelectedIndex = 0;
             s = new SQLServer();
-           // listBox1.SelectedIndex = 0;
-            ImenaPriimkiInIdentitete = s.ImePriimekInIdZaposlenega(comboBox1.GetItemText(comboBox1.SelectedItem));
-         
-            foreach (string a in ImenaPriimkiInIdentitete)
-            {
-                    identitete.Add(int.Parse(a.Split('ő')[1]));
-            }
-           
-          
-            foreach (string a in ImenaPriimkiInIdentitete)
-            {
-                    listBox1.Items.Add(a.Split('ő')[0]);
-            }
-            ImenaPriimkiInIdentitete.Clear();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

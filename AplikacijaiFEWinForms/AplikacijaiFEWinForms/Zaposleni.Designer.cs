@@ -100,9 +100,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(12, 190);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(84, 13);
+            this.label7.Size = new System.Drawing.Size(99, 13);
             this.label7.TabIndex = 6;
-            this.label7.Text = "TipZaposlenega";
+            this.label7.Text = "Skupina zaposlenih";
             // 
             // label8
             // 
@@ -144,7 +144,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 310);
+            this.ClientSize = new System.Drawing.Size(426, 310);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
