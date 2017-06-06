@@ -48,7 +48,6 @@ namespace AplikacijaiFEWinForms
             return s;
         }
 
-
         public List<string> PodatkiZaposlenega(int id)
         {
             Uspeh = true;
@@ -56,7 +55,6 @@ namespace AplikacijaiFEWinForms
             cmd = new SqlCommand("SELECT * FROM dbo.fnVsiPodatkiZaposlenega(@ID)", povezava);
             cmd.Parameters.AddWithValue("@ID", id);
             cmd.CommandType = CommandType.Text;
-
             try
             {
                 povezava.Open();
@@ -89,7 +87,36 @@ namespace AplikacijaiFEWinForms
             }
             return s;
         }
+        public bool AliObstajaStudent(int vpisna, string geslo)
+        {
+            bool a = false;
+            Uspeh = true;
+            cmd = new SqlCommand("SELECT dbo.fnObstajaStudent(@Vpisna,@Geslo)", povezava);
+            cmd.Parameters.AddWithValue("@Vpisna", vpisna);
 
+            cmd.Parameters.AddWithValue("@Geslo", geslo);
+            cmd.CommandType = CommandType.Text;
+            try
+            {
+                povezava.Open();
+                var result = cmd.ExecuteScalar();
+
+                if ((int)result==1)
+                {
+                    a = true;     
+                }
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+            finally
+            {
+                povezava.Close();
+            }
+
+            return a;
+        }
         public void VstaviSkodo(string opis, string prostor, int id_prijavitelja)
         {
             cmd = new SqlCommand("dbo.spVstaviSkodo", povezava);
@@ -113,6 +140,7 @@ namespace AplikacijaiFEWinForms
                 povezava.Close();
             }
         }
+
         public List<string> DobiDogodke()
         {
             s = new List<string>();
@@ -148,43 +176,42 @@ namespace AplikacijaiFEWinForms
             {
                 return null;
             }
-
         }
         public List<string>[] VrniFunkcijeInProcedure()
+        {
+            List<string>[] a = new List<string>[5];
+            for (int i = 0; i < a.Length; i++)
             {
-                List<string>[] a = new List<string>[5];
-                for(int i=0;i<a.Length;i++)
+                a[i] = new List<string>();
+            }
+            try
+            {
+                Uspeh = true;
+                povezava.Open();
+                cmd = new SqlCommand();
+                cmd.Connection = povezava;
+                cmd.CommandText = "SELECT * FROM dbo.fnSeznam()";
+                dt = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                foreach (DataRow dr in dt.Rows)
                 {
-                  a[i] = new List<string>();
+                    a[1].Add(dr["Objekt v PB"].ToString());
+                    a[2].Add(dr["Vhod / Izhod"].ToString());
+                    a[3].Add(dr["ImeParametra"].ToString());
+                    a[4].Add(dr["PodatkovniTip"].ToString());
+                    a[0].Add(dr["Ime objekta v podatkovni bazi"].ToString());
                 }
-                try
-                {
-                    Uspeh = true;
-                    povezava.Open();
-                    cmd = new SqlCommand();
-                    cmd.Connection = povezava;
-                    cmd.CommandText = "SELECT * FROM dbo.fnSeznam()";
-                    dt = new DataTable();
-                    da = new SqlDataAdapter(cmd);
-                    da.Fill(dt);
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        a[1].Add(dr["Objekt v PB"].ToString());
-                        a[2].Add(dr["Vhod / Izhod"].ToString());
-                        a[3].Add(dr["ImeParametra"].ToString());
-                        a[4].Add(dr["PodatkovniTip"].ToString());
-                        a[0].Add(dr["Ime objekta v podatkovni bazi"].ToString());
-                    }
-                }
-                catch (Exception e)
-                {
-                    ex = e;
-                    Uspeh = false;
-                }
-                finally
-                {
-                    povezava.Close();
-                }
+            }
+            catch (Exception e)
+            {
+                ex = e;
+                Uspeh = false;
+            }
+            finally
+            {
+                povezava.Close();
+            }
             if (Uspeh)
             {
                 if (a[0].Count > 1)
@@ -192,15 +219,14 @@ namespace AplikacijaiFEWinForms
                     string p = "";
                     for (int i = 0; i < a[0].Count; i++)
                     {
-                       p = a[0][i];
+                        p = a[0][i];
                         if (i + 1 != a[0].Count)
                         {
-                            for (int j =( i+1); j < a[0].Count; j++)
+                            for (int j = (i + 1); j < a[0].Count; j++)
                             {
-                                if (p!=a[0][j])
+                                if (p != a[0][j])
                                 {
                                     break;
-                                    
                                 }
                                 a[0][j] = "";
                                 a[1][j] = "";
@@ -208,21 +234,13 @@ namespace AplikacijaiFEWinForms
                         }
                     }
                 }
-                return a;
             }
-            else
-            {
-                return null;
-            }
-
-            
-
-         }
+            return a;
+        }
         public List<string> Dobi_dogodek(string ime,string datum)
         {
             s = new List<string>();
             cmd = new SqlCommand("SELECT * FROM dbo.DobiDogodek(@Ime,@Datum)",povezava);
-
             try
             {
                 cmd.CommandType = CommandType.Text;
@@ -248,5 +266,5 @@ namespace AplikacijaiFEWinForms
 
             return s;
         }
-    }
+    } 
 }

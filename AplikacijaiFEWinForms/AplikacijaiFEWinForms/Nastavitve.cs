@@ -23,7 +23,12 @@ namespace AplikacijaiFEWinForms
         private void button3_Click(object sender, EventArgs e)
         {
 
-            string a = "";
+            int vpisna = int.Parse(textBox1.Text);
+            string geslo = textBox2.Text;
+            SQLServer s = new SQLServer();
+            
+            MessageBox.Show(s.AliObstajaStudent(vpisna, geslo).ToString());
+           
             // preveri če obstaja uporabnik in vpiši podatke
         }
 
