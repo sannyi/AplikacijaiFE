@@ -19,9 +19,6 @@ namespace AplikacijaiFEWinForms
             if(!s.Uspeh)
             MessageBox.Show(s.ex.ToString());
 
-            int konec = b[1].Count;
-            MessageBox.Show(b[1][6]);
-
             string[] a = new string[5] { "ImeObjekta", "TipObjekta", "VhodIzhod", "ImeParametra", "PodatkovniTip" };
             dataGridView1.Rows.Add(b[1].Count);
             for (int i = 0; i < b[1].Count; i++)

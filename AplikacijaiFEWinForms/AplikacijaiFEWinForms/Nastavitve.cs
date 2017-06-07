@@ -7,12 +7,12 @@ namespace AplikacijaiFEWinForms
 {
     public partial class Nastavitve : Form
     {
-        SQLiteConnection povezava;
+       /* SQLiteConnection povezava;
         private string geslo;
         private int VpisnaSt;
         private string Geslo; 
         private string Jezik;
-        private byte SamoWifi;
+        private byte SamoWifi;*/
 
         public Nastavitve()
         {
@@ -37,19 +37,19 @@ namespace AplikacijaiFEWinForms
             if(checkBox1.Checked)
             {
                 checkBox1.Checked = false;
-                SamoWifi = 0;
+           //     SamoWifi = 0;
             }
             else
             {
                 checkBox1.Checked = true;
-                SamoWifi = 1;
+             //   SamoWifi = 1;
             }
            
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Jezik = comboBox2.SelectedItem.ToString();
+            //Jezik = comboBox2.SelectedItem.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)

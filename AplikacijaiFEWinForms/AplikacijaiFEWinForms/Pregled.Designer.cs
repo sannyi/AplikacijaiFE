@@ -34,6 +34,8 @@
             this.VhodIzhod = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ImeParametra = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PodatkovniTip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,7 +50,7 @@
             this.PodatkovniTip});
             this.dataGridView1.Location = new System.Drawing.Point(12, 12);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(883, 341);
+            this.dataGridView1.Size = new System.Drawing.Size(579, 341);
             this.dataGridView1.TabIndex = 0;
             // 
             // ImeObjekta
@@ -80,16 +82,39 @@
             this.PodatkovniTip.Name = "PodatkovniTip";
             this.PodatkovniTip.ReadOnly = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 374);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(517, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Tam, kjer so funkcije, se da iz imena same funkcije razbrati vrednost, ki se vrne" +
+    ", sicer je funkcija vrne tabelo.";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 399);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(474, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Za morebitne napake se opravičujem funckije bi morale imeti dodane fn, shranjene " +
+    "procedure pa sp";
+            // 
             // Pregled
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(950, 521);
+            this.ClientSize = new System.Drawing.Size(599, 419);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Pregled";
             this.Text = "Pogled";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -101,5 +126,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn VhodIzhod;
         private System.Windows.Forms.DataGridViewTextBoxColumn ImeParametra;
         private System.Windows.Forms.DataGridViewTextBoxColumn PodatkovniTip;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }

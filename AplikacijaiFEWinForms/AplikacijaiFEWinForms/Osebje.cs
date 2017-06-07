@@ -21,7 +21,7 @@ namespace AplikacijaiFEWinForms
         {
             listBox1.Items.Clear();
             s = new SQLServer();
-
+        
             ImenaPriimkiInIdentitete.Clear();
             identitete.Clear();
             ImenaPriimkiInIdentitete = s.ImePriimekInIdZaposlenega(comboBox1.GetItemText(comboBox1.SelectedItem));
@@ -43,7 +43,6 @@ namespace AplikacijaiFEWinForms
             int ID = identitete[listBox1.SelectedIndex];
             Zaposleni z = new Zaposleni(ID);
             z.Show();
-
         }
     }
 }

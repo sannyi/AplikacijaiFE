@@ -91,17 +91,19 @@ namespace AplikacijaiFEWinForms
         {
             bool a = false;
             Uspeh = true;
+            
+
             cmd = new SqlCommand("SELECT dbo.fnObstajaStudent(@Vpisna,@Geslo)", povezava);
             cmd.Parameters.AddWithValue("@Vpisna", vpisna);
 
             cmd.Parameters.AddWithValue("@Geslo", geslo);
-            cmd.CommandType = CommandType.Text;
+           
             try
             {
-                povezava.Open();
-                var result = cmd.ExecuteScalar();
-
-                if ((int)result==1)
+              povezava.Open();
+              int result =(int)cmd.ExecuteScalar();
+            
+                if (result==1)
                 {
                     a = true;     
                 }
