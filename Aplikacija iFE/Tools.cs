@@ -1,46 +1,128 @@
 ﻿using Microsoft.Data.Sqlite;
-using Microsoft.Data.Sqlite.Internal;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
+using Windows.Storage;
+//outer libraries
+using Chilkat;
+using EASendMailRT;
 
 namespace Aplikacija_iFE
 {
     class tools
-    {
-        #region SPREMENLJIVKE
-        byte counter=0;
+    {      
+        #region ATRIBUTI
+        public bool InternetConnection { get { return NetworkInterface.GetIsNetworkAvailable(); } }
+        public Exception Ex { get; set; }
+        public bool Success { get; set; }
+        public string Result { get; set; }
+        public StorageFile File { get; set; }
         #endregion
-        #region OSTALE FUNKCIJE IN METODE
-        public bool Connected_net() { return NetworkInterface.GetIsNetworkAvailable();}
-
-        public string [] Getdate()
+        #region SPREMENLJIVKE
+        private byte counter=0;
+        #endregion
+        #region SPLOŠNE METODE
+        public List<string> Getdate()
         {
+            List<string> a = new List<string>();
             DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
             foreach (DateTime date in dates)
             {
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++;}           
-            }
-
-            //lahko tudi dolocimo najprej samo tiste dneve,ko so vikendi, prazniki in odpadanje Pedgoškega procesa odpade
-            string[] meaningful_dates = new string[counter+1];
-            counter = 0;
-            foreach (DateTime date in dates)
-            {
-                if(date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday )
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++;}
                 {
-                    meaningful_dates[counter] = date.ToString("dd. MMMM yyy");
-                    counter++;
-                }  
+                    a.Add(date.ToString("dd. MMMM yyy"));
+                }
+                a.Add("Več na spletni strani");
             }
-            meaningful_dates[counter++] = "Več na spletni strani";
-            return meaningful_dates;
+            return a;
          }
         #endregion
+        #region PODATKOVNI PRENOS
+        public void MailAndFTP(string room, string description, StorageFile photo)
+        {
+           Parallel.Invoke( () => SendMail(room, description), () => SendToFTP(room, description, photo));     
+        }
+        private async void SendMail(string room,string description)
+        {
+            try
+            {
+                SmtpMail mail = new SmtpMail("Porocilo o škodi");
+                SmtpClient client = new SmtpClient();
+                mail.From = new MailAddress("aleksander.kovac97@hotmail.com");//mail bo posredovan preko konstruktorja
+                mail.To.Add("ak3900@student.uni-lj.si");
+                mail.Subject = "V prostoru " + room + " je nastala škoda: ";
+                mail.TextBody = description;
+
+                SmtpServer mail_server = new SmtpServer("smtp.live.com");
+                mail_server.Password = "Phoenix176";
+                mail_server.User = "aleksander.kovac97@hotmail.com";
+
+                mail_server.ConnectType = SmtpConnectType.ConnectSTARTTLS;
+
+                await client.SendMailAsync(mail_server, mail);
+                Result = "Obvestilo uspesno poslano!";
+
+
+            }
+            catch (Exception e)
+            {
+                e = Ex; Success = false;
+                Result = "Zgodila se je napaka";
+            }
+        }
+        private void  SendToFTP(string room ,string description, StorageFile photo)
+        {
+            Ftp2 ftp = new Ftp2();
+            /*success = ftp.UnlockComponent("Anything for 30-day trial");
+
+            if (!success)
+            {
+                Debug.WriteLine(ftp.LastErrorText);
+                return;
+            }
+            ftp.ClientIpAddress = "83.212.126.172";
+            ftp.Username = "Administrator";
+            ftp.Password = "8KINtGoV7s";
+            ftp.Port = 1026;
+            success = await ftp.ConnectAsync();
+            if (!success)
+            {
+                Debug.WriteLine(ftp.LastErrorText);
+                return;
+            }
+
+            success = await ftp.ChangeRemoteDirAsync("Shares/SlikeZaSkodo");
+            if (!success)
+            {
+                Debug.WriteLine(ftp.LastErrorText);
+            }
+            string file2 = File;
+            success = await ftp.PutFileAsync(File, file2);
+            if (!success)
+            {
+                Debug.WriteLine(ftp.LastErrorText);
+            }
+            while (ftp.AsyncBytesSent64 != size)
+            {
+                Debug.WriteLine(Convert.ToString(ftp.AsyncBytesSent64) + " bytes sent");
+                Debug.WriteLine(Convert.ToString(ftp.UploadTransferRate) + " bytes per second");
+
+                ftp.SleepMs(1000);
+            }
+            if (ftp.LastMethodSuccess == true)
+            {
+                Debug.WriteLine("File Uploaded!");
+            }
+            else
+            {
+                Debug.WriteLine(ftp.LastErrorText);
+            }
+            success = await ftp.DisconnectAsync();*/       }
+        #endregion
     }
-  
+ #region SQL
  public class SQLite
     {
         #region SPREMENLJIVKE
@@ -127,5 +209,5 @@ namespace Aplikacija_iFE
         public string Email { get; set; }
         public string Password { get; set; }
     }
-
-    }
+#endregion
+}

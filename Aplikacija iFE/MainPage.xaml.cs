@@ -1,9 +1,9 @@
 ﻿
 using Microsoft.Data.Sqlite.Internal;
 using System.IO;
+using Windows.UI.Popups;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-
 using Windows.UI.Xaml.Controls;
 
 using Windows.UI.Xaml.Navigation;
@@ -62,7 +62,7 @@ namespace Aplikacija_iFE
         #region FUNKCIJE IN METODE
         private void Navigiraj_po_straneh(byte stran)
         {
-           if(new tools().Connected_net()  )
+           if(new tools().InternetConnection)
             {
                 switch(stran)
                 {
@@ -90,7 +90,7 @@ namespace Aplikacija_iFE
             }
            else
             {
-                
+                //messega dialog, ki gre do nastavitev
             }
         }
 

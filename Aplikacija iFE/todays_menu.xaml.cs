@@ -1,16 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Aplikacija_iFE
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class todays_menu : Page
     {
         #region SPREMENLJIVKE
@@ -18,37 +14,29 @@ namespace Aplikacija_iFE
         #endregion
         public todays_menu()
         {   
-            this.InitializeComponent();
+            InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Todays_menu_BackRequested;
-            if (!(tools_for_menu.Connected_net()))
+            if (!(tools_for_menu.InternetConnection))
             {
-
-                
+                if(Frame.CanGoBack) { Frame.GoBack(); }
             }
             else
             {
-
-               // refresh_menu();
-                string[] days = tools_for_menu.Getdate();
+                // refresh_menu();
+                List<string> days = new List<string>();
+                 days = tools_for_menu.Getdate();
                 foreach (string day1 in days)
                 {
-                   Dnevi_za_prikaz.Items.Add(day1);
+                    Dnevi_za_prikaz.Items.Add(day1);
                 }
-                TextBlock[] a = new TextBlock[] {meso1, meso2, meso3, testenine, zlica, solata1};
-                byte counter = 0;
-               
+                //GEt types of food (Read from website according to date)
+                TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
             }
-   
         }
 
         private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (Frame.CanGoBack)
-            {
-                Frame.GoBack();
-                e.Handled = true;
-            }
-        }
+        { if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true; } }
+
         #region METODE V PRIDAJOČEM CLASS-u
         private void Refresh_menu(string day)
         {
@@ -56,18 +44,13 @@ namespace Aplikacija_iFE
             byte counter = 0;
             foreach (TextBlock text in a)
             {
-                //  text.Name=
-                // counter++;
-            }
-            
+            }   
         }
         #endregion
-
         #region GUMBI
         private async void Dnevi_za_prikaz_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int get_item_count = Dnevi_za_prikaz.Items.Count-1;
-            if(Dnevi_za_prikaz.SelectedIndex==get_item_count)
+            if(Dnevi_za_prikaz.SelectedIndex==Dnevi_za_prikaz.Items.Count-1)
             {
                 var URI = new Uri(@"http://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/");
                 var URIlaunched = await Launcher.LaunchUriAsync(URI);
@@ -77,13 +60,13 @@ namespace Aplikacija_iFE
                     URIlaunched = await Launcher.LaunchUriAsync(URI);
                     if(!URIlaunched)
                     {
-                        var message = new MessageDialog("Do spletne strani trenutno ni mogoče dostopati ");
+                        var message = new MessageDialog("Do spletne strani trenutno ni mogoče dostopati.");
+                        await message.ShowAsync();
                     }
                 }
-
             }
             //refresh_menu(dnevi_za_prikaz.);
         }
-        #endregion
+      #endregion
     }
 }

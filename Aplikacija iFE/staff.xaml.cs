@@ -55,9 +55,9 @@ namespace Aplikacija_iFE
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             HttpClient client = new HttpClient();
-            var JsonResponse = await client.GetStreamAsync();
+         /*  var JsonResponse = await client.GetStreamAsync();
             var staffResult = JsonConvert.DeserializeObject<List<staff>>(JsonResponse);
-            Zaposleni.ItemsSource = staffResult;
+            Zaposleni.ItemsSource = staffResult;*/
 
 
 

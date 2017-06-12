@@ -15,24 +15,30 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.System.Display;
-using Chilkat; //Preveri kako je s to licenco!!!!!!
+ //Preveri kako je s to licenco!!!!!!
+// preveriti za taskthread ter EASend
 
 namespace Aplikacija_iFE
 {
-   
+
     public sealed partial class camera_report : Page
     {
         #region SPREMENLJIVKE
+        //fotoaparat
         MediaCapture _capturingPreview;
-       private bool _isPreviewing;
         DisplayRequest _request_to_display;
-            private string File;
-        private long size;
+        private bool _isPreviewing;
+        
+        
+        tools a;
+        private bool phototaken = false;
+        private string filame;
         #endregion       
         #region KONSTRUKTORJI
         public camera_report()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            a = new tools();
             SystemNavigationManager.GetForCurrentView().BackRequested += Camera_report_BackRequested;
             if (!Camera_present().Result)
             {
@@ -43,7 +49,6 @@ namespace Aplikacija_iFE
                 StartPreviewAsync();
                 _request_to_display = new DisplayRequest();
                 //Strechiraj fotoaparat na 
-            
                 Application.Current.Suspending += Application_Suspending;
             }          
         }
@@ -121,8 +126,6 @@ namespace Aplikacija_iFE
                     }
                         _capturingPreview.Dispose();
                         _capturingPreview = null;
-                    
-
                 });
             }
         }
@@ -157,82 +160,25 @@ namespace Aplikacija_iFE
             StorageFile photo = await captureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
             if(photo==null)
             {
-                //obvesti uporabnika, da je preklical zajem fotografije
+                var messagedialog = new MessageDialog("Zajem slike preklican!");
+                await messagedialog.ShowAsync();
                 return;
             }
             else
             {
                 string filename = "Poskodba_na_fakulteti" + DateTime.Now.ToString() + ".jpg";
-                BasicProperties pro = await photo.GetBasicPropertiesAsync();
-                size = Convert.ToInt64(pro.Size);
-                StorageFolder destination_folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Poskodbe na fakulteti");
-                await photo.CopyAsync(destination_folder, filename, NameCollisionOption.ReplaceExisting);
-                File = Path.Combine(destination_folder.DisplayName, filename);
-                bool success;
-                Ftp2 ftp = new Ftp2();
-                success = ftp.UnlockComponent("Anything for 30-day trial");
-
-                if (!success)
-                {
-                    Debug.WriteLine(ftp.LastErrorText);
-                    return;
-                }
-                ftp.ClientIpAddress = "83.212.126.172";
-                ftp.Username = "Administrator";
-                ftp.Password = "8KINtGoV7s";
-                ftp.Port = 1026;
-                success = await ftp.ConnectAsync();
-                if (!success)
-                {
-                    Debug.WriteLine(ftp.LastErrorText);
-                    return;
-                }
-
-                success = await ftp.ChangeRemoteDirAsync("Shares/SlikeZaSkodo");
-                if (!success)
-                {
-                    Debug.WriteLine(ftp.LastErrorText);
-                }
-                string file2 = File;
-                success = await ftp.PutFileAsync(File, file2);
-                if (!success)
-                {
-                    Debug.WriteLine(ftp.LastErrorText);
-                }
-                while (ftp.AsyncBytesSent64 != size)
-                {
-                    Debug.WriteLine(Convert.ToString(ftp.AsyncBytesSent64) + " bytes sent");
-                    Debug.WriteLine(Convert.ToString(ftp.UploadTransferRate) + " bytes per second");
-
-                    ftp.SleepMs(1000);
-                }
-                if (ftp.LastMethodSuccess == true)
-                {
-                    Debug.WriteLine("File Uploaded!");
-                    
-                  
-                }
-                else
-                {
-                        Debug.WriteLine(ftp.LastErrorText);
-                }
-
-                success = await ftp.DisconnectAsync();
-
+               
+               
+                
+             //   await photo.CopyAsync(Aplication.,filename, NameCollisionOption.ReplaceExisting);
+              //  File = Path.Combine(destination_folder.DisplayName, filename);
+                phototaken = true;
+              
             }
 
             //prepiši te funkcije v tools
-
-
-
-
-
-
         }
-        private void SendToShare()
-        {
-
-        }
+    
         #endregion
         #region GUMBI IN HANDLERJI
         private async void CommandInvokedHandler(IUICommand command)
@@ -273,6 +219,21 @@ namespace Aplikacija_iFE
             //exit to the menu
         }
         #endregion
+
+        private async Task Poslji_Click(object sender, RoutedEventArgs e)
+        {
+            var combobox_item = Prostori.Items[Prostori.SelectedIndex] as ComboBoxItem;
+
+            if (text_box_for_description.Text == null ||
+                text_box_for_description.Text == "" ||
+                combobox_item == null || phototaken==false)
+            {
+                var messageDialog = new MessageDialog("Prosimo izpolnite vsa polja in naredite fotografijo poškodbe.");
+                await messageDialog.ShowAsync();
+                return;
+            }
+           // a.MailAndFTP(combobox_item.Content.ToString(), text_box_for_description.Text, filename );
+        }
     }
 
 

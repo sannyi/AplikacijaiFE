@@ -16,7 +16,7 @@
             <StackPanel Height="525">
                 <Button x:Name="take_photo" Content="Fotografiraj" HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="100,0,167,0" Click="Take_photo_Click"/>
                 <TextBlock TextWrapping="Wrap" Text="Izberi v prostor v katerem je nastala težava"/>
-                <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,50,10,10">
+                <ComboBox x:Name="Prostori" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,50,10,10">
                     <ComboBoxItem Content="Edit Lab"/>
                     <ComboBoxItem Content="Net Lab"/>
                     <ComboBoxItem Content="Studio"/>
@@ -29,6 +29,7 @@
                      TextWrapping="Wrap"
                      AcceptsReturn="True"
                      ></TextBox>
+                <Button x:Name="Poslji" Click="Poslji_Click"/>
             </StackPanel>
             <Frame></Frame>
         </StackPanel>
