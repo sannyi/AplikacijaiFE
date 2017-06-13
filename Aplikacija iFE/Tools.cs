@@ -1,18 +1,21 @@
-﻿using Microsoft.Data.Sqlite;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.Networking;
+using Windows.Networking.Sockets;
 using Windows.Storage;
-//outer libraries
-using Chilkat;
+using Windows.Storage.Streams;
 using EASendMailRT;
-
+using System.Text;
+//FTP spisan po vzorčni kodi
+//https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
 namespace Aplikacija_iFE
 {
-    class tools
-    {      
+    class tools : IDisposable
+    {
         #region ATRIBUTI
         public bool InternetConnection { get { return NetworkInterface.GetIsNetworkAvailable(); } }
         public Exception Ex { get; set; }
@@ -20,8 +23,25 @@ namespace Aplikacija_iFE
         public string Result { get; set; }
         public StorageFile File { get; set; }
         #endregion
-        #region SPREMENLJIVKE
-        private byte counter=0;
+        #region LOKALNE SPREMENLJIVKE
+        private byte counter = 0;
+        private StreamSocket ControlStreamSocket, DataSocket;
+        private HostName hostname;
+
+        private DataReader reader;
+        private DataWriter writer;
+        private AutoResetEvent loadCompleteEvent;
+        private Task readTask;
+        private List<string> readCommands;
+        private string MessageLeft;
+
+        //spreme
+        #endregion
+        #region USTVARI DATOTEKE
+        public async void CreateLocalDB()
+        {
+            StorageFile SqliteDatabase = await ApplicationData.Current.LocalFolder.CreateFileAsync("iFe.sqlite", CreationCollisionOption.ReplaceExisting);
+        }
         #endregion
         #region SPLOŠNE METODE
         public List<string> Getdate()
@@ -30,35 +50,37 @@ namespace Aplikacija_iFE
             DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
             foreach (DateTime date in dates)
             {
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++;}
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++; }
                 {
                     a.Add(date.ToString("dd. MMMM yyy"));
                 }
                 a.Add("Več na spletni strani");
             }
             return a;
-         }
+        }
         #endregion
         #region PODATKOVNI PRENOS
         public void MailAndFTP(string room, string description, StorageFile photo)
         {
-           Parallel.Invoke( () => SendMail(room, description), () => SendToFTP(room, description, photo));     
+            Parallel.Invoke(() => SendMail(room, description), () => SendToFTP(room, description, photo));
         }
-        private async void SendMail(string room,string description)
+        private async void SendMail(string room, string description)
         {
             try
             {
                 SmtpMail mail = new SmtpMail("Porocilo o škodi");
                 SmtpClient client = new SmtpClient();
+                Attachment a = new Attachment();
                 mail.From = new MailAddress("aleksander.kovac97@hotmail.com");//mail bo posredovan preko konstruktorja
                 mail.To.Add("ak3900@student.uni-lj.si");
                 mail.Subject = "V prostoru " + room + " je nastala škoda: ";
                 mail.TextBody = description;
-
+              //  a.A =await
                 SmtpServer mail_server = new SmtpServer("smtp.live.com");
+                mail_server.Port =25;
                 mail_server.Password = "Phoenix176";
                 mail_server.User = "aleksander.kovac97@hotmail.com";
-
+                
                 mail_server.ConnectType = SmtpConnectType.ConnectSTARTTLS;
 
                 await client.SendMailAsync(mail_server, mail);
@@ -72,142 +94,148 @@ namespace Aplikacija_iFE
                 Result = "Zgodila se je napaka";
             }
         }
-        private void  SendToFTP(string room ,string description, StorageFile photo)
+        private async void SendToFTP(string room, string desctiption, StorageFile photo)
+        { }
+        #region FTP PODMETODE
+        internal async Task ConnectAsync(HostName hostname, string serviceName, string user, string password)
         {
-            Ftp2 ftp = new Ftp2();
-            /*success = ftp.UnlockComponent("Anything for 30-day trial");
+            if (ControlStreamSocket != null)
+            {
+                throw new InvalidOperationException("Kontrolna povezava je že v teku.");
+            }
+            ControlStreamSocket = new StreamSocket();
+            await ControlStreamSocket.ConnectAsync(hostname, serviceName);
 
-            if (!success)
-            {
-                Debug.WriteLine(ftp.LastErrorText);
-                return;
-            }
-            ftp.ClientIpAddress = "83.212.126.172";
-            ftp.Username = "Administrator";
-            ftp.Password = "8KINtGoV7s";
-            ftp.Port = 1026;
-            success = await ftp.ConnectAsync();
-            if (!success)
-            {
-                Debug.WriteLine(ftp.LastErrorText);
-                return;
-            }
+            Parallel.Invoke(
+                () => { this.hostname = hostname; },
+                () => { reader = new DataReader(ControlStreamSocket.InputStream);
+                    reader.InputStreamOptions = InputStreamOptions.Partial;
+                    writer = new DataWriter(ControlStreamSocket.OutputStream); },
+                () => { readCommands = new List<string>();
+                    loadCompleteEvent = new AutoResetEvent(false);
+                    readTask = InfiniteReadAsync(); });
 
-            success = await ftp.ChangeRemoteDirAsync("Shares/SlikeZaSkodo");
-            if (!success)
-            {
-                Debug.WriteLine(ftp.LastErrorText);
-            }
-            string file2 = File;
-            success = await ftp.PutFileAsync(File, file2);
-            if (!success)
-            {
-                Debug.WriteLine(ftp.LastErrorText);
-            }
-            while (ftp.AsyncBytesSent64 != size)
-            {
-                Debug.WriteLine(Convert.ToString(ftp.AsyncBytesSent64) + " bytes sent");
-                Debug.WriteLine(Convert.ToString(ftp.UploadTransferRate) + " bytes per second");
 
-                ftp.SleepMs(1000);
-            }
-            if (ftp.LastMethodSuccess == true)
+            FtpResponse response;
+            response = await GetResponseAsync();
+            VerifyResponse(response, 220);
+
+            response = await ExecAsync(user,"USER");
+            VerifyResponse(response, 331);
+
+            response = await ExecAsync(password,"PASS");
+            VerifyResponse(response, 230);
+         }
+        internal async Task UploadAsync(string filepath,byte[] filecontent)
+        {
+            if (ControlStreamSocket == null) { throw new InvalidOperationException("Najprej se naj izvede ConnectAsync()."); }
+            FtpResponse response;
+            response = await ExecuteAsync("I","TYPE");
+            VerifyResponse(response, 200);
+
+            response = await ExecuteAsync("","EPSV");
+            VerifyRespone(response, 229);
+
+            await OpenDataConnectionAsync(response.DataPort);
+
+            response = await ExecuteAsync(filepath,"STOR");
+            VerifyResponse(response, new uint[] { 125, 150 });
+
+            await WriteAndCloseAsync(filecontent.AsBuffer());
+            response = await GetResponseAsync();
+            VerifyResponse(response, 226);
+        }
+        internal async Task OpenDataConnectionAsync(uint port)
+        {
+            if(DataSocket!= null)
+            throw new InvalidOperationException("Podatkovna povezava se je že začela.");
+            
+            DataSocket = new StreamSocket();
+            await DataSocket.ConnectAsync(hostname, port.ToString());
+        }
+        internal Task<FtpResponse> ExecuteAsync(string value, string type)
+        {
+            //StorAsync -> filenam >> value, "STOR" >> type
+            //RetrAsync -> filename >> value, "RETR" >> type
+            //SizeAsync -> filename >> value, "SIZE" >> type
+            //EpsvAsync -> "" >> value, "EPSV" >> type
+            //TypeAsync -> type >> value, "TYPE" >> type
+            //PassAsync -> password >> value, "PASS" >>type
+            //UserAsync -> user >> value, "USER" >> type
+            return SendCommandAndGetResponseAsync(String.Format(type + " {0}\r\n", value);
+        }
+        internal async Task<uint> WriteAndCloseAsync(IBuffer buffer)
+        {
+            uint bytesWritten = await DataSocket.OutputStream.WriteAsync(buffer);
+            DataSocket.Dispose();
+            DataSocket = null;
+            return bytesWritten;
+        }
+
+        internal Task QuitAsync()
+        {
+            return SendCommandAsync(String.Format("QUIT \r\n"));
+        }
+        internal async Task<FtpResponse> SendCommandAndGetResponseAsync(string command)
+        {
+            loadCompleteEvent.Reset();
+            await SendCommandAndGetResponseAsync(command);
+            uint bytesWritten = await writer.StoreAsync();
+        }
+        internal Task<FtpResponse> GetResponseAsync()
+        {
+            return Task.Run(() =>
             {
-                Debug.WriteLine("File Uploaded!");
-            }
-            else
+                loadCompleteEvent.WaitOne();
+                FtpResponse response = new FtpResponse(readCommands.ToArray());
+                readCommands = new List<string>();
+                return response;
+            });
+        }
+        internal static void VerifyResponse(FtpResponse response,uint expectedReplyCode)
+        {
+            VerifyResponse(response, new uint[] { expectedReplyCode });
+        }
+        internal static void VerifyResponse(FtpResponse response, uint[] expectedReplyCodes)
+        {
+            foreach(uint expectedReplyCode in expectedReplyCodes)
             {
-                Debug.WriteLine(ftp.LastErrorText);
+                if(expectedReplyCode == response.ReplyCode)
+                {
+                    return;
+                }
             }
-            success = await ftp.DisconnectAsync();*/       }
-        #endregion
+            throw new Exception(
+                String.Format("FTP: Pričakovana odzivna koda je bila {0}, vendar je strežnik vrnil kodo: {1}",
+                JoinRetryCodes(expectedReplyCodes),
+                response.ToString().Trim()));
+        }
+         private static string JoinRetryCodes(uint [] values)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach(uint value in values)
+            {
+                if(builder.Length!=0)
+                {
+                    builder.Append(" or ");
+                }
+                builder.Append(value.ToString());
+            }
+            return builder.ToString();
+        }
     }
- #region SQL
- public class SQLite
-    {
-        #region SPREMENLJIVKE
-      
-       SqliteConnection conn = new SqliteConnection("Filename="+Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "iFE.sqlite"));
-        private string[] queries;
-       
+
+
+
+
+
 
         #endregion
-        #region KONSTRUKTORJI
-        public SQLite()
-        {
- 
-            string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "iFE.sqlite");
-            if (!File.Exists(path))
-            {
-                CreateDatabase();
-            }
-        }
         #endregion
-        #region METODE
-        public void CreateDatabase()
-        {
-            queries = new string[] {
-                    "CREATE TABLE Settings (OnlyWifi TINYINT NOT NULL , Language VARCHAR(2) NOT NULL DEFAULT 'si', Certificate VARCHAR(40) NOT NULL DEFAULT 'c', Password VARCHAR(50) NOT NULL DEFAULT 'sha1')",
-                    "CREATE TABLE User( ID INTEGER NOT NULL, Surname CHAR(50) NOT NULL, Name CHAR(50) NOT NULL, Email CHAR(20) NOT NULL, Password CHAR(40) NOT NULL)" };
-        
-            foreach (string a in queries)
-            {
-                conn.Open();
-                SqliteCommand command = new SqliteCommand(a, conn);
-                try{command.ExecuteNonQuery();}
-                catch(SqliteException e){  conn.Close();}  
-            }
-            conn.Close();
-        }
-        public void SetAllToDefault()
-        {
-            queries = new string[] {"UPDATE User SET ID = 0, Surname = '', Name = '', Email = '', Password = '';","UPDATE Settings  SET OnlyWifi= 1, Language = 'si', Certificate = 'c:', SHA1Certif = 'sha1';"};
-            SqliteCommand command = new SqliteCommand();
-            command.Connection = conn;
-            conn.Open();
-            foreach (string a in queries)
-            {
-                command.CommandText = a;
-                try { command.ExecuteReader(); } catch { conn.Close(); }
-            }
-            conn.Close();
-        }
-        public void UpdateSettings(byte column,string value)
-        {
-            string collumn_name;
-           switch(column)
-            {
-                case 0:
-                case 1: collumn_name = "OnlyWifi"; if(value.ToLower().Contains("false") || value.ToLower().Contains("true") ) { if (value.ToLower().Contains("true")) { column = 1; } else { column = 0; } } else { throw new Exception(); }  break;
-                case 2: collumn_name = "Language";   break;
-                case 3: collumn_name = "Certificate"; break;
-                case 4: collumn_name = "Password";   break;
-                default: throw new Exception();
-            }
-            if (column == 1 || column == 0) { queries = new string[] { "UPDATE Settings SET '" + collumn_name + "'='" + column + "'" }; }
-            else { queries = new string[] { "UPDATE Settings SET '" + collumn_name + "'='" + value + "'" }; }
-            conn.Open();
-            SqliteCommand command = new SqliteCommand(queries[0], conn);
-            try { command.ExecuteNonQuery(); } catch(Exception e) { e.ToString(); } finally  { conn.Close(); }   
 
-        }
-        #endregion
+        //https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
     }
-
-    public class SETTINGSQLite
-    {
-        public bool OnlyWifi { get; set; }
-        public string Language { get; set; }
-        public string Certificate { get; set; }
-        public string CertfKey { get; set; }
-     }
-    public class USERSQLite
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-#endregion
 }
+    
+     
+

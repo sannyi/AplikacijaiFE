@@ -31,6 +31,7 @@ namespace Aplikacija_iFE
                 }
                 //GEt types of food (Read from website according to date)
                 TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
+                days.Clear();
             }
         }
 
