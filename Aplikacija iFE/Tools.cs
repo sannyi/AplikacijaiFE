@@ -1,41 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Networking;
-using Windows.Networking.Sockets;
+using Windows.Networking.Connectivity;
 using Windows.Storage;
-using Windows.Storage.Streams;
+using HtmlAgilityPack;
 using EASendMailRT;
-using System.Text;
+
 //FTP spisan po vzorčni kodi
 //https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
 namespace Aplikacija_iFE
 {
-    class tools : IDisposable
+    class Tools
     {
         #region ATRIBUTI
-        public bool InternetConnection { get { return NetworkInterface.GetIsNetworkAvailable(); } }
+        public bool InternetConnection => NetworkInterface.GetIsNetworkAvailable();
+        public bool IsWlanConnection => NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile;
+        #endregion
+        #region SPREMENLJIVKE
         public Exception Ex { get; set; }
         public bool Success { get; set; }
         public string Result { get; set; }
         public StorageFile File { get; set; }
-        #endregion
-        #region LOKALNE SPREMENLJIVKE
-        private byte counter = 0;
-        private StreamSocket ControlStreamSocket, DataSocket;
-        private HostName hostname;
-
-        private DataReader reader;
-        private DataWriter writer;
-        private AutoResetEvent loadCompleteEvent;
-        private Task readTask;
-        private List<string> readCommands;
-        private string MessageLeft;
-
-        //spreme
         #endregion
         #region USTVARI DATOTEKE
         public async void CreateLocalDB()
@@ -45,48 +32,101 @@ namespace Aplikacija_iFE
         #endregion
         #region SPLOŠNE METODE
         public List<string> Getdate()
-        {
+        {/*
             List<string> a = new List<string>();
-            DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
+            DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2)};
             foreach (DateTime date in dates)
             {
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++; }
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) 
                 {
                     a.Add(date.ToString("dd. MMMM yyy"));
                 }
                 a.Add("Več na spletni strani");
             }
-            return a;
+            return a;*/
+            byte counter = 0;
+            
+            DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
+                        foreach (DateTime date in dates)
+                         {
+                                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++; }
+                         }
+            
+                    //lahko tudi dolocimo najprej samo tiste dneve,ko so vikendi, prazniki in odpadanje Pedgoškega procesa odpade
+            string[] meaningful_dates = new string[counter + 1];
+           counter = 0;
+                       foreach (DateTime date in dates)
+                       {
+                           if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                           {
+           meaningful_dates[counter] = date.ToString("dd. MMMM yyy");
+           counter++;
+                           }
+                       }
+            meaningful_dates[counter++] = "Več na spletni strani";
+            List<string> a = new List<string>();
+            a.AddRange(meaningful_dates);
+                         return a;
+        }
+        public List<string> GetTypesOfFood(string website)
+        {
+            List<string> TypesOfFood = new List<string>();
+
+            HtmlDocument document = GetHtmlOfPage(website).Result;
+            /* HtmlNode docNodes = document.DocumentNode;
+             HtmlNode ul = docNodes.Element("id('ContentHolderMain_ContentHolderMainContent_ContentHolderMainContent_pnlDaily')/x:div/x:ol/x:li[1]/x:ul[@title]");*/
+
+
+            HtmlNode div = document.GetElementbyId("ContentHolderMain_ContentHolderMainContent_ContentHolderMainContent_pnlDaily");
+            if(div!=null)
+            {
+                var ul = div.Element("//div[@class='holderRestaurantInfo']/ol/li[1]/ul/@title").GetAttributeValue("title", "title");
+                    string a = ul;
+
+                TypesOfFood.Add(a);
+            }
+        
+
+            return TypesOfFood;
+        }
+        private static async Task<HtmlDocument> GetHtmlOfPage(string website)
+        {
+               return await new HtmlWeb().LoadFromWebAsync(website);
         }
         #endregion
         #region PODATKOVNI PRENOS
-        public void MailAndFTP(string room, string description, StorageFile photo)
+        public void MailAndFTP(string room, string description, string photo)
         {
-            Parallel.Invoke(() => SendMail(room, description), () => SendToFTP(room, description, photo));
+            Parallel.Invoke(() => SendMail(room, description,photo));
         }
-        private async void SendMail(string room, string description)
+        private async void SendMail(string room, string description, string filename)
         {
             try
             {
-                SmtpMail mail = new SmtpMail("Porocilo o škodi");
                 SmtpClient client = new SmtpClient();
-                Attachment a = new Attachment();
-                mail.From = new MailAddress("aleksander.kovac97@hotmail.com");//mail bo posredovan preko konstruktorja
-                mail.To.Add("ak3900@student.uni-lj.si");
-                mail.Subject = "V prostoru " + room + " je nastala škoda: ";
-                mail.TextBody = description;
-              //  a.A =await
+                SmtpMail mail = new SmtpMail("Porocilo o škodi");
                 SmtpServer mail_server = new SmtpServer("smtp.live.com");
-                mail_server.Port =25;
-                mail_server.Password = "Phoenix176";
-                mail_server.User = "aleksander.kovac97@hotmail.com";
-                
-                mail_server.ConnectType = SmtpConnectType.ConnectSTARTTLS;
+                Attachment a = new Attachment();
+                Parallel.Invoke(
+                    () =>
+                    {
+                        mail.From = new MailAddress("aleksander.kovac97@hotmail.com");
+                        mail.To.Add("ak3900@student.uni-lj.si");
+                        mail.Subject = "V prostoru " + room + " je nastala škoda: ";
+                        mail.TextBody = description;  
+                    },
+                    () =>
+                    {
+                        mail_server.Port = 25;
+                        mail_server.Password = "Phoenix176";
+                        mail_server.User = "aleksander.kovac97@hotmail.com";
+                        mail_server.ConnectType = SmtpConnectType.ConnectSTARTTLS;
+                    }
+                    );
 
+                await mail.AddAttachmentAsync(filename);
                 await client.SendMailAsync(mail_server, mail);
                 Result = "Obvestilo uspesno poslano!";
-
-
             }
             catch (Exception e)
             {
@@ -94,148 +134,35 @@ namespace Aplikacija_iFE
                 Result = "Zgodila se je napaka";
             }
         }
-        private async void SendToFTP(string room, string desctiption, StorageFile photo)
-        { }
-        #region FTP PODMETODE
-        internal async Task ConnectAsync(HostName hostname, string serviceName, string user, string password)
+        private async void SendToFTP(string photo)
         {
-            if (ControlStreamSocket != null)
+            Uri uri = new Uri("ftp://83.212.126.172");
+            FtpClient client = new FtpClient();
+            await client.ConnectAsync(new HostName(uri.Host),"1026","Administrator", "8KINtGoV7s");
+
+            byte [] data;
+            await Task.Run(() =>
             {
-                throw new InvalidOperationException("Kontrolna povezava je že v teku.");
+
+
+
             }
-            ControlStreamSocket = new StreamSocket();
-            await ControlStreamSocket.ConnectAsync(hostname, serviceName);
-
-            Parallel.Invoke(
-                () => { this.hostname = hostname; },
-                () => { reader = new DataReader(ControlStreamSocket.InputStream);
-                    reader.InputStreamOptions = InputStreamOptions.Partial;
-                    writer = new DataWriter(ControlStreamSocket.OutputStream); },
-                () => { readCommands = new List<string>();
-                    loadCompleteEvent = new AutoResetEvent(false);
-                    readTask = InfiniteReadAsync(); });
 
 
-            FtpResponse response;
-            response = await GetResponseAsync();
-            VerifyResponse(response, 220);
+            );
 
-            response = await ExecAsync(user,"USER");
-            VerifyResponse(response, 331);
-
-            response = await ExecAsync(password,"PASS");
-            VerifyResponse(response, 230);
-         }
-        internal async Task UploadAsync(string filepath,byte[] filecontent)
-        {
-            if (ControlStreamSocket == null) { throw new InvalidOperationException("Najprej se naj izvede ConnectAsync()."); }
-            FtpResponse response;
-            response = await ExecuteAsync("I","TYPE");
-            VerifyResponse(response, 200);
-
-            response = await ExecuteAsync("","EPSV");
-            VerifyRespone(response, 229);
-
-            await OpenDataConnectionAsync(response.DataPort);
-
-            response = await ExecuteAsync(filepath,"STOR");
-            VerifyResponse(response, new uint[] { 125, 150 });
-
-            await WriteAndCloseAsync(filecontent.AsBuffer());
-            response = await GetResponseAsync();
-            VerifyResponse(response, 226);
+            //await client.UploadAsync(uri.AbsolutePath, data);
         }
-        internal async Task OpenDataConnectionAsync(uint port)
-        {
-            if(DataSocket!= null)
-            throw new InvalidOperationException("Podatkovna povezava se je že začela.");
-            
-            DataSocket = new StreamSocket();
-            await DataSocket.ConnectAsync(hostname, port.ToString());
-        }
-        internal Task<FtpResponse> ExecuteAsync(string value, string type)
-        {
-            //StorAsync -> filenam >> value, "STOR" >> type
-            //RetrAsync -> filename >> value, "RETR" >> type
-            //SizeAsync -> filename >> value, "SIZE" >> type
-            //EpsvAsync -> "" >> value, "EPSV" >> type
-            //TypeAsync -> type >> value, "TYPE" >> type
-            //PassAsync -> password >> value, "PASS" >>type
-            //UserAsync -> user >> value, "USER" >> type
-            return SendCommandAndGetResponseAsync(String.Format(type + " {0}\r\n", value);
-        }
-        internal async Task<uint> WriteAndCloseAsync(IBuffer buffer)
-        {
-            uint bytesWritten = await DataSocket.OutputStream.WriteAsync(buffer);
-            DataSocket.Dispose();
-            DataSocket = null;
-            return bytesWritten;
-        }
-
-        internal Task QuitAsync()
-        {
-            return SendCommandAsync(String.Format("QUIT \r\n"));
-        }
-        internal async Task<FtpResponse> SendCommandAndGetResponseAsync(string command)
-        {
-            loadCompleteEvent.Reset();
-            await SendCommandAndGetResponseAsync(command);
-            uint bytesWritten = await writer.StoreAsync();
-        }
-        internal Task<FtpResponse> GetResponseAsync()
-        {
-            return Task.Run(() =>
-            {
-                loadCompleteEvent.WaitOne();
-                FtpResponse response = new FtpResponse(readCommands.ToArray());
-                readCommands = new List<string>();
-                return response;
-            });
-        }
-        internal static void VerifyResponse(FtpResponse response,uint expectedReplyCode)
-        {
-            VerifyResponse(response, new uint[] { expectedReplyCode });
-        }
-        internal static void VerifyResponse(FtpResponse response, uint[] expectedReplyCodes)
-        {
-            foreach(uint expectedReplyCode in expectedReplyCodes)
-            {
-                if(expectedReplyCode == response.ReplyCode)
-                {
-                    return;
-                }
-            }
-            throw new Exception(
-                String.Format("FTP: Pričakovana odzivna koda je bila {0}, vendar je strežnik vrnil kodo: {1}",
-                JoinRetryCodes(expectedReplyCodes),
-                response.ToString().Trim()));
-        }
-         private static string JoinRetryCodes(uint [] values)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach(uint value in values)
-            {
-                if(builder.Length!=0)
-                {
-                    builder.Append(" or ");
-                }
-                builder.Append(value.ToString());
-            }
-            return builder.ToString();
-        }
-    }
-
-
-
-
-
-
         #endregion
-        #endregion
-
-        //https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
     }
 }
+
+
+
+    
+        //https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
+
+
     
      
 

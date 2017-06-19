@@ -6,9 +6,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Aplikacija_iFE
 {
-    public sealed partial class settings : Page
+    public sealed partial class Settings : Page
     {
-        public settings()
+        public Settings()
         {
             InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Settings_BackRequested;

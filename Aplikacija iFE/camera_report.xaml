@@ -29,7 +29,9 @@
                      TextWrapping="Wrap"
                      AcceptsReturn="True"
                      ></TextBox>
+                <!--
                 <Button x:Name="Poslji" Click="Poslji_Click"/>
+                -->
             </StackPanel>
             <Frame></Frame>
         </StackPanel>

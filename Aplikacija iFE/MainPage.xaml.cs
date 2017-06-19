@@ -62,7 +62,7 @@ namespace Aplikacija_iFE
         #region FUNKCIJE IN METODE
         private void Navigiraj_po_straneh(byte stran)
         {
-           if(new tools().InternetConnection)
+           if(new Tools().InternetConnection)
             {
                 switch(stran)
                 {
@@ -70,7 +70,7 @@ namespace Aplikacija_iFE
                         Frame.Navigate(typeof(camera_report));
                         break;
                     case 2:
-                        Frame.Navigate(typeof(todays_menu));
+                        Frame.Navigate(typeof(Todays_menu));
                         break;
                     case 3:
                         Frame.Navigate(typeof(staff));
@@ -82,7 +82,7 @@ namespace Aplikacija_iFE
                         
                         break;
                     case 6:
-                        Frame.Navigate(typeof(settings));
+                        Frame.Navigate(typeof(Settings));
                         break;
                     default: 
                         break;

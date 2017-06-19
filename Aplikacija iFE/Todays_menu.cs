@@ -7,31 +7,33 @@ using Windows.UI.Xaml.Controls;
 
 namespace Aplikacija_iFE
 {
-    public sealed partial class todays_menu : Page
+    public sealed partial class Todays_menu : Page
     {
         #region SPREMENLJIVKE
-        tools tools_for_menu = new tools();
+        Tools tools_for_menu = new Tools();
         #endregion
-        public todays_menu()
+        public Todays_menu()
         {   
             InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Todays_menu_BackRequested;
             if (!(tools_for_menu.InternetConnection))
             {
-                if(Frame.CanGoBack) { Frame.GoBack(); }
+                if (Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                }
             }
+                                                  
+            
             else
             {
-                // refresh_menu();
-                List<string> days = new List<string>();
-                 days = tools_for_menu.Getdate();
-                foreach (string day1 in days)
-                {
-                    Dnevi_za_prikaz.Items.Add(day1);
-                }
-                //GEt types of food (Read from website according to date)
-                TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
-                days.Clear();
+                    List<string> days = new List<string>();
+                    days = tools_for_menu.Getdate();
+                    foreach (string day1 in days)
+                    {
+                        Dnevi_za_prikaz.Items.Add(day1);
+                    }
+                    TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
             }
         }
 
@@ -66,7 +68,6 @@ namespace Aplikacija_iFE
                     }
                 }
             }
-            //refresh_menu(dnevi_za_prikaz.);
         }
       #endregion
     }

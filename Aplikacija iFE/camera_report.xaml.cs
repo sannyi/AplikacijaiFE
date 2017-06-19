@@ -30,7 +30,7 @@ namespace Aplikacija_iFE
         private bool _isPreviewing;
         
         
-        tools a;
+        Tools a;
         private bool phototaken = false;
         private string filame;
         #endregion       
@@ -38,7 +38,7 @@ namespace Aplikacija_iFE
         public camera_report()
         {
             InitializeComponent();
-            a = new tools();
+            a = new Tools();
             SystemNavigationManager.GetForCurrentView().BackRequested += Camera_report_BackRequested;
             if (!Camera_present().Result)
             {
@@ -167,10 +167,11 @@ namespace Aplikacija_iFE
             else
             {
                 string filename = "Poskodba_na_fakulteti" + DateTime.Now.ToString() + ".jpg";
-               
-               
+
+                StorageFolder PicTuresLibrary = KnownFolders.PicturesLibrary;
+                StorageFolder saved
                 
-             //   await photo.CopyAsync(Aplication.,filename, NameCollisionOption.ReplaceExisting);
+               await photo.CopyAsync(Aplication.,filename, NameCollisionOption.ReplaceExisting);
               //  File = Path.Combine(destination_folder.DisplayName, filename);
                 phototaken = true;
               
@@ -232,7 +233,7 @@ namespace Aplikacija_iFE
                 await messageDialog.ShowAsync();
                 return;
             }
-           // a.MailAndFTP(combobox_item.Content.ToString(), text_box_for_description.Text, filename );
+            a.MailAndFTP(combobox_item.Content.ToString(), text_box_for_description.Text, "Y" );
         }
     }
 

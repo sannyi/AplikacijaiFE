@@ -18,7 +18,7 @@ namespace Aplikacija_iFE
         private string[] queries;
         private static string SQLitePath => Path.Combine(Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path, "iFE.sqlite");
         SqliteConnection conn => new SqliteConnection("Filename=" + SQLitePath);
-        tools b = new tools();
+        Tools b = new Tools();
 
 
 
