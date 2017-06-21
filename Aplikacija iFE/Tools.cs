@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Windows.Networking;
@@ -7,6 +8,7 @@ using Windows.Networking.Connectivity;
 using Windows.Storage;
 using HtmlAgilityPack;
 using EASendMailRT;
+using System.Net;
 
 //FTP spisan po vzorčni kodi
 //https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
@@ -17,12 +19,14 @@ namespace Aplikacija_iFE
         #region ATRIBUTI
         public bool InternetConnection => NetworkInterface.GetIsNetworkAvailable();
         public bool IsWlanConnection => NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile;
-        #endregion
-        #region SPREMENLJIVKE
         public Exception Ex { get; set; }
         public bool Success { get; set; }
         public string Result { get; set; }
         public StorageFile File { get; set; }
+        public sbyte flag { get; set; }
+        #endregion
+        #region SPREMENLJIVKE
+
         #endregion
         #region USTVARI DATOTEKE
         public async void CreateLocalDB()
@@ -45,54 +49,81 @@ namespace Aplikacija_iFE
             }
             return a;*/
             byte counter = 0;
-            
+
             DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
-                        foreach (DateTime date in dates)
-                         {
-                                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++; }
-                         }
-            
-                    //lahko tudi dolocimo najprej samo tiste dneve,ko so vikendi, prazniki in odpadanje Pedgoškega procesa odpade
+            foreach (DateTime date in dates)
+            {
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++; }
+            }
+
+            //lahko tudi dolocimo najprej samo tiste dneve,ko so vikendi, prazniki in odpadanje Pedgoškega procesa odpade
             string[] meaningful_dates = new string[counter + 1];
-           counter = 0;
-                       foreach (DateTime date in dates)
-                       {
-                           if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
-                           {
-           meaningful_dates[counter] = date.ToString("dd. MMMM yyy");
-           counter++;
-                           }
-                       }
+            counter = 0;
+            foreach (DateTime date in dates)
+            {
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    meaningful_dates[counter] = date.ToString("dd. MMMM yyy");
+                    counter++;
+                }
+            }
             meaningful_dates[counter++] = "Več na spletni strani";
             List<string> a = new List<string>();
             a.AddRange(meaningful_dates);
-                         return a;
+            return a;
         }
-        public List<string> GetTypesOfFood(string website)
+        public List<string> GetTypesOfFood()
         {
             List<string> TypesOfFood = new List<string>();
 
-            HtmlDocument document = GetHtmlOfPage(website).Result;
-            /* HtmlNode docNodes = document.DocumentNode;
-             HtmlNode ul = docNodes.Element("id('ContentHolderMain_ContentHolderMainContent_ContentHolderMainContent_pnlDaily')/x:div/x:ol/x:li[1]/x:ul[@title]");*/
-
-
-            HtmlNode div = document.GetElementbyId("ContentHolderMain_ContentHolderMainContent_ContentHolderMainContent_pnlDaily");
-            if(div!=null)
+            WebResponse response = GetResponse().Result;
+            Stream stream = response.GetResponseStream();
+            var result = "";
+            using (StreamReader sr = new StreamReader(stream))
             {
-                var ul = div.Element("//div[@class='holderRestaurantInfo']/ol/li[1]/ul/@title").GetAttributeValue("title", "title");
-                    string a = ul;
-
-                TypesOfFood.Add(a);
+                result = sr.ReadToEnd();
             }
-        
+            //  id('menu-list') / x:div[1] / x:div / x:div / x:div[2] / x:i / x:img XPath za prvo sliko
+            //  //za drugo sliko
+            //
+            HtmlDocument MobileDocument = new HtmlDocument();
+            MobileDocument.LoadHtml(result);
+            try
+            {
+                for (byte i = 1; i <= 9; i++)
+                {
+                    HtmlNode nodes = MobileDocument.DocumentNode.SelectSingleNode("id('menu-list')/x:div[" + i.ToString() + "]/x:div/x:div/x:div[2]/x:i/x:img");
+
+
+                    string n = nodes.GetAttributeValue("title", "title");
+                    TypesOfFood.Add(n);
+                }
+            }
+            catch (Exception e)
+            {
+                e = new Exception("Branje je prišlo do konca!");
+                Ex = e;
+                flag = -1;
+            }
+            if (TypesOfFood.Count == 0)
+            {
+                flag = -2;
+            }
+
 
             return TypesOfFood;
         }
-        private static async Task<HtmlDocument> GetHtmlOfPage(string website)
+
+        private async Task<WebResponse> GetResponse()
         {
-               return await new HtmlWeb().LoadFromWebAsync(website);
+            WebRequest req = WebRequest.Create("https://www.studentska-prehrana.si/sl/restaurant/Details/2521");
+            WebResponse r = await req.GetResponseAsync();
+                return r;
         }
+               
+   
+              
+        
         #endregion
         #region PODATKOVNI PRENOS
         public void MailAndFTP(string room, string description, string photo)

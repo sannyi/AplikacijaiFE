@@ -168,10 +168,8 @@ namespace Aplikacija_iFE
             {
                 string filename = "Poskodba_na_fakulteti" + DateTime.Now.ToString() + ".jpg";
 
-                StorageFolder PicTuresLibrary = KnownFolders.PicturesLibrary;
-                StorageFolder saved
                 
-               await photo.CopyAsync(Aplication.,filename, NameCollisionOption.ReplaceExisting);
+          //     await photo.CopyAsync(Aplication.,filename, NameCollisionOption.ReplaceExisting);
               //  File = Path.Combine(destination_folder.DisplayName, filename);
                 phototaken = true;
               

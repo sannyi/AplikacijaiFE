@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Aplikacija_iFE
@@ -27,13 +29,39 @@ namespace Aplikacija_iFE
             
             else
             {
-                    List<string> days = new List<string>();
-                    days = tools_for_menu.Getdate();
-                    foreach (string day1 in days)
+                Parallel.Invoke(
+
+                    ()=> {
+
+
+                        List<string> days = new List<string>();
+
+
+                        days = tools_for_menu.Getdate();
+                        foreach (string day1 in days)
+                        {
+                            Dnevi_za_prikaz.Items.Add(day1);
+                        }
+                        TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
+
+
+                    },
+                    () =>
                     {
-                        Dnevi_za_prikaz.Items.Add(day1);
+                        List<string> type = new List<string>();
+                        type = tools_for_menu.GetTypesOfFood();
+
+                        foreach (string f1 in type)
+                        {
+                            jedilnik.Items.Add(f1);
+                        }
+                        var Message = new MessageDialog("uj");
+                        Message.ShowAsync();
                     }
-                    TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
+
+                    );
+                   
+              
             }
         }
 
@@ -70,5 +98,10 @@ namespace Aplikacija_iFE
             }
         }
       #endregion
+      private void Menu_Loaded(object sender, RoutedEventArgs e)
+        {/*
+            
+            */
+        }
     }
 }
