@@ -53,41 +53,76 @@ namespace Aplikacija_iFE
             dts.Add("Več na spletni strani.");
             return dts;
         }
-        public List<string> GetTypesOfFood()
-        {
+        public List<string> GetSiteContent(byte type,string uri)
+        {          // menu = 
             if(!InternetConnection)
             {
                 flag = -3;
                 return null;
             }
-            List<string> TypesOfFood = new List<string>();
+            List<string> Content = new List<string>();
 
-            WebResponse response = GetResponse().Result;
-            Stream stream = response.GetResponseStream();
+            Stream stream = GetResponse(uri).Result.GetResponseStream();
             string result = "";
+
             using (StreamReader sr = new StreamReader(stream))
-            {
-                result = sr.ReadToEnd();
-            }
-            
+                                            result = sr.ReadToEnd();
             
             HtmlDocument MobileDocument = new HtmlDocument();
             MobileDocument.LoadHtml(result);
             
-               var images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']"); 
-                foreach(var image in images)
-                {
-                    HtmlAttribute title = image.Attributes[@"title"];
-                    TypesOfFood.Add(title.Value);
-                }
-         return TypesOfFood;
+            switch(type)
+            {
+                case 1:
+                    var images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
+                    foreach (var image in images)
+                        Content.Add(image.Attributes[@"title"].Value);
+                    break;
+                case 2:
+                    List<string> headers = new List<string>(), soups = new List<string>(), meals = new List<string>();
+                    
+                    Parallel.Invoke(
+                        () =>
+                        {
+                            var h5 = MobileDocument.DocumentNode.SelectNodes("//h5/strong[@class=' color-blue']");
+                            foreach (var h in h5)
+                                headers.Add(h.InnerText);
+                        },
+
+                          () =>
+                          {
+                              var soup = MobileDocument.DocumentNode.SelectNodes("//ul[@class='list-unstyled']/li/i[@class='text-bold color-dark icon-food-090']");
+                              foreach (var s in soup)
+                                  soups.Add(s.InnerText);
+                          },
+                            () =>
+                            {
+                                var meal = MobileDocument.DocumentNode.SelectNodes("//i[@class='text-bold color-dark']");
+                                foreach (var m in meal)
+                                    if(m.InnerText!="")
+                                        meals.Add(m.InnerText);
+                            }
+                         );
+                    sbyte legth = Convert.ToSByte(meals.Count);
+                    for(int i=0;i<headers.Count;i++)
+                    {
+                        if (i + 1 == headers.Count)
+                            Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i] +Environment.NewLine+ meals[i + 1]);
+                        else
+                            Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
+                    }
+                        break;
+                default: throw new NotImplementedException();
+            }
+            
+                           
+                
+         return Content;
         }
 
-        private async Task<WebResponse> GetResponse()
+        private async Task<WebResponse> GetResponse(string uri)
         {
-            WebRequest req = WebRequest.Create("https://www.studentska-prehrana.si/sl/restaurant/Details/2521");
-            WebResponse r = await req.GetResponseAsync();
-                return r;
+                return await WebRequest.Create(uri).GetResponseAsync();
         }
                
    
@@ -107,10 +142,11 @@ namespace Aplikacija_iFE
                 SmtpMail mail = new SmtpMail("Porocilo o škodi");
                 SmtpServer mail_server = new SmtpServer("smtp.live.com");
                 Attachment a = new Attachment();
+                mail.From = new MailAddress("aleksander.kovac97@hotmail.com");
+
                 Parallel.Invoke(
                     () =>
                     {
-                        mail.From = new MailAddress("aleksander.kovac97@hotmail.com");
                         mail.To.Add("ak3900@student.uni-lj.si");
                         mail.Subject = "V prostoru " + room + " je nastala škoda: ";
                         mail.TextBody = description;  
@@ -121,8 +157,7 @@ namespace Aplikacija_iFE
                         mail_server.Password = "Phoenix176";
                         mail_server.User = "aleksander.kovac97@hotmail.com";
                         mail_server.ConnectType = SmtpConnectType.ConnectSTARTTLS;
-                    }
-                    );
+                    });
 
                 await mail.AddAttachmentAsync(filename);
                 await client.SendMailAsync(mail_server, mail);

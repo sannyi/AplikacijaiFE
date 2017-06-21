@@ -27,16 +27,20 @@ namespace Aplikacija_iFE
             }
             else
             {
-                List<string> days = new List<string>(), type = new List<string>();
+                List<string> days = new List<string>(), type = new List<string>(), food = new List<string>();
                 
-                Parallel.Invoke( ()=> { days = tools_for_menu.Getdate();}, () => { type = tools_for_menu.GetTypesOfFood(); });
+                Parallel.Invoke( ()=> { days = tools_for_menu.Getdate();}, () => { type = tools_for_menu.GetSiteContent(1, "https://www.studentska-prehrana.si/sl/restaurant/Details/2521"); },
+                    ()=> {
+                        food = tools_for_menu.GetSiteContent(2, "https://www.studentska-prehrana.si/sl/restaurant/Details/2521");
+                    });
                 if (tools_for_menu.flag == -3)
                 {
                     Frame.GoBack();
                 }
                 foreach ( string d in days)
                                     Dnevi_za_prikaz.Items.Add(d);
-                
+
+                byte m = 0;
                 foreach (string t in type)
                 {
                     PivotItem p = new PivotItem();
@@ -47,10 +51,12 @@ namespace Aplikacija_iFE
                     p.Header = t;
                         sv.Name = t;
                             txtb.Name = t;
+                            txtb.Text = food[m];
                         sv.Content = txtb;
                         sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
                     p.Content = sv;
                     jedilnik.Items.Add(p);
+                    m++;
                 }
                                   
             }
