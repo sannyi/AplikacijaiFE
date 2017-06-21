@@ -24,7 +24,12 @@ namespace Aplikacija_iFE
         public string Result { get; set; }
         public StorageFile File { get; set; }
         public sbyte flag { get; set; }
+
         #endregion
+        public Tools()
+        {
+            flag = 0;
+        }
         #region SPREMENLJIVKE
 
         #endregion
@@ -36,82 +41,46 @@ namespace Aplikacija_iFE
         #endregion
         #region SPLOŠNE METODE
         public List<string> Getdate()
-        {/*
-            List<string> a = new List<string>();
-            DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2)};
-            foreach (DateTime date in dates)
-            {
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) 
-                {
-                    a.Add(date.ToString("dd. MMMM yyy"));
-                }
-                a.Add("Več na spletni strani");
-            }
-            return a;*/
-            byte counter = 0;
-
+        { 
+            List<string> dts = new List<string>();
             DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
-            foreach (DateTime date in dates)
-            {
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday) { counter++; }
-            }
+          
 
-            //lahko tudi dolocimo najprej samo tiste dneve,ko so vikendi, prazniki in odpadanje Pedgoškega procesa odpade
-            string[] meaningful_dates = new string[counter + 1];
-            counter = 0;
             foreach (DateTime date in dates)
-            {
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
-                {
-                    meaningful_dates[counter] = date.ToString("dd. MMMM yyy");
-                    counter++;
-                }
-            }
-            meaningful_dates[counter++] = "Več na spletni strani";
-            List<string> a = new List<string>();
-            a.AddRange(meaningful_dates);
-            return a;
+                       if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                                                            dts.Add(date.ToString("dd. MMMM yyy"));
+                      
+            dts.Add("Več na spletni strani.");
+            return dts;
         }
         public List<string> GetTypesOfFood()
         {
+            if(!InternetConnection)
+            {
+                flag = -3;
+                return null;
+            }
             List<string> TypesOfFood = new List<string>();
 
             WebResponse response = GetResponse().Result;
             Stream stream = response.GetResponseStream();
-            var result = "";
+            string result = "";
             using (StreamReader sr = new StreamReader(stream))
             {
                 result = sr.ReadToEnd();
             }
-            //  id('menu-list') / x:div[1] / x:div / x:div / x:div[2] / x:i / x:img XPath za prvo sliko
-            //  //za drugo sliko
-            //
+            
+            
             HtmlDocument MobileDocument = new HtmlDocument();
             MobileDocument.LoadHtml(result);
-            try
-            {
-                for (byte i = 1; i <= 9; i++)
+            
+               var images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']"); 
+                foreach(var image in images)
                 {
-                    HtmlNode nodes = MobileDocument.DocumentNode.SelectSingleNode("id('menu-list')/x:div[" + i.ToString() + "]/x:div/x:div/x:div[2]/x:i/x:img");
-
-
-                    string n = nodes.GetAttributeValue("title", "title");
-                    TypesOfFood.Add(n);
+                    HtmlAttribute title = image.Attributes[@"title"];
+                    TypesOfFood.Add(title.Value);
                 }
-            }
-            catch (Exception e)
-            {
-                e = new Exception("Branje je prišlo do konca!");
-                Ex = e;
-                flag = -1;
-            }
-            if (TypesOfFood.Count == 0)
-            {
-                flag = -2;
-            }
-
-
-            return TypesOfFood;
+         return TypesOfFood;
         }
 
         private async Task<WebResponse> GetResponse()

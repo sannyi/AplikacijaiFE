@@ -25,58 +25,46 @@ namespace Aplikacija_iFE
                     Frame.GoBack();
                 }
             }
-                                                  
-            
             else
             {
-                Parallel.Invoke(
-
-                    ()=> {
-
-
-                        List<string> days = new List<string>();
-
-
-                        days = tools_for_menu.Getdate();
-                        foreach (string day1 in days)
-                        {
-                            Dnevi_za_prikaz.Items.Add(day1);
-                        }
-                        TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
-
-
-                    },
-                    () =>
-                    {
-                        List<string> type = new List<string>();
-                        type = tools_for_menu.GetTypesOfFood();
-
-                        foreach (string f1 in type)
-                        {
-                            jedilnik.Items.Add(f1);
-                        }
-                        var Message = new MessageDialog("uj");
-                        Message.ShowAsync();
-                    }
-
-                    );
-                   
-              
+                List<string> days = new List<string>(), type = new List<string>();
+                
+                Parallel.Invoke( ()=> { days = tools_for_menu.Getdate();}, () => { type = tools_for_menu.GetTypesOfFood(); });
+                if (tools_for_menu.flag == -3)
+                {
+                    Frame.GoBack();
+                }
+                foreach ( string d in days)
+                                    Dnevi_za_prikaz.Items.Add(d);
+                
+                foreach (string t in type)
+                {
+                    PivotItem p = new PivotItem();
+                    ScrollViewer sv = new ScrollViewer();
+                    TextBlock txtb = new TextBlock();
+                              
+                    p.Name = t;
+                    p.Header = t;
+                        sv.Name = t;
+                            txtb.Name = t;
+                        sv.Content = txtb;
+                        sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                    p.Content = sv;
+                    jedilnik.Items.Add(p);
+                }
+                                  
             }
         }
 
         private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)
-        { if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true; } }
+        {
+            if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true; } }
 
         #region METODE V PRIDAJOČEM CLASS-u
-        private void Refresh_menu(string day)
+       /* private void Refresh_menu(string day)
         {
-            TextBlock[] a = new TextBlock[] { meso1, meso2, meso3, testenine, zlica, solata1 };
-            byte counter = 0;
-            foreach (TextBlock text in a)
-            {
-            }   
-        }
+        }*/
+
         #endregion
         #region GUMBI
         private async void Dnevi_za_prikaz_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -97,11 +85,9 @@ namespace Aplikacija_iFE
                 }
             }
         }
-      #endregion
-      private void Menu_Loaded(object sender, RoutedEventArgs e)
-        {/*
-            
-            */
+        #endregion
+        private async void Menu_Loaded(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
