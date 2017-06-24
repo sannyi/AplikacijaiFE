@@ -13,83 +13,81 @@ namespace Aplikacija_iFE
     {
         #region SPREMENLJIVKE
         Tools tools_for_menu = new Tools();
+        private MessageDialog message;
         #endregion
         public Todays_menu()
-        {   
+        {
             InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Todays_menu_BackRequested;
-            if (!(tools_for_menu.InternetConnection))
-            {
-                if (Frame.CanGoBack)
-                {
-                    Frame.GoBack();
-                }
-            }
+            if (!(tools_for_menu.NetAndWiFi))
+                            if (Frame.CanGoBack)
+                                     Frame.GoBack();
             else
             {
                 List<string> days = new List<string>(), type = new List<string>(), food = new List<string>();
-                
-                Parallel.Invoke( ()=> { days = tools_for_menu.Getdate();}, () => { type = tools_for_menu.GetSiteContent(1, "https://www.studentska-prehrana.si/sl/restaurant/Details/2521"); },
-                    ()=> {
+                Parallel.Invoke(
+                    () =>
+                    {
+                        days = tools_for_menu.Getdate();
+                    },
+                    () =>
+                    {
+                        type = tools_for_menu.GetSiteContent(1, "https://www.studentska-prehrana.si/sl/restaurant/Details/2521");
+                    },
+                    () =>
+                    {
                         food = tools_for_menu.GetSiteContent(2, "https://www.studentska-prehrana.si/sl/restaurant/Details/2521");
+
                     });
                 if (tools_for_menu.flag == -3)
-                {
-                    Frame.GoBack();
-                }
-                foreach ( string d in days)
-                                    Dnevi_za_prikaz.Items.Add(d);
-
+                                        Frame.GoBack();
+             /*   foreach (string d in days) Dnevi_za_prikaz.Items.Add(d);*/
                 byte m = 0;
                 foreach (string t in type)
-                {
+                {            
                     PivotItem p = new PivotItem();
                     ScrollViewer sv = new ScrollViewer();
                     TextBlock txtb = new TextBlock();
-                              
-                    p.Name = t;
-                    p.Header = t;
-                        sv.Name = t;
-                            txtb.Name = t;
-                            txtb.Text = food[m];
-                        sv.Content = txtb;
-                        sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                    Parallel.Invoke(
+                            () =>
+                            {
+                                p.Name = t;
+                                p.Header = t;
+                            },
+                            () =>
+                            {
+                                sv.Name = t;
+                                txtb.Name = t;
+                            },
+                            ()=>
+                            {
+                                txtb.Text = food[m];
+                                sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                            });
+                    sv.Content = txtb;
                     p.Content = sv;
                     jedilnik.Items.Add(p);
                     m++;
                 }
-                                  
             }
         }
-
         private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true; } }
-
-        #region METODE V PRIDAJOČEM CLASS-u
-       /* private void Refresh_menu(string day)
-        {
-        }*/
-
-        #endregion
+            if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true;}
+        }
         #region GUMBI
-        private async void Dnevi_za_prikaz_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void GoToWebSite(object sender, SelectionChangedEventArgs e)
         {
-            if(Dnevi_za_prikaz.SelectedIndex==Dnevi_za_prikaz.Items.Count-1)
-            {
-                var URI = new Uri(@"http://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/");
-                var URIlaunched = await Launcher.LaunchUriAsync(URI);
+                var URIlaunched = await Launcher.LaunchUriAsync(new Uri(@"https://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/"));
                 if(!URIlaunched)
                 {
-                    URI = new Uri(@"https://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/");
-                    URIlaunched = await Launcher.LaunchUriAsync(URI);
+                    URIlaunched = await Launcher.LaunchUriAsync(new Uri(@"http://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/"));
                     if(!URIlaunched)
                     {
-                        var message = new MessageDialog("Do spletne strani trenutno ni mogoče dostopati.");
+                        message = new MessageDialog("Do spletne strani trenutno ni mogoče dostopati.");
                         await message.ShowAsync();
                     }
                 }
-            }
         }
         #endregion
         private async void Menu_Loaded(object sender, RoutedEventArgs e)

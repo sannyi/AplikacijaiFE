@@ -1,30 +1,26 @@
-﻿
-using Microsoft.Data.Sqlite.Internal;
+﻿using System;
 using System.IO;
 using Windows.UI.Popups;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using Windows.UI.Xaml.Navigation;
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace Aplikacija_iFE
 {
-
     public sealed partial class MainPage : Page
     {
+        private MessageDialog messagedialog;
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,"iFE.sqlite");
    
            if (!File.Exists(path))
             {
-                SqliteEngine.UseWinSqlite3();
-                SQLite offline_baza = new SQLite();
-                SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
-            }            
+              
+                //create sqlitefile
+            }
+            SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
         }
 #region NAVIGACIJA MED STRANMI
         private void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
@@ -60,17 +56,23 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region FUNKCIJE IN METODE
-        private void Navigiraj_po_straneh(byte stran)
+        private async void Navigiraj_po_straneh(byte stran)
         {
-           if(new Tools().InternetConnection)
+            if (new Tools().NetAndWiFi)
             {
-                switch(stran)
+                switch (stran)
                 {
                     case 1:
                         Frame.Navigate(typeof(camera_report));
                         break;
                     case 2:
-                        Frame.Navigate(typeof(Todays_menu));
+                        if (new Tools().SaturdaySundayOrHoliday)
+                        {
+                            messagedialog = new MessageDialog("Danes kuhinja ne obratuje");
+                            await messagedialog.ShowAsync();
+                        }
+                        else
+                            Frame.Navigate(typeof(Todays_menu));
                         break;
                     case 3:
                         Frame.Navigate(typeof(staff));
@@ -79,18 +81,19 @@ namespace Aplikacija_iFE
                         Frame.Navigate(typeof(profile));
                         break;
                     case 5:
-                        
-                        break;
+                        throw new NotImplementedException();
+                       // break;
                     case 6:
                         Frame.Navigate(typeof(Settings));
                         break;
-                    default: 
-                        break;
+                    default: throw new NotImplementedException();
+                        
                 }
             }
-           else
+            else
             {
-                //messega dialog, ki gre do nastavitev
+                messagedialog = new MessageDialog("Preverite če ste povezani s spetom preko WiFi-ja.");
+                await messagedialog.ShowAsync();
             }
         }
 

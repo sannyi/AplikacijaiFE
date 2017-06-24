@@ -1,14 +1,18 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
 using Windows.Storage;
-using HtmlAgilityPack;
-using EASendMailRT;
-using System.Net;
+//od tu naprej  je vprašljiva licenca;
+using Nager.Date;
+using HtmlAgilityPack; //licenca
+using EASendMailRT; //licenca
+
 
 //FTP spisan po vzorčni kodi
 //https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
@@ -17,8 +21,22 @@ namespace Aplikacija_iFE
     class Tools
     {
         #region ATRIBUTI
-        public bool InternetConnection => NetworkInterface.GetIsNetworkAvailable();
-        public bool IsWlanConnection => NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile;
+        public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile);
+        public bool SaturdaySundayOrHoliday
+        {
+             get
+            {
+              bool IsPublicHoliday = DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI);
+
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday ||
+                    DateTime.Today.DayOfWeek == DayOfWeek.Sunday   ||
+                   IsPublicHoliday)
+                   {
+                    return true;
+                   }                 
+             return false;
+            }
+        }
         public Exception Ex { get; set; }
         public bool Success { get; set; }
         public string Result { get; set; }
@@ -34,9 +52,12 @@ namespace Aplikacija_iFE
 
         #endregion
         #region USTVARI DATOTEKE
-        public async void CreateLocalDB()
+        public void CreateLocalDB()
         {
-            StorageFile SqliteDatabase = await ApplicationData.Current.LocalFolder.CreateFileAsync("iFe.sqlite", CreationCollisionOption.ReplaceExisting);
+            //create sqlite database
+            SqliteEngine.UseWinSqlite3();
+            SQLite offline_baza = new SQLite();
+          //  StorageFile SqliteDatabase = await ApplicationData.Current.LocalFolder.CreateFileAsync("iFe.sqlite", CreationCollisionOption.ReplaceExisting);
         }
         #endregion
         #region SPLOŠNE METODE
@@ -55,9 +76,9 @@ namespace Aplikacija_iFE
         }
         public List<string> GetSiteContent(byte type,string uri)
         {          // menu = 
-            if(!InternetConnection)
+            if(!NetAndWiFi)
             {
-                flag = -3;
+                flag = -3; // ni interneta
                 return null;
             }
             List<string> Content = new List<string>();
@@ -70,51 +91,56 @@ namespace Aplikacija_iFE
             
             HtmlDocument MobileDocument = new HtmlDocument();
             MobileDocument.LoadHtml(result);
-            
-            switch(type)
+            try
             {
-                case 1:
-                    var images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
-                    foreach (var image in images)
-                        Content.Add(image.Attributes[@"title"].Value);
-                    break;
-                case 2:
-                    List<string> headers = new List<string>(), soups = new List<string>(), meals = new List<string>();
-                    
-                    Parallel.Invoke(
-                        () =>
-                        {
-                            var h5 = MobileDocument.DocumentNode.SelectNodes("//h5/strong[@class=' color-blue']");
-                            foreach (var h in h5)
-                                headers.Add(h.InnerText);
-                        },
-
-                          () =>
-                          {
-                              var soup = MobileDocument.DocumentNode.SelectNodes("//ul[@class='list-unstyled']/li/i[@class='text-bold color-dark icon-food-090']");
-                              foreach (var s in soup)
-                                  soups.Add(s.InnerText);
-                          },
+                switch (type)
+                {
+                    case 1:
+                        var images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
+                        foreach (var image in images)
+                            Content.Add(image.Attributes[@"title"].Value);
+                        break;
+                    case 2:
+                        List<string> headers = new List<string>(), soups = new List<string>(), meals = new List<string>();
+                        Parallel.Invoke(
+                            () =>
+                            {
+                                var h5 = MobileDocument.DocumentNode.SelectNodes("//strong[@class=' color-blue']");
+                                foreach (var h in h5)
+                                    headers.Add(h.InnerText);
+                            },
+                            () =>
+                            {
+                                var soup = MobileDocument.DocumentNode.SelectNodes("//ul[@class='list-unstyled']/li/i[@class='text-bold color-dark icon-food-090']");
+                                foreach (var s in soup)
+                                    soups.Add(s.InnerText);
+                            },    
                             () =>
                             {
                                 var meal = MobileDocument.DocumentNode.SelectNodes("//i[@class='text-bold color-dark']");
                                 foreach (var m in meal)
-                                    if(m.InnerText!="")
+                                    if (m.InnerText != "")
                                         meals.Add(m.InnerText);
+                            });
+
+                            sbyte legth = Convert.ToSByte(meals.Count);
+                            for (int i = 0; i < headers.Count; i++)
+                            {
+                                if (i + 1 == headers.Count)
+                                    Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i] + Environment.NewLine + meals[i + 1]);
+                                else
+                                    Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
                             }
-                         );
-                    sbyte legth = Convert.ToSByte(meals.Count);
-                    for(int i=0;i<headers.Count;i++)
-                    {
-                        if (i + 1 == headers.Count)
-                            Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i] +Environment.NewLine+ meals[i + 1]);
-                        else
-                            Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
-                    }
                         break;
-                default: throw new NotImplementedException();
+                    default: throw new NotImplementedException();
+                }
             }
-            
+            catch (NullReferenceException e)
+            {
+                Ex = e;
+                flag = -4; // ne morem dol povlečti strani ker nič ni na njej
+                return null;
+            }
                            
                 
          return Content;
