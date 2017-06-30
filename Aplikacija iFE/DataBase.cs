@@ -48,7 +48,8 @@ namespace Aplikacija_iFE
                 conn.Open();
                 SqliteCommand command = new SqliteCommand(a, conn);
                 try { command.ExecuteNonQuery(); }
-                catch (SqliteException e) { conn.Close(); }
+                catch (SqliteException e) {
+                    conn.Close(); }
             }
             conn.Close();
         }
@@ -86,7 +87,7 @@ namespace Aplikacija_iFE
         }
         #endregion
     }
-    /* public class SETTINGSQLite
+     public class SETTINGSQLite
     {
         public bool OnlyWifi { get; set; }
         public string Language { get; set; }
@@ -100,5 +101,5 @@ namespace Aplikacija_iFE
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-    }*/
+    }
 }

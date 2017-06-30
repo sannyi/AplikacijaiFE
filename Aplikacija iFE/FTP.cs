@@ -27,7 +27,7 @@ namespace Aplikacija_iFE
             foreach (var command in Commands)
             {
                 string codeString = command.Substring(0, 3);
-                uint code;
+                uint code = 0;
                 if (UInt32.TryParse(codeString, out code))
                 {
                     ReplyCode = code;
@@ -90,8 +90,10 @@ namespace Aplikacija_iFE
             Parallel.Invoke(
                 () => { this.hostname = hostname; },
                 () => {
-                    reader = new DataReader(ControlStreamSocket.InputStream);
-                    reader.InputStreamOptions = InputStreamOptions.Partial;
+                    reader = new DataReader(ControlStreamSocket.InputStream)
+                    {
+                        InputStreamOptions = InputStreamOptions.Partial
+                    };
                     writer = new DataWriter(ControlStreamSocket.OutputStream);
                 },
                 () => {

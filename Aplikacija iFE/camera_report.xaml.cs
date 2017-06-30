@@ -28,11 +28,10 @@ namespace Aplikacija_iFE
         MediaCapture _capturingPreview;
         DisplayRequest _request_to_display;
         private bool _isPreviewing;
-        
-        
+
+        MessageDialog message;
         Tools a;
         private bool phototaken = false;
-        private string filame;
         #endregion       
         #region KONSTRUKTORJI
         public camera_report()
@@ -40,17 +39,11 @@ namespace Aplikacija_iFE
             InitializeComponent();
             a = new Tools();
             SystemNavigationManager.GetForCurrentView().BackRequested += Camera_report_BackRequested;
-            if (!Camera_present().Result)
-            {
-                Frame.GoBack();
-            }
-            else
-            {
-                StartPreviewAsync();
+
+            StartPreviewAsync();
                 _request_to_display = new DisplayRequest();
                 //Strechiraj fotoaparat na 
-                Application.Current.Suspending += Application_Suspending;
-            }          
+                Application.Current.Suspending += Application_Suspending;  
         }
 
         private void Camera_report_BackRequested(object sender, BackRequestedEventArgs e)
@@ -196,22 +189,11 @@ namespace Aplikacija_iFE
             }
         }
       
-        private async Task<bool> Camera_present()
-        {
-            bool is_camera_present=false;
-
-            var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-            if(devices.Count>=1)
-            {
-                is_camera_present = true;
-            }
-
-            return is_camera_present;
-        }
+       
         private async void Take_photo_Click(object sender, RoutedEventArgs e)
         {
-           CleanupCameraAsync();
-      Take_photo_of_damaged_proprerty();
+              await  CleanupCameraAsync();
+              await  Take_photo_of_damaged_proprerty();
 
             //sendmail
             //notification for mail
@@ -224,11 +206,11 @@ namespace Aplikacija_iFE
             var combobox_item = Prostori.Items[Prostori.SelectedIndex] as ComboBoxItem;
 
             if (text_box_for_description.Text == null ||
-                text_box_for_description.Text == "" ||
-                combobox_item == null || phototaken==false)
+                text_box_for_description.Text == ""   ||
+                combobox_item == null || !phototaken)
             {
-                var messageDialog = new MessageDialog("Prosimo izpolnite vsa polja in naredite fotografijo poškodbe.");
-                await messageDialog.ShowAsync();
+               message = new MessageDialog("Prosimo izpolnite vsa polja in naredite fotografijo poškodbe.");
+                await message.ShowAsync();
                 return;
             }
             a.MailAndFTP(combobox_item.Content.ToString(), text_box_for_description.Text, "Y" );

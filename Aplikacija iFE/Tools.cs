@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
 using Windows.Storage;
@@ -30,23 +31,24 @@ namespace Aplikacija_iFE
 
                 if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday ||
                     DateTime.Today.DayOfWeek == DayOfWeek.Sunday   ||
-                   IsPublicHoliday)
-                   {
-                    return true;
-                   }                 
+                    IsPublicHoliday)
+                                   return true;
+                            
              return false;
             }
         }
+        public bool IsCameraPresent => (Camera_present().Result);
+        
         public Exception Ex { get; set; }
         public bool Success { get; set; }
         public string Result { get; set; }
         public StorageFile File { get; set; }
-        public sbyte flag { get; set; }
+        public sbyte Flag { get; set; }
 
         #endregion
         public Tools()
         {
-            flag = 0;
+            Flag = 0;
         }
         #region SPREMENLJIVKE
 
@@ -61,7 +63,7 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region SPLOŠNE METODE
-        public List<string> Getdate()
+      /*  public List<string> Getdate()
         { 
             List<string> dts = new List<string>();
             DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
@@ -73,12 +75,12 @@ namespace Aplikacija_iFE
                       
             dts.Add("Več na spletni strani.");
             return dts;
-        }
+        }*/
         public List<string> GetSiteContent(byte type,string uri)
-        {          // menu = 
+        {         
             if(!NetAndWiFi)
             {
-                flag = -3; // ni interneta
+                Flag = -3; // ni interneta
                 return null;
             }
             List<string> Content = new List<string>();
@@ -127,7 +129,7 @@ namespace Aplikacija_iFE
                             for (int i = 0; i < headers.Count; i++)
                             {
                                 if (i + 1 == headers.Count)
-                                    Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i] + Environment.NewLine + meals[i + 1]);
+                                    Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
                                 else
                                     Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
                             }
@@ -138,7 +140,7 @@ namespace Aplikacija_iFE
             catch (NullReferenceException e)
             {
                 Ex = e;
-                flag = -4; // ne morem dol povlečti strani ker nič ni na njej
+                Flag = -4; // ne morem dol povlečti strani ker nič ni na njej
                 return null;
             }
                            
@@ -150,10 +152,21 @@ namespace Aplikacija_iFE
         {
                 return await WebRequest.Create(uri).GetResponseAsync();
         }
-               
-   
-              
-        
+        private async Task<bool> Camera_present()
+        {
+            bool is_camera_present = false;
+
+            var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+            if (devices.Count >= 1)
+            {
+                is_camera_present = true;
+            }
+
+            return is_camera_present;
+        }
+
+
+
         #endregion
         #region PODATKOVNI PRENOS
         public void MailAndFTP(string room, string description, string photo)
@@ -201,7 +214,7 @@ namespace Aplikacija_iFE
             FtpClient client = new FtpClient();
             await client.ConnectAsync(new HostName(uri.Host),"1026","Administrator", "8KINtGoV7s");
 
-            byte [] data;
+          /*  byte [] data;
             await Task.Run(() =>
             {
 
@@ -210,7 +223,7 @@ namespace Aplikacija_iFE
             }
 
 
-            );
+            );*/
 
             //await client.UploadAsync(uri.AbsolutePath, data);
         }

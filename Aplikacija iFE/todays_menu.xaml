@@ -9,13 +9,16 @@
     Loaded="Menu_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Height="720">
-            <Pivot x:Name="jedilnik" Title="Jedilnik"/>
-            <Button Content="Vec na spletni strani" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="100,100,100,100" Click="GoToWebSite" />
+        <StackPanel Height="720" >
+            
+                    <Pivot x:Name="jedilnik" Title="Jedilnik"/>
+
             <!--
+                    <Button Content="Več na spletni strani" Click="GoToWebSite_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="100,100,100,100"  x:Name="GoToWebSite" RenderTransformOrigin="0.35,4.344" />
+                    
             <ComboBox x:Name="Dnevi_za_prikaz" HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="148,50,67,10" HorizontalContentAlignment="Center" Width="145" SelectionChanged="Dnevi_za_prikaz_SelectionChanged" />
              -->
-            
-            </StackPanel>
+             
+        </StackPanel>
     </Grid>
 </Page>
