@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
-
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.Http;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml;
 
 namespace Aplikacija_iFE
 {
@@ -16,7 +18,9 @@ namespace Aplikacija_iFE
         {
            InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Staff_BackRequested;
-   
+       
+          
+
         }
         #region EVENTI
         private void Staff_BackRequested(object sender, BackRequestedEventArgs e)
@@ -30,23 +34,27 @@ namespace Aplikacija_iFE
         #endregion
         private void staff_BackRequested(object sender, BackRequestedEventArgs e)
         {
+
             if (Frame.CanGoBack)
             {
                 Frame.GoBack();
                 e.Handled = true;
             }
+            
         }
-        private void TipZaposlenih_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {}
+        
                   
-        private void Zaposleni_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {}
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+       
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            
+        } 
+        private void staff_loaded(object sender, RoutedEventArgs e)
         {
             HttpClient client = new HttpClient();
-            /*  var JsonResponse = await client.GetStreamAsync();
-               var staffResult = JsonConvert.DeserializeObject<List<staff>>(JsonResponse);
-               Zaposleni.ItemsSource = staffResult;*/
-        } 
+            var JsonResponse = client.GetStringAsync("http://localhost:54348/api/Zaposlens");
+            var staffResult = JsonConvert.DeserializeObject<List<Zaposlen>>(JsonResponse);
+            seznamZaposlenih.ItemsSource = staffResult;
+        }
     }
 }

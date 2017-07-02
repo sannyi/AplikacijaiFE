@@ -99,6 +99,9 @@
       <DependentUpon>camera_report.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataBase.cs" />
+    <Compile Include="EmployeeInfo.xaml.cs">
+      <DependentUpon>EmployeeInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FTP.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -116,6 +119,7 @@
     </Compile>
     <Compile Include="Todays_menu.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="Zaposlen.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -141,6 +145,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="camera_report.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EmployeeInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
