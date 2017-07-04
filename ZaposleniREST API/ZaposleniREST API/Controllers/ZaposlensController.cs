@@ -21,17 +21,17 @@ namespace ZaposleniREST_API.Controllers
         private DataTable dt;
         private SqlDataAdapter da;
         private Exception ex = new Exception();
-        SqlConnection povezava = new SqlConnection("Data Source=83.212.126.172\\SQLEXPRESS;Initial Catalog=iFE;User id=sa;Password=iFE2016");
-     
+        private SqlConnection povezava = new SqlConnection("Data Source=83.212.126.172\\SQLEXPRESS;Initial Catalog=iFE;User id=sa;Password=iFE2016");
 
-        // GET: api/Zaposlens
-        public IQueryable<Zaposlen> GetZaposlens()
+        private List<Zaposlen> GetEmployee(int id, bool all_employee)
         {
-           
-            
             cmd = new SqlCommand("SELECT * FROM dbo.fnVsiPodatkiZaposlenega(@ID)", povezava);
-            cmd.Parameters.AddWithValue("@ID", 0);
-            cmd.CommandType = CommandType.Text;  
+            if (!all_employee)
+                cmd.Parameters.AddWithValue("@ID", id);
+            else
+                cmd.Parameters.AddWithValue("@ID", 0);
+
+            cmd.CommandType = CommandType.Text;
 
             dt = new DataTable();
             da = new SqlDataAdapter(cmd);
@@ -40,15 +40,16 @@ namespace ZaposleniREST_API.Controllers
             {
                 povezava.Open();
                 da.Fill(dt);
-               foreach (DataRow dr in dt.Rows)
+                foreach (DataRow dr in dt.Rows)
                 {
+                    string eposta = dr["Eposta"].ToString().Replace('č', 'c').Replace('š', 's').Replace('ž', 'z');
                     Zaposlen emp = new Zaposlen
                     {
 
                         Ime = dr["ImeZaposlenega"].ToString(),
                         Priimek = dr["PriimekZaposlenega"].ToString(),
 
-                        Eposta = dr["Eposta"].ToString(),
+                        Eposta = eposta,
                         Telefonska = dr["Telefonska"].ToString(),
                         GovorilneUre = dr["GovorilneUre"].ToString(),
 
@@ -62,11 +63,11 @@ namespace ZaposleniREST_API.Controllers
                         ID = int.Parse((dr["ID"].ToString()))
                     };
                     z.Add(emp);
-               
-                    
+
+
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ex = e;
             }
@@ -74,13 +75,13 @@ namespace ZaposleniREST_API.Controllers
             {
                 povezava.Close();
             }
-           
-           
-              
-            IQueryable<Zaposlen> zaposlen = z.AsQueryable();
-            return zaposlen;
+            return z;
+        }
 
-
+        // GET: api/Zaposlens
+        public IQueryable<Zaposlen> GetZaposlens()
+        {
+            return GetEmployee(0, true).AsQueryable();
 
         }
 
@@ -88,13 +89,10 @@ namespace ZaposleniREST_API.Controllers
         [ResponseType(typeof(Zaposlen))]
         public IHttpActionResult GetZaposlen(int id)
         {
-            Zaposlen zaposlen = db.Zaposlens.Find(id);
-            if (zaposlen == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(zaposlen);
+            Zaposlen zaposlen = GetEmployee(id, false)[0];
+            if (zaposlen != null)
+                return Ok(zaposlen);
+            return NotFound();
         }
 
         // PUT: api/Zaposlens/5
