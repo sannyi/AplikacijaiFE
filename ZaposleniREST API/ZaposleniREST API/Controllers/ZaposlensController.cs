@@ -6,8 +6,6 @@ using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ZaposleniREST_API.Models;
@@ -21,16 +19,15 @@ namespace ZaposleniREST_API.Controllers
         private DataTable dt;
         private SqlDataAdapter da;
         private Exception ex = new Exception();
+
         private SqlConnection povezava = new SqlConnection("Data Source=83.212.126.172\\SQLEXPRESS;Initial Catalog=iFE;User id=sa;Password=iFE2016");
 
-        private List<Zaposlen> GetEmployee(int id, bool all_employee)
+        private List<Zaposlen> GetEmployee(int id, bool all_employees)
         {
             cmd = new SqlCommand("SELECT * FROM dbo.fnVsiPodatkiZaposlenega(@ID)", povezava);
-            if (!all_employee)
-                cmd.Parameters.AddWithValue("@ID", id);
-            else
-                cmd.Parameters.AddWithValue("@ID", 0);
-
+            if (all_employees)
+                id = 0;
+            cmd.Parameters.AddWithValue("@ID", id);
             cmd.CommandType = CommandType.Text;
 
             dt = new DataTable();
@@ -42,8 +39,13 @@ namespace ZaposleniREST_API.Controllers
                 da.Fill(dt);
                 foreach (DataRow dr in dt.Rows)
                 {
+                    int Identiteta = int.Parse((dr["ID"].ToString()));
+                    
+                    if (!all_employees && id != Identiteta)
+                        continue;
+
                     string eposta = dr["Eposta"].ToString().Replace('č', 'c').Replace('š', 's').Replace('ž', 'z');
-                    Zaposlen emp = new Zaposlen
+                    z.Add(new Zaposlen
                     {
 
                         Ime = dr["ImeZaposlenega"].ToString(),
@@ -60,11 +62,10 @@ namespace ZaposleniREST_API.Controllers
                         Laboratorij = dr["Laboratorij"].ToString(),
                         Tajnica = dr["Tajnica"].ToString(),
                         Vloga = dr["Vloga"].ToString(),
-                        ID = int.Parse((dr["ID"].ToString()))
-                    };
-                    z.Add(emp);
-
-
+                        ID = Identiteta
+                    });
+                    if (!all_employees && id == Identiteta)
+                        break;
                 }
             }
             catch (Exception e)
@@ -82,7 +83,6 @@ namespace ZaposleniREST_API.Controllers
         public IQueryable<Zaposlen> GetZaposlens()
         {
             return GetEmployee(0, true).AsQueryable();
-
         }
 
         // GET: api/Zaposlens/5
@@ -100,15 +100,9 @@ namespace ZaposleniREST_API.Controllers
         public IHttpActionResult PutZaposlen(int id, Zaposlen zaposlen)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
-
             if (id != zaposlen.ID)
-            {
                 return BadRequest();
-            }
-
             db.Entry(zaposlen).State = EntityState.Modified;
 
             try
@@ -118,15 +112,10 @@ namespace ZaposleniREST_API.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!ZaposlenExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
-
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -135,13 +124,9 @@ namespace ZaposleniREST_API.Controllers
         public IHttpActionResult PostZaposlen(Zaposlen zaposlen)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
-
             db.Zaposlens.Add(zaposlen);
             db.SaveChanges();
-
             return CreatedAtRoute("DefaultApi", new { id = zaposlen.ID }, zaposlen);
         }
 
@@ -149,24 +134,18 @@ namespace ZaposleniREST_API.Controllers
         [ResponseType(typeof(Zaposlen))]
         public IHttpActionResult DeleteZaposlen(int id)
         {
-            Zaposlen zaposlen = db.Zaposlens.Find(id);
+            Zaposlen zaposlen = GetEmployee(id, false)[0];
             if (zaposlen == null)
-            {
                 return NotFound();
-            }
-
             db.Zaposlens.Remove(zaposlen);
             db.SaveChanges();
-
             return Ok(zaposlen);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
 
