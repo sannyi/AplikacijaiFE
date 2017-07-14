@@ -22,24 +22,13 @@ namespace Aplikacija_iFE
     class Tools
     {
         #region ATRIBUTI
-        public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile);
-        public bool SaturdaySundayOrHoliday
-        {
-             get
-            {
-              bool IsPublicHoliday = DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI);
-
-                if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday ||
-                    DateTime.Today.DayOfWeek == DayOfWeek.Sunday   ||
-                    IsPublicHoliday)
-                                   return true;
-                            
-             return false;
-            }
-        }
+        private ConnectionCost connectionhost = NetworkInformation.GetInternetConnectionProfile().GetConnectionCost();
+        public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile ||    (connectionhost.NetworkCostType==NetworkCostType.Unknown || connectionhost.NetworkCostType==NetworkCostType.Unrestricted));
+        public bool SaturdaySundayOrHoliday => (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday || DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI));
         public bool IsCameraPresent => (Camera_present().Result);
         
         public Exception Ex { get; set; }
+        
         public bool Success { get; set; }
         public string Result { get; set; }
         public StorageFile File { get; set; }
@@ -63,24 +52,12 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region SPLOŠNE METODE
-      /*  public List<string> Getdate()
-        { 
-            List<string> dts = new List<string>();
-            DateTime[] dates = new DateTime[] { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
-          
-
-            foreach (DateTime date in dates)
-                       if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
-                                                            dts.Add(date.ToString("dd. MMMM yyy"));
-                      
-            dts.Add("Več na spletni strani.");
-            return dts;
-        }*/
+    
         public List<string> GetSiteContent(byte type,string uri)
         {         
             if(!NetAndWiFi)
             {
-                Flag = -3; // ni interneta
+                Ex = new Exception("Preverite ali ste povezani z internetom preko povezave WiFi."); // ni interneta
                 return null;
             }
             List<string> Content = new List<string>();
@@ -99,6 +76,7 @@ namespace Aplikacija_iFE
                 {
                     case 1:
                         var images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
+                                                 
                         foreach (var image in images)
                             Content.Add(image.Attributes[@"title"].Value);
                         break;
@@ -124,6 +102,7 @@ namespace Aplikacija_iFE
                                     if (m.InnerText != "")
                                         meals.Add(m.InnerText);
                             });
+                       
 
                             sbyte legth = Convert.ToSByte(meals.Count);
                             for (int i = 0; i < headers.Count; i++)
@@ -139,34 +118,21 @@ namespace Aplikacija_iFE
             }
             catch (NullReferenceException e)
             {
-                Ex = e;
-                Flag = -4; // ne morem dol povlečti strani ker nič ni na njej
+                Ex = new NullReferenceException();
                 return null;
-            }
-                           
-                
+            }                            
          return Content;
         }
-
         private async Task<WebResponse> GetResponse(string uri)
         {
                 return await WebRequest.Create(uri).GetResponseAsync();
         }
         private async Task<bool> Camera_present()
         {
-            bool is_camera_present = false;
-
-            var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-            if (devices.Count >= 1)
-            {
-                is_camera_present = true;
-            }
-
-            return is_camera_present;
+           var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+           return (devices.Count >= 1);
+          
         }
-
-
-
         #endregion
         #region PODATKOVNI PRENOS
         public void MailAndFTP(string room, string description, string photo)
@@ -229,7 +195,28 @@ namespace Aplikacija_iFE
         }
         #endregion
     }
+
+
+
+
+    class Zaposlen
+    {
+
+        public int ID { get; set; }
+        public string Ime { get; set; }
+        public string Priimek { get; set; }
+        public string Eposta { get; set; }
+        public string Telefonska { get; set; }
+        public string GovorilneUre { get; set; }
+        public string Prostor { get; set; }
+        public string Naziv { get; set; }
+        public string TipZaposlenega { get; set; }
+        public string Laboratorij { get; set; }
+        public string Tajnica { get; set; }
+        public string Vloga { get; set; }
+    }
 }
+
 
 
 

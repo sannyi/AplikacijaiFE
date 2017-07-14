@@ -8,20 +8,14 @@ using System.Threading.Tasks;
 
 namespace Aplikacija_iFE
 {
-    class DataBaseVariables
-    {
-
-
-    }
-    class SQLite : DataBaseVariables
+   
+    class SQLite
     {
         private string[] queries;
         private static string SQLitePath => Path.Combine(Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path, "iFE.sqlite");
-        SqliteConnection conn => new SqliteConnection("Filename=" + SQLitePath);
+        SqliteConnection Conn => new SqliteConnection("Filename=" + SQLitePath);
         Tools b = new Tools();
-
-
-
+        
         #region KONSTRUKTORJI
         public SQLite()
         {
@@ -45,26 +39,30 @@ namespace Aplikacija_iFE
 
             foreach (string a in queries)
             {
-                conn.Open();
-                SqliteCommand command = new SqliteCommand(a, conn);
+                Conn.Open();
+                SqliteCommand command = new SqliteCommand(a, Conn);
                 try { command.ExecuteNonQuery(); }
-                catch (SqliteException e) {
-                    conn.Close(); }
+                catch (SqliteException e)
+                {
+                }
+                finally
+                {
+                    Conn.Close();
+                }
             }
-            conn.Close();
+            Conn.Close();
         }
         public void SetAllToDefault()
         {
             queries = new string[] { "UPDATE User SET ID = 0, Surname = '', Name = '', Email = '', Password = '';", "UPDATE Settings  SET OnlyWifi= 1, Language = 'si', Certificate = 'c:', SHA1Certif = 'sha1';" };
-            SqliteCommand command = new SqliteCommand();
-            command.Connection = conn;
-            conn.Open();
+            SqliteCommand command = new SqliteCommand(){Connection = Conn};
+            Conn.Open();
             foreach (string a in queries)
             {
                 command.CommandText = a;
-                try { command.ExecuteReader(); } catch { conn.Close(); }
+                try { command.ExecuteReader(); } catch { Conn.Close(); }
             }
-            conn.Close();
+            Conn.Close();
         }
         public void UpdateSettings(byte column, string value)
         {
@@ -80,9 +78,9 @@ namespace Aplikacija_iFE
             }
             if (column == 1 || column == 0) { queries = new string[] { "UPDATE Settings SET '" + collumn_name + "'='" + column + "'" }; }
             else { queries = new string[] { "UPDATE Settings SET '" + collumn_name + "'='" + value + "'" }; }
-            conn.Open();
-            SqliteCommand command = new SqliteCommand(queries[0], conn);
-            try { command.ExecuteNonQuery(); } catch (Exception e) { e.ToString(); } finally { conn.Close(); }
+            Conn.Open();
+            SqliteCommand command = new SqliteCommand(queries[0], Conn);
+            try { command.ExecuteNonQuery(); } catch (Exception e) { e.ToString(); } finally { Conn.Close(); }
 
         }
         #endregion

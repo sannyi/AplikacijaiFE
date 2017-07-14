@@ -13,16 +13,16 @@ namespace Aplikacija_iFE
         public MainPage()
         {
             InitializeComponent();
-            string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path,"iFE.sqlite");
-   
-           if (!File.Exists(path))
+            string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "iFE.sqlite");
+
+            if (!File.Exists(path))
             {
-              
+
                 //create sqlitefile
             }
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
         }
-#region NAVIGACIJA MED STRANMI
+        #region NAVIGACIJA MED STRANMI
         private void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
@@ -36,7 +36,7 @@ namespace Aplikacija_iFE
                 rootFrame.GoBack();
             }
         }
-#endregion
+        #endregion
         #region GUMBI
         private void Camera_click(object sender, RoutedEventArgs e)
         {
@@ -60,17 +60,18 @@ namespace Aplikacija_iFE
         {
             if (new Tools().NetAndWiFi)
             {
+                messagedialog = new MessageDialog("0");
                 switch (stran)
                 {
                     case 1:
-                        Frame.Navigate(typeof(camera_report));
+                        if(new Tools().IsCameraPresent)
+                                                       Frame.Navigate(typeof(Camera_report));
+                        else
+                            messagedialog = new MessageDialog("Preverite ali je vaša kamera priključena.");
                         break;
                     case 2:
                         if (new Tools().SaturdaySundayOrHoliday)
-                        {
-                            messagedialog = new MessageDialog("Danes kuhinja ne obratuje");
-                            await messagedialog.ShowAsync();
-                        }
+                                                 messagedialog = new MessageDialog("Danes kuhinja ne obratuje");
                         else
                             Frame.Navigate(typeof(Todays_menu));
                         break;
@@ -82,13 +83,14 @@ namespace Aplikacija_iFE
                         break;
                     case 5:
                         throw new NotImplementedException();
-                       // break;
+                    // break;
                     case 6:
                         Frame.Navigate(typeof(Settings));
                         break;
                     default: throw new NotImplementedException();
-                        
                 }
+                if(messagedialog.Content!="0")
+                await messagedialog.ShowAsync();
             }
             else
             {
@@ -96,9 +98,6 @@ namespace Aplikacija_iFE
                 await messagedialog.ShowAsync();
             }
         }
-
         #endregion
-
-      
     }
 }

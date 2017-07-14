@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Media.Capture;
@@ -21,7 +20,7 @@ using Windows.System.Display;
 namespace Aplikacija_iFE
 {
 
-    public sealed partial class camera_report : Page
+    public sealed partial class Camera_report : Page
     {
         #region SPREMENLJIVKE
         //fotoaparat
@@ -34,13 +33,15 @@ namespace Aplikacija_iFE
         private bool phototaken = false;
         #endregion       
         #region KONSTRUKTORJI
-        public camera_report()
+        public Camera_report()
         {
             InitializeComponent();
             a = new Tools();
             SystemNavigationManager.GetForCurrentView().BackRequested += Camera_report_BackRequested;
 
-            StartPreviewAsync();
+                   
+                
+                StartPreviewAsync();
                 _request_to_display = new DisplayRequest();
                 //Strechiraj fotoaparat na 
                 Application.Current.Suspending += Application_Suspending;  
@@ -130,7 +131,7 @@ namespace Aplikacija_iFE
         //Uničenje objekta v primeru, da se odločimo za izhod iz aplikacije
         private async void Application_Suspending(object sender,SuspendingEventArgs e)
            {
-                if(Frame.CurrentSourcePageType==typeof(camera_report))
+                if(Frame.CurrentSourcePageType==typeof(Camera_report))
                          {
                           var deferral = e.SuspendingOperation.GetDeferral();
                           await CleanupCameraAsync();

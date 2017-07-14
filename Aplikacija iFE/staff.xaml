@@ -5,20 +5,20 @@
     xmlns:local="using:Aplikacija_iFE"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Loaded="staff_loaded">
-    <StackPanel>
+    mc:Ignorable="d">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <ListBox x:Name="seznamZaposlenih" Margin="0,0,0,50">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Padding="20" Margin="20" Width="300" Background="Lime">
-                        <TextBlock Text="{Binding Ime}" FontSize="24" Foreground="Black"/>
-                        <TextBlock Text="{Binding Priimek}" FontSize="12" Foreground="Black"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>    
-        </ListBox>
+            <ListBox x:Name="STAFF" Margin="0, 0, 0, 50">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Padding="20" Margin="20" Background="Crimson">
+                            <TextBlock Text="{Binding Ime}" FontSize="26"/>
+                            <TextBlock Text="{Binding Priimek}" FontSize="26"/>
+                            <TextBlock Text="{Binding TipZaposlenega}" Foreground="Silver"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </ScrollViewer>
-    </StackPanel>
+    </Grid>
 </Page>
