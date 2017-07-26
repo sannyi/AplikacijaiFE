@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -26,22 +27,16 @@ namespace Aplikacija_iFE
         public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile ||    (connectionhost.NetworkCostType==NetworkCostType.Unknown || connectionhost.NetworkCostType==NetworkCostType.Unrestricted));
         public bool SaturdaySundayOrHoliday => (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday || DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI));
         public bool IsCameraPresent => (Camera_present().Result);
-        
         public Exception Ex { get; set; }
-        
         public bool Success { get; set; }
         public string Result { get; set; }
         public StorageFile File { get; set; }
         public sbyte Flag { get; set; }
-
         #endregion
         public Tools()
         {
             Flag = 0;
         }
-        #region SPREMENLJIVKE
-
-        #endregion
         #region USTVARI DATOTEKE
         public void CreateLocalDB()
         {
@@ -52,7 +47,11 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region SPLOŠNE METODE
-    
+        #region METODE KI VRAČAJO LIST<OBJEKT>
+        public List<Zaposlen> GetEmployeesBasedOnType(string content, List<Zaposlen> all_employees )
+        {
+           return (all_employees.Where(a_emp => a_emp.TipZaposlenega == content)).ToList();
+        }
         public List<string> GetSiteContent(byte type,string uri)
         {         
             if(!NetAndWiFi)
@@ -123,6 +122,8 @@ namespace Aplikacija_iFE
             }                            
          return Content;
         }
+        #endregion
+        #region METODE TIPA ASYNC TASK
         private async Task<WebResponse> GetResponse(string uri)
         {
                 return await WebRequest.Create(uri).GetResponseAsync();
@@ -133,6 +134,7 @@ namespace Aplikacija_iFE
            return (devices.Count >= 1);
           
         }
+        #endregion
         #endregion
         #region PODATKOVNI PRENOS
         public void MailAndFTP(string room, string description, string photo)
@@ -195,13 +197,9 @@ namespace Aplikacija_iFE
         }
         #endregion
     }
-
-
-
-
+    #region CLASSI ZA OBJEKTE
     class Zaposlen
     {
-
         public int ID { get; set; }
         public string Ime { get; set; }
         public string Priimek { get; set; }
@@ -215,13 +213,8 @@ namespace Aplikacija_iFE
         public string Tajnica { get; set; }
         public string Vloga { get; set; }
     }
+    #endregion
 }
-
-
-
-
-    
-        //https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
 
 
     

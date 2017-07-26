@@ -12,11 +12,10 @@ namespace Aplikacija_iFE
         {
             InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Settings_BackRequested;
-            Wifi.Text = "Podatki se bodo prenasali" + Environment.NewLine + "tudi preko podatkovne" +Environment.NewLine+" povezave.";
+        //    Wifi.Text = "Podatki se bodo prenasali" + Environment.NewLine + "tudi preko podatkovne" + Environment.NewLine + " povezave.";
             Language1.Text = "Izberite jezik." + Environment.NewLine + "Choose a language." + Environment.NewLine + "Sprache wählen.";
-           
-        }
-#region EVENTI
+        }  
+        #region EVENTI
         private void Settings_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if (Frame.CanGoBack)
@@ -25,15 +24,13 @@ namespace Aplikacija_iFE
                 e.Handled = true;
             }
         }
-
         private void Privzeto_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             new SQLite().SetAllToDefault();
         }
-
         private void ToggleSwitch_Toggled(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if(WiFi!=null)
+          /*  if(WiFi!=null)
             {
                 try
                 {
@@ -41,7 +38,6 @@ namespace Aplikacija_iFE
                     {
                         WiFi.IsOn = false;
                         new SQLite().UpdateSettings(0, "false");
-                        
                     }
                     else
                     {
@@ -53,13 +49,9 @@ namespace Aplikacija_iFE
                 {
                     ex.ToString();
                 }
-
-
-            }
-         
+            }*/
         }
         #endregion
-
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //update language

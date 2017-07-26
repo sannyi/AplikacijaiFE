@@ -7,18 +7,36 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ListBox x:Name="STAFF" Margin="0, 0, 0, 50">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Padding="20" Margin="20" Background="Crimson">
-                            <TextBlock Text="{Binding Ime}" FontSize="26"/>
-                            <TextBlock Text="{Binding Priimek}" FontSize="26"/>
-                            <TextBlock Text="{Binding TipZaposlenega}" Foreground="Silver"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <RelativePanel Margin="10,10,10,0" Grid.Row="0" Height="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ListBox x:Name="STAFF" Margin="0, 0, 0, 10" SelectionChanged="STAFF_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Padding="20" Margin="20" Background="Crimson">
+                                <TextBlock Text="{Binding Ime}" FontSize="26"/>
+                                <TextBlock Text="{Binding Priimek}" FontSize="26"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+        </RelativePanel>
+
+        <StackPanel Margin="10,10,10,10" Grid.Row="1">
+            <ComboBox Name="TipZaposlenih" HorizontalAlignment="Stretch" SelectionChanged="TipZaposlenih_SelectionChanged">
+                <ComboBoxItem Content="Vsi zaposleni"/>
+                <ComboBoxItem Content="Izredni profesorji"/>
+                <ComboBoxItem Content="Redni profesorij"/>
+                <ComboBoxItem Content="Docenti"/>
+                <ComboBoxItem Content="Predavatelji in višji predavatelji"/>
+                <ComboBoxItem Content="Asistenti"/>
+                <ComboBoxItem Content="Tehniški sodelavci"/>
+            </ComboBox>
+        </StackPanel>
     </Grid>
+   
 </Page>
