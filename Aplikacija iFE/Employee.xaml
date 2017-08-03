@@ -17,7 +17,7 @@
         <TextBlock Name="Laboratorij" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Name="Tajnica" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Name="Vloga" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Name="Zadeva" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="40" />
+        <TextBox Name="Zadeva" PlaceholderText="Napišite zadevo vsebine" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="40" />
         <TextBox Name="Hitro_sporocilo" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="169" />
         <Button Name="Poslji_hitro_sporocilo" Content="Pošlji hitro sporočilo" FontSize="18" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="180" Height="35" />
     </StackPanel>

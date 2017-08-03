@@ -1,6 +1,4 @@
-﻿using System;
-using Windows.UI.Core;
-using Windows.UI.Popups;
+﻿using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -22,13 +20,12 @@ namespace Aplikacija_iFE
             }
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-           
+        {  
             Zaposlen employee = e.Parameter as Zaposlen;
-            string[] props = new string[] {employee.Eposta,employee.Telefonska, employee.GovorilneUre, employee.Prostor,employee.Naziv, employee.TipZaposlenega, employee.Laboratorij,employee.Tajnica,employee.Vloga   };
+            string[] props = new string[] {employee.Eposta,employee.Telefonska, employee.GovorilneUre, employee.Prostor,employee.Naziv, employee.TipZaposlenega, employee.Laboratorij,employee.Tajnica,employee.Vloga};
             TextBlock[] textblocks = new TextBlock [] {Eposta,Telefonska,GovorilneUre,Prostor,Naziv,TipZaposlenega,Laboratorij,Tajnica,Vloga};
 
-
+            
             Ime_in_priimek.Text = employee.Ime + " " + employee.Priimek;
             sbyte itemcount = 0;
             foreach (TextBlock t in textblocks )

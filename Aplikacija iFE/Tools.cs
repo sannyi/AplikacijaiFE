@@ -9,7 +9,10 @@ using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
+using Windows.Security.Cryptography;
+using Windows.Security.Cryptography.Core;
 using Windows.Storage;
+using Windows.Storage.Streams;
 //od tu naprej  je vprašljiva licenca;
 using Nager.Date;
 using HtmlAgilityPack; //licenca
@@ -24,7 +27,7 @@ namespace Aplikacija_iFE
     {
         #region ATRIBUTI
         private ConnectionCost connectionhost = NetworkInformation.GetInternetConnectionProfile().GetConnectionCost();
-        public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile ||    (connectionhost.NetworkCostType==NetworkCostType.Unknown || connectionhost.NetworkCostType==NetworkCostType.Unrestricted));
+        public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile || (connectionhost.NetworkCostType == NetworkCostType.Unknown || connectionhost.NetworkCostType == NetworkCostType.Unrestricted));
         public bool SaturdaySundayOrHoliday => (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday || DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI));
         public bool IsCameraPresent => (Camera_present().Result);
         public Exception Ex { get; set; }
@@ -43,30 +46,69 @@ namespace Aplikacija_iFE
             //create sqlite database
             SqliteEngine.UseWinSqlite3();
             SQLite offline_baza = new SQLite();
-          //  StorageFile SqliteDatabase = await ApplicationData.Current.LocalFolder.CreateFileAsync("iFe.sqlite", CreationCollisionOption.ReplaceExisting);
+            //  StorageFile SqliteDatabase = await ApplicationData.Current.LocalFolder.CreateFileAsync("iFe.sqlite", CreationCollisionOption.ReplaceExisting);
         }
         #endregion
         #region SPLOŠNE METODE
-        #region METODE KI VRAČAJO LIST<OBJEKT>
-        public List<Zaposlen> GetEmployeesBasedOnType(string content, List<Zaposlen> all_employees )
+
+
+        #region VOID METODE
+        public void GetCredentialsAndUpdateDatabase(string credential, string password)
         {
-           return (all_employees.Where(a_emp => a_emp.TipZaposlenega == content)).ToList();
+            password = TextToHash("SHA1", password);
+
+            byte queryCount = 0;
+            //1. preveri ali  je vnesen string int (ID) ali e-mail
+            if(credential.ToString().Length==8)
+            {
+                int ID =int.Parse(credential);
+               // query_count=
+            }
+            else if(credential.Length==6)
+            {
+                string Eposta = credential;
+                //queryCount
+            }
+            else
+            {
+                return;
+            }
+
+
+
+            //2. če je e-mail pojdi po REST APIju za mail+password
+            //sicer ID+password
+            //3. preveri coutn -> vrni null če je 0, sicer nadaljuje
+            
+            //0 -> ID , //1 -> email //2 -> password
+
         }
-        public List<string> GetSiteContent(byte type,string uri)
-        {         
-            if(!NetAndWiFi)
+
+
+        #endregion
+        #region METODE KI VRAČAJO LIST<OBJEKT>
+        public List<Zaposlen> GetEmployeesBasedOnType(string type_of_employee, List<Zaposlen> all_employees)
+        {
+            foreach (Zaposlen e in all_employees.ToList())
+                if (e.TipZaposlenega != type_of_employee)
+                    all_employees.Remove(e);
+            //ČISTA LINQ METODA, BREZ ZANK !!!!!!!!!!!!!!!!!!!!
+            return all_employees;
+        }
+        public List<string> GetSiteContent(byte type, string uri)
+        {
+            if (!NetAndWiFi)
             {
                 Ex = new Exception("Preverite ali ste povezani z internetom preko povezave WiFi."); // ni interneta
                 return null;
             }
             List<string> Content = new List<string>();
 
-            Stream stream = GetResponse(uri).Result.GetResponseStream();
             string result = "";
 
-            using (StreamReader sr = new StreamReader(stream))
-                                            result = sr.ReadToEnd();
-            
+            using (StreamReader sr = new StreamReader(GetResponse(uri).Result.GetResponseStream()))
+                result = sr.ReadToEnd();
+
             HtmlDocument MobileDocument = new HtmlDocument();
             MobileDocument.LoadHtml(result);
             try
@@ -74,9 +116,8 @@ namespace Aplikacija_iFE
                 switch (type)
                 {
                     case 1:
-                        var images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
-                                                 
-                        foreach (var image in images)
+                       HtmlNodeCollection images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
+                        foreach (HtmlNode image in images)
                             Content.Add(image.Attributes[@"title"].Value);
                         break;
                     case 2:
@@ -84,33 +125,31 @@ namespace Aplikacija_iFE
                         Parallel.Invoke(
                             () =>
                             {
-                                var h5 = MobileDocument.DocumentNode.SelectNodes("//strong[@class=' color-blue']");
-                                foreach (var h in h5)
+                                HtmlNodeCollection h5 = MobileDocument.DocumentNode.SelectNodes("//strong[@class=' color-blue']");
+                                foreach (HtmlNode h in h5)
                                     headers.Add(h.InnerText);
                             },
                             () =>
                             {
-                                var soup = MobileDocument.DocumentNode.SelectNodes("//ul[@class='list-unstyled']/li/i[@class='text-bold color-dark icon-food-090']");
-                                foreach (var s in soup)
+                                HtmlNodeCollection soup = MobileDocument.DocumentNode.SelectNodes("//ul[@class='list-unstyled']/li/i[@class='text-bold color-dark icon-food-090']");
+                                foreach (HtmlNode s in soup)
                                     soups.Add(s.InnerText);
-                            },    
+                            },
                             () =>
                             {
-                                var meal = MobileDocument.DocumentNode.SelectNodes("//i[@class='text-bold color-dark']");
-                                foreach (var m in meal)
+                                HtmlNodeCollection meal = MobileDocument.DocumentNode.SelectNodes("//i[@class='text-bold color-dark']");
+                                foreach (HtmlNode m in meal)
                                     if (m.InnerText != "")
                                         meals.Add(m.InnerText);
                             });
-                       
-
-                            sbyte legth = Convert.ToSByte(meals.Count);
-                            for (int i = 0; i < headers.Count; i++)
-                            {
-                                if (i + 1 == headers.Count)
-                                    Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
-                                else
-                                    Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
-                            }
+                        sbyte legth = Convert.ToSByte(meals.Count);
+                        for (int i = 0; i < headers.Count; i++)
+                        {
+                            if (i + 1 == headers.Count)
+                                Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
+                            else
+                                Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
+                        }
                         break;
                     default: throw new NotImplementedException();
                 }
@@ -119,27 +158,27 @@ namespace Aplikacija_iFE
             {
                 Ex = new NullReferenceException();
                 return null;
-            }                            
-         return Content;
+            }
+            return Content;
         }
         #endregion
         #region METODE TIPA ASYNC TASK
         private async Task<WebResponse> GetResponse(string uri)
         {
-                return await WebRequest.Create(uri).GetResponseAsync();
+            return await WebRequest.Create(uri).GetResponseAsync();
         }
         private async Task<bool> Camera_present()
         {
-           var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-           return (devices.Count >= 1);
-          
+            var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+            return (devices.Count >= 1);
+
         }
         #endregion
         #endregion
         #region PODATKOVNI PRENOS
         public void MailAndFTP(string room, string description, string photo)
         {
-            Parallel.Invoke(() => SendMail(room, description,photo));
+            Parallel.Invoke(() => SendMail(room, description, photo));
         }
         private async void SendMail(string room, string description, string filename)
         {
@@ -156,7 +195,7 @@ namespace Aplikacija_iFE
                     {
                         mail.To.Add("ak3900@student.uni-lj.si");
                         mail.Subject = "V prostoru " + room + " je nastala škoda: ";
-                        mail.TextBody = description;  
+                        mail.TextBody = description;
                     },
                     () =>
                     {
@@ -180,31 +219,50 @@ namespace Aplikacija_iFE
         {
             Uri uri = new Uri("ftp://83.212.126.172");
             FtpClient client = new FtpClient();
-            await client.ConnectAsync(new HostName(uri.Host),"1026","Administrator", "8KINtGoV7s");
+            await client.ConnectAsync(new HostName(uri.Host), "1026", "Administrator", "8KINtGoV7s");
 
-          /*  byte [] data;
-            await Task.Run(() =>
-            {
-
-
-
-            }
+            /*  byte [] data;
+              await Task.Run(() =>
+              {
 
 
-            );*/
+
+              }
+
+
+              );*/
 
             //await client.UploadAsync(uri.AbsolutePath, data);
         }
         #endregion
+        #region Kriptografija
+        public string TextToHash(string algorithm, string text)
+        {
+            IBuffer buffUTF8Msg = CryptographicBuffer.ConvertStringToBinary(text, BinaryStringEncoding.Utf8);
+            HashAlgorithmProvider objAlgProv = HashAlgorithmProvider.OpenAlgorithm(algorithm);
+            string algorithmUsed = objAlgProv.AlgorithmName;
+            IBuffer buffHash = objAlgProv.HashData(buffUTF8Msg);
+            if(buffHash.Length != objAlgProv.HashLength)
+            {
+                throw new Exception("Napaka pri kreiranju HASHA");
+            }
+            return CryptographicBuffer.EncodeToBase64String(buffHash);
+        }
+        #endregion
     }
     #region CLASSI ZA OBJEKTE
-    class Zaposlen
+    class Oseba
     {
         public int ID { get; set; }
         public string Ime { get; set; }
         public string Priimek { get; set; }
         public string Eposta { get; set; }
         public string Telefonska { get; set; }
+        public string Naslov { get; set; }
+    }
+    class Zaposlen : Oseba
+    {
+       
         public string GovorilneUre { get; set; }
         public string Prostor { get; set; }
         public string Naziv { get; set; }
@@ -213,9 +271,18 @@ namespace Aplikacija_iFE
         public string Tajnica { get; set; }
         public string Vloga { get; set; }
     }
+
+    class Student : Oseba
+    {
+      
+        public string Password { get; }
+
+
+       
+    }
+
     #endregion
 }
-
 
     
      

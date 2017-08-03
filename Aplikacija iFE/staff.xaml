@@ -25,9 +25,8 @@
                 </ListBox>
             </ScrollViewer>
         </RelativePanel>
-
         <StackPanel Margin="10,10,10,10" Grid.Row="1">
-            <ComboBox Name="TipZaposlenih" HorizontalAlignment="Stretch" SelectionChanged="TipZaposlenih_SelectionChanged">
+            <ComboBox Name="TipZaposlenih" HorizontalAlignment="Stretch" SelectionChanged="TipZaposlenih_SelectionChanged" SelectedIndex="0">
                 <ComboBoxItem Content="Vsi zaposleni"/>
                 <ComboBoxItem Content="Izredni profesorji"/>
                 <ComboBoxItem Content="Redni profesorij"/>
@@ -38,5 +37,4 @@
             </ComboBox>
         </StackPanel>
     </Grid>
-   
 </Page>

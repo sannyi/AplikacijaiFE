@@ -1,20 +1,22 @@
 ﻿using System.Collections.Generic;
-
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using System.Net.Http;
 using Windows.UI.Xaml.Navigation;
 
+
 namespace Aplikacija_iFE
 {
     public sealed partial class staff : Page
     {
         private List<Zaposlen> zaposleni = new List<Zaposlen>();
+        Tools fetch_lists;
         public staff()
         {
            InitializeComponent();
-            SystemNavigationManager.GetForCurrentView().BackRequested += Staff_BackRequested;
+           fetch_lists = new Tools();
+           SystemNavigationManager.GetForCurrentView().BackRequested += Staff_BackRequested;
         }
         #region EVENTI
         private void Staff_BackRequested(object sender, BackRequestedEventArgs e)
@@ -36,33 +38,36 @@ namespace Aplikacija_iFE
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-          zaposleni = JsonConvert.DeserializeObject<List<Zaposlen>>(await new HttpClient().GetStringAsync("http://83.212.126.172/api/Zaposlens"));
-            STAFF.ItemsSource = zaposleni;
+            if (fetch_lists.NetAndWiFi)
+            {
+                zaposleni = JsonConvert.DeserializeObject<List<Zaposlen>>(await new HttpClient().GetStringAsync("http://83.212.126.172/api/Zaposlens"));
+                STAFF.ItemsSource = zaposleni;
+            }
+            else
+            {
+                STAFF.ItemsSource = new Zaposlen
+                {
+                    ID = -1, Ime = "Napaka omrežne povezave"
+                };
+                TipZaposlenih.IsEnabled = false;
+                STAFF.IsEnabled = false;
+            }
         }
        private void STAFF_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Frame.Navigate(typeof(Employee), STAFF.SelectedItem as Zaposlen);
         }
-
-      
-
-        private void TipZaposlenih_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private  void TipZaposlenih_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
-            string content = TipZaposlenih.SelectedValue.ToString();
-           if(content!="Vsi zaposleni")
+            if (TipZaposlenih == null) return;
+            STAFF.ItemsSource = null;
+
+            if (((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString() != "Vsi zaposleni")
             {
-                STAFF.ItemsSource = new Tools().GetEmployeesBasedOnType(content, zaposleni);
-
+                STAFF.ItemsSource = fetch_lists.GetEmployeesBasedOnType(((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString(),new List<Zaposlen>(zaposleni));
+                return;
             }
-           else
-            {
-                STAFF.ItemsSource = zaposleni;
-            }
-            STAFF.ReloadLocalValue();
-
-           
-
+            STAFF.ItemsSource = zaposleni;
         }
     }
 }

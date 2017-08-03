@@ -7,28 +7,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <TextBlock Text="Nastavitve" Margin="52,0,127,0" Height="22" HorizontalAlignment="Center" Width="183"/>
-                <StackPanel Height="618" RenderTransformOrigin="0.5,0.5">
-                    <Grid Height="100" Margin="0,30,0,0"/>
-                    <Grid Height="150" Margin="0,30,0,0">
-                        <TextBlock x:Name="Language1" Margin="0,0,0,65" />
-                        <ComboBox  Margin="0,110,0,0" VerticalAlignment="Top" Width="360" Height="30" SelectionChanged="ComboBox_SelectionChanged">
-                            <ComboBoxItem Content="Slovenščina"/>
-                            <ComboBoxItem Content="Deutsch"/>
-                            <ComboBoxItem Content="English"/>
-                        </ComboBox>
-                    </Grid>
-                    <Grid Height="100" Margin="0,30,0,0">
-                        <Button x:Name="Save" Content="Shrani nastavitve"  Height="46" Margin="10,44,10,10" Width="350"/>
-
-                    </Grid>
-                    <Grid Height="100" Margin="0,30,0,0">
-                        <Button x:Name="Privzeto" Content="Pobriši "  Height="46" Margin="10,44,10,10" Width="350" Click="Privzeto_Click"/>
-                    </Grid>
-                </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <RelativePanel ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="0" Height="Auto">
+            <StackPanel   Height="Auto" Margin="10,10,-145.667,0"  HorizontalAlignment="Center" Width="340">
+                <TextBox x:Name="IDOrMail" Width="320" Height="Auto" PlaceholderText="Vpisna stevilka ali eposta" HorizontalAlignment="Center" Margin="10,0"  />
+                <PasswordBox x:Name="PasswordLogin" Width="320" Height="Auto" PlaceholderText="Uporabnisko geslo"  HorizontalAlignment="Center" Margin="10,10,10,10" PasswordChar="$"/>
+                <Button x:Name="LogIn" Width="320" Height="Auto" Content="Prijava" HorizontalAlignment="Center" Margin="10,0,10,10" Click="LogIn_Click"/>
             </StackPanel>
-        </ScrollViewer>
+            <StackPanel Margin="10,136,0,-136">
+                <ComboBox x:Name="Languages"  Margin="10,100,0,10" VerticalAlignment="Top" Width="310" Height="30" SelectionChanged="Languages_SelectionChanged">
+                    <ComboBoxItem Content="Slovenščina"/>
+                    <ComboBoxItem Content="Deutsch"/>
+                    <ComboBoxItem Content="English"/>
+                </ComboBox>
+            </StackPanel>
+        </RelativePanel>
+        <StackPanel Margin="0,0"  Grid.Row="1">
+            <Button x:Name="Save" Content="Shrani nastavitve" Margin="10,10,10,0"  Height="Auto"  Width="340" HorizontalAlignment="Center" Click="Save_Click"/>
+            <Button x:Name="Defaults" Content="Pobriši nastavitve" Margin="10"  Height="Auto" Width="340" HorizontalAlignment="Center"    Click="Defaults_Click"/>
+        </StackPanel>
     </Grid>
+
+
 </Page>

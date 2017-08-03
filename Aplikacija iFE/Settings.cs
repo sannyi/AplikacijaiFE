@@ -1,8 +1,6 @@
-﻿using System;
-using Windows.UI.Core;
+﻿using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Aplikacija_iFE
 {
@@ -12,8 +10,6 @@ namespace Aplikacija_iFE
         {
             InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Settings_BackRequested;
-        //    Wifi.Text = "Podatki se bodo prenasali" + Environment.NewLine + "tudi preko podatkovne" + Environment.NewLine + " povezave.";
-            Language1.Text = "Izberite jezik." + Environment.NewLine + "Choose a language." + Environment.NewLine + "Sprache wählen.";
         }  
         #region EVENTI
         private void Settings_BackRequested(object sender, BackRequestedEventArgs e)
@@ -28,33 +24,26 @@ namespace Aplikacija_iFE
         {
             new SQLite().SetAllToDefault();
         }
-        private void ToggleSwitch_Toggled(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+
+        private void Languages_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-          /*  if(WiFi!=null)
-            {
-                try
-                {
-                    if (WiFi.IsOn)
-                    {
-                        WiFi.IsOn = false;
-                        new SQLite().UpdateSettings(0, "false");
-                    }
-                    else
-                    {
-                        new SQLite().UpdateSettings(0, "true");
-                        WiFi.IsOn = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ex.ToString();
-                }
-            }*/
+
         }
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void Defaults_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void LogIn_Click(object sender, RoutedEventArgs e)
+        {
+            Tools prijava = new Tools();
+            prijava.GetCredentialsAndUpdateDatabase(IDOrMail.Text, PasswordLogin.Password);
+        }
+
         #endregion
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //update language
-        }
+
     }
 }
