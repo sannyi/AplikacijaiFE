@@ -16,9 +16,8 @@
                 <TextBox x:Name="IDOrMail" Width="320" Height="Auto" PlaceholderText="Vpisna stevilka ali eposta" HorizontalAlignment="Center" Margin="10,0"  />
                 <PasswordBox x:Name="PasswordLogin" Width="320" Height="Auto" PlaceholderText="Uporabnisko geslo"  HorizontalAlignment="Center" Margin="10,10,10,10" PasswordChar="$"/>
                 <Button x:Name="LogIn" Width="320" Height="Auto" Content="Prijava" HorizontalAlignment="Center" Margin="10,0,10,10" Click="LogIn_Click"/>
-            </StackPanel>
-            <StackPanel Margin="10,136,0,-136">
-                <ComboBox x:Name="Languages"  Margin="10,100,0,10" VerticalAlignment="Top" Width="310" Height="30" SelectionChanged="Languages_SelectionChanged">
+
+                <ComboBox x:Name="Languages"  Margin="10,0,10,10" VerticalAlignment="Top" HorizontalAlignment="Center" Width="320" Height="30" SelectionChanged="Languages_SelectionChanged">
                     <ComboBoxItem Content="Slovenščina"/>
                     <ComboBoxItem Content="Deutsch"/>
                     <ComboBoxItem Content="English"/>

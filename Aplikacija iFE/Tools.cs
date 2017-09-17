@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using Windows.Devices.Enumeration;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
@@ -16,7 +18,8 @@ using Windows.Storage.Streams;
 //od tu naprej  je vprašljiva licenca;
 using Nager.Date;
 using HtmlAgilityPack; //licenca
-using EASendMailRT; //licenca
+
+
 
 
 //FTP spisan po vzorčni kodi
@@ -35,10 +38,32 @@ namespace Aplikacija_iFE
         public string Result { get; set; }
         public StorageFile File { get; set; }
         public sbyte Flag { get; set; }
+        /*
+         * 
+         * 
+         * 
+         * 
+         * 
+         * Flag = 5 > ni študenta
+         * Flag = 6 > študent je v bazi
+         * Flag
+         * */
         #endregion
         public Tools()
         {
             Flag = 0;
+        }
+        public string Errors(int Flag)
+        {
+            switch(Flag)
+            {
+                case 5:
+                    return "Zapisi o študentu v PB ne obstajo";
+                case 6:
+                    return "Uspešno prijavljen";
+                default:
+                    throw new Exception();
+            }
         }
         #region USTVARI DATOTEKE
         public void CreateLocalDB()
@@ -55,32 +80,27 @@ namespace Aplikacija_iFE
         #region VOID METODE
         public void GetCredentialsAndUpdateDatabase(string credential, string password)
         {
-            password = TextToHash("SHA1", password);
-
-            byte queryCount = 0;
-            //1. preveri ali  je vnesen string int (ID) ali e-mail
-            if(credential.ToString().Length==8)
-            {
-                int ID =int.Parse(credential);
-               // query_count=
-            }
-            else if(credential.Length==6)
-            {
-                string Eposta = credential;
-                //queryCount
-            }
+            string original_passoword = password;
+            string SHA1password = TextToHash("SHA1", password);
+            string AES = Encrypt(SHA1password.ToUpper());
+            int type;
+            if (credential.Length == 8)
+                type = 1;
             else
             {
-                return;
+                credential = credential.Substring(0, 6);
+                type = 2;
             }
+                    /*
+             1 pošlji query na server in dobi response ,v primeru, da je vse null daj flag (definiraj jih) sicer posodobi SQLite DB
+             
+             
+             */
+        
 
 
 
-            //2. če je e-mail pojdi po REST APIju za mail+password
-            //sicer ID+password
-            //3. preveri coutn -> vrni null če je 0, sicer nadaljuje
             
-            //0 -> ID , //1 -> email //2 -> password
 
         }
 
@@ -176,45 +196,8 @@ namespace Aplikacija_iFE
         #endregion
         #endregion
         #region PODATKOVNI PRENOS
-        public void MailAndFTP(string room, string description, string photo)
-        {
-            Parallel.Invoke(() => SendMail(room, description, photo));
-        }
-        private async void SendMail(string room, string description, string filename)
-        {
-            try
-            {
-                SmtpClient client = new SmtpClient();
-                SmtpMail mail = new SmtpMail("Porocilo o škodi");
-                SmtpServer mail_server = new SmtpServer("smtp.live.com");
-                Attachment a = new Attachment();
-                mail.From = new MailAddress("aleksander.kovac97@hotmail.com");
-
-                Parallel.Invoke(
-                    () =>
-                    {
-                        mail.To.Add("ak3900@student.uni-lj.si");
-                        mail.Subject = "V prostoru " + room + " je nastala škoda: ";
-                        mail.TextBody = description;
-                    },
-                    () =>
-                    {
-                        mail_server.Port = 25;
-                        mail_server.Password = "Phoenix176";
-                        mail_server.User = "aleksander.kovac97@hotmail.com";
-                        mail_server.ConnectType = SmtpConnectType.ConnectSTARTTLS;
-                    });
-
-                await mail.AddAttachmentAsync(filename);
-                await client.SendMailAsync(mail_server, mail);
-                Result = "Obvestilo uspesno poslano!";
-            }
-            catch (Exception e)
-            {
-                e = Ex; Success = false;
-                Result = "Zgodila se je napaka";
-            }
-        }
+      
+    
         private async void SendToFTP(string photo)
         {
             Uri uri = new Uri("ftp://83.212.126.172");
@@ -236,6 +219,27 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region Kriptografija
+        private string Encrypt(string text)
+        {
+            string CRYPTOPASS = "E8CA77DA07CB749474775F5ADACFF45A771E16D2C7566544EF2AAE81BE1ADAAF";
+            byte[] clearBytes = Encoding.Unicode.GetBytes(text);
+            using (Aes encryptor = Aes.Create())
+            {
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(CRYPTOPASS, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                encryptor.Key = pdb.GetBytes(32);
+                encryptor.IV = pdb.GetBytes(16);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(clearBytes, 0, clearBytes.Length);
+                        cs.Dispose();
+                    }
+                    text = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            return text;
+        }
         public string TextToHash(string algorithm, string text)
         {
             IBuffer buffUTF8Msg = CryptographicBuffer.ConvertStringToBinary(text, BinaryStringEncoding.Utf8);
@@ -250,38 +254,7 @@ namespace Aplikacija_iFE
         }
         #endregion
     }
-    #region CLASSI ZA OBJEKTE
-    class Oseba
-    {
-        public int ID { get; set; }
-        public string Ime { get; set; }
-        public string Priimek { get; set; }
-        public string Eposta { get; set; }
-        public string Telefonska { get; set; }
-        public string Naslov { get; set; }
-    }
-    class Zaposlen : Oseba
-    {
-       
-        public string GovorilneUre { get; set; }
-        public string Prostor { get; set; }
-        public string Naziv { get; set; }
-        public string TipZaposlenega { get; set; }
-        public string Laboratorij { get; set; }
-        public string Tajnica { get; set; }
-        public string Vloga { get; set; }
-    }
-
-    class Student : Oseba
-    {
-      
-        public string Password { get; }
-
-
-       
-    }
-
-    #endregion
+  
 }
 
     
