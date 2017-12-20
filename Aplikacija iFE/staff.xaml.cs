@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Newtonsoft.Json;
 using System.Net.Http;
 using Windows.UI.Xaml.Navigation;
 
@@ -40,8 +39,10 @@ namespace Aplikacija_iFE
         {
             if (fetch_lists.NetAndWiFi)
             {
-                zaposleni = JsonConvert.DeserializeObject<List<Zaposlen>>(await new HttpClient().GetStringAsync("http://83.212.126.172/api/Zaposlens"));
-                STAFF.ItemsSource = zaposleni;
+                //vrni s pomočjo 
+            /*    zaposleni = JsonConvert.DeserializeObject<List<Zaposlen>>(await new HttpClient().GetStringAsync("http://83.212.126.172/api/Zaposlens"));
+                STAFF.ItemsSource = zaposleni;*/
+                //QUERY ZA PROFESORJE (ID, IME, PRIIMEK, EMAIL)
             }
             else
             {

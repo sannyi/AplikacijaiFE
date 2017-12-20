@@ -38,22 +38,10 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region GUMBI
-        private void Camera_click(object sender, RoutedEventArgs e)
-        {
-            Navigiraj_po_straneh(1);
-        }
-        private void Menu_Click(object sender, RoutedEventArgs e)
-        {
-            Navigiraj_po_straneh(2);
-        }
-        private void Nastavitve_Click(object sender, RoutedEventArgs e)
-        {
-            Navigiraj_po_straneh(6);
-        }
-        private void Profesorji_Click(object sender, RoutedEventArgs e)
-        {
-            Navigiraj_po_straneh(3);
-        }
+        private void Camera_click(object sender, RoutedEventArgs e)       {           Navigiraj_po_straneh(1);        }
+        private void Menu_Click(object sender, RoutedEventArgs e)         {           Navigiraj_po_straneh(2);        }
+        private void Nastavitve_Click(object sender, RoutedEventArgs e)   {           Navigiraj_po_straneh(6);        }
+        private void Profesorji_Click(object sender, RoutedEventArgs e)   {           Navigiraj_po_straneh(3);        }
         #endregion
         #region FUNKCIJE IN METODE
         private async void Navigiraj_po_straneh(byte stran)

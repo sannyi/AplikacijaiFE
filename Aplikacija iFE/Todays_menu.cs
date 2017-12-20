@@ -6,6 +6,7 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace Aplikacija_iFE
 {
@@ -47,6 +48,8 @@ namespace Aplikacija_iFE
             }
             
         }
+        private bool ListDownLoaded = false;
+
         private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true;}
@@ -69,5 +72,8 @@ namespace Aplikacija_iFE
         private async void Menu_Loaded(object sender, RoutedEventArgs e)
         {
         }
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+                }
     }
 }

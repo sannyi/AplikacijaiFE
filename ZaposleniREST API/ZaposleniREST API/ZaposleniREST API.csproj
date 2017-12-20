@@ -195,8 +195,6 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Oseba.cs" />
-    <Compile Include="Models\Student.cs" />
-    <Compile Include="Models\Zaposlen.cs" />
     <Compile Include="Models\ZaposleniREST_APIContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

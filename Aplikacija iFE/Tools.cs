@@ -18,6 +18,7 @@ using Windows.Storage.Streams;
 //od tu naprej  je vprašljiva licenca;
 using Nager.Date;
 using HtmlAgilityPack; //licenca
+using System.Globalization;
 
 
 
@@ -30,41 +31,53 @@ namespace Aplikacija_iFE
     {
         #region ATRIBUTI
         private ConnectionCost connectionhost = NetworkInformation.GetInternetConnectionProfile().GetConnectionCost();
+        
+        private DateTimeFormatInfo datetimeinfo = new CultureInfo("sl-SI").DateTimeFormat;
+
         public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile || (connectionhost.NetworkCostType == NetworkCostType.Unknown || connectionhost.NetworkCostType == NetworkCostType.Unrestricted));
+
         public bool SaturdaySundayOrHoliday => (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday || DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI));
+
+        public List<string>WorkingDays
+        {
+            get
+            {
+                byte i = 0;
+                DateTime Today = DateTime.Now;
+
+                while(DateTime.Today.DayOfWeek!=DayOfWeek.Saturday || DateTime.Today.DayOfWeek!=DayOfWeek.Sunday)
+                {
+                    WorkingDays.Add( DateTimeFormatInfo.CurrentInfo.GetDayName(Today.AddDays(i).DayOfWeek));
+                    if (Today.AddDays(i+1).DayOfWeek == DayOfWeek.Saturday)
+                        break;
+                    i++;
+                }
+
+                return WorkingDays;
+            }
+        }
+
         public bool IsCameraPresent => (Camera_present().Result);
         public Exception Ex { get; set; }
         public bool Success { get; set; }
         public string Result { get; set; }
         public StorageFile File { get; set; }
         public sbyte Flag { get; set; }
-        /*
-         * 
-         * 
-         * 
-         * 
-         * 
-         * Flag = 5 > ni študenta
-         * Flag = 6 > študent je v bazi
-         * Flag
-         * */
+        private static int tester;
+        
         #endregion
-        public Tools()
+        #region SLOVARJI
+        Dictionary<string, byte> Days = new Dictionary<string, byte>
         {
-            Flag = 0;
-        }
-        public string Errors(int Flag)
-        {
-            switch(Flag)
-            {
-                case 5:
-                    return "Zapisi o študentu v PB ne obstajo";
-                case 6:
-                    return "Uspešno prijavljen";
-                default:
-                    throw new Exception();
-            }
-        }
+            {"Ponedeljek",1 }, {"Torek",2}, {"Sreda",3},{"Četrtek",4},{"Petek",5}
+        };
+        Dictionary<byte, string> ErrorDescriptions = new Dictionary<byte, string>
+        {   {0, "OK"},
+            {1, "Napake internetne povezave." },{2,"Vnos ni vpisna številka!" },
+            { 5, "Zapisi o študentu v podatkovni bazi ne obstajajo!" },{ 6, "Uspešno prijavljen!" }, {7,"Dan v tednu (Sobota/Nedelja) ni veljavna izbira!"}
+        }; 
+        
+        #endregion
         #region USTVARI DATOTEKE
         public void CreateLocalDB()
         {
@@ -75,27 +88,40 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region SPLOŠNE METODE
-
+        #region NON VOID METODE
+        public byte GetDayNumber(string Day)
+        {
+            if (Days.ContainsKey(Day))
+                return Days[Day];
+            return 7;
+        }
+        public string GetErrorDescription(byte Code)
+        {
+            if(ErrorDescriptions.ContainsKey(Code))
+                            return ErrorDescriptions[Code];
+            return "Opisa napake v slovarju napak (še) ni. V primeru, da se je zgodila napaka, razvijalcu aplikacije pošljite opis napake s screenshotom vred.";
+        }
+#endregion
 
         #region VOID METODE
         public void GetCredentialsAndUpdateDatabase(string credential, string password)
         {
-            string original_passoword = password;
-            string SHA1password = TextToHash("SHA1", password);
-            string AES = Encrypt(SHA1password.ToUpper());
-            int type;
-            if (credential.Length == 8)
-                type = 1;
+            // string original_passoword = password;
+            //string SHA1password = TextToHash("SHA1", password);
+            // string AES = Encrypt(SHA1password.ToUpper());
+            MySQL prijava = new MySQL();
+            tester = prijava.Count("student", new string[]  { credential, password });
+            if (tester == 0)  {Flag = 5;return;}
+            else if (tester == -1) { Flag = 2; }
             else
             {
-                credential = credential.Substring(0, 6);
-                type = 2;
+                Student s;
+             /*   if(credential.Length==24 || credential.Length==6)                  
+                        credential = credential[2].ToString() + credential[3].ToString() + credential[4].ToString() + credential[5].ToString();*/
+
+                s = prijava.ReturnStudent(1, new string[] { credential, password });
             }
-                    /*
-             1 pošlji query na server in dobi response ,v primeru, da je vse null daj flag (definiraj jih) sicer posodobi SQLite DB
-             
-             
-             */
+           
         
 
 
@@ -114,12 +140,23 @@ namespace Aplikacija_iFE
                     all_employees.Remove(e);
             //ČISTA LINQ METODA, BREZ ZANK !!!!!!!!!!!!!!!!!!!!
             return all_employees;
-        }
+        }//DELA
+
+       /* public List<string>[] GetLunchForDayOfWeek(byte day)
+        {
+            List<string>[]  = new List<string>[]; // 
+            if(!NetAndWiFi)
+            {
+                Flag = 1;
+                return null;
+            }
+        }*/
         public List<string> GetSiteContent(byte type, string uri)
         {
             if (!NetAndWiFi)
             {
                 Ex = new Exception("Preverite ali ste povezani z internetom preko povezave WiFi."); // ni interneta
+
                 return null;
             }
             List<string> Content = new List<string>();
@@ -189,7 +226,7 @@ namespace Aplikacija_iFE
         }
         private async Task<bool> Camera_present()
         {
-            var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+            DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
             return (devices.Count >= 1);
 
         }
@@ -218,8 +255,8 @@ namespace Aplikacija_iFE
             //await client.UploadAsync(uri.AbsolutePath, data);
         }
         #endregion
-        #region Kriptografija
-        private string Encrypt(string text)
+        #region KRIPTO
+       /* private string Encrypt(string text)
         {
             string CRYPTOPASS = "E8CA77DA07CB749474775F5ADACFF45A771E16D2C7566544EF2AAE81BE1ADAAF";
             byte[] clearBytes = Encoding.Unicode.GetBytes(text);
@@ -239,8 +276,8 @@ namespace Aplikacija_iFE
                 }
             }
             return text;
-        }
-        public string TextToHash(string algorithm, string text)
+        }*/
+       public string TextToHash(string algorithm, string text)
         {
             IBuffer buffUTF8Msg = CryptographicBuffer.ConvertStringToBinary(text, BinaryStringEncoding.Utf8);
             HashAlgorithmProvider objAlgProv = HashAlgorithmProvider.OpenAlgorithm(algorithm);
@@ -250,7 +287,7 @@ namespace Aplikacija_iFE
             {
                 throw new Exception("Napaka pri kreiranju HASHA");
             }
-            return CryptographicBuffer.EncodeToBase64String(buffHash);
+            return CryptographicBuffer.EncodeToBase64String(buffHash).ToLower();
         }
         #endregion
     }

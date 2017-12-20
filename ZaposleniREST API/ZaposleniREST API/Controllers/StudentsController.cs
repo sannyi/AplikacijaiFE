@@ -18,13 +18,14 @@ namespace ZaposleniREST_API.Controllers
         private SqlDataAdapter da;
         private Exception ex = new Exception();
         private SqlConnection   povezava = new SqlConnection("Data Source=83.212.126.172\\SQLEXPRESS;Initial Catalog=iFE;User id=sa;Password=iFE2016");
-        
-        private Student GetTheStudent(string credential, string type, string encrypted_password)
+
+        [ResponseType(typeof(Student))]
+        private IHttpActionResult GetStudent(string credential, string type, string encrypted_password)
         {
            
             if (int.Parse(type) == 1)
             {
-                cmd = new SqlCommand("SELECT FROM dbo.fnVpisna(@ID,@Password)");
+                cmd = new SqlCommand("SELECT FROM dbo.fnDStudentPoVpisni(@ID,@Password)");
                 cmd.Parameters.AddWithValue("@ID", int.Parse(credential));
             }
             else
@@ -44,25 +45,23 @@ namespace ZaposleniREST_API.Controllers
                 foreach (DataRow dr in dt.Rows)
                 {
                     if(dr["Ime"].ToString()==null)
-                                            return null;
+                                            return NotFound();
                     s.ID = int.Parse(dr["ID"].ToString());
                     s.Ime = dr["Ime"].ToString();
                     s.Priimek = dr["Priimek"].ToString();
                     s.Eposta = dr["Eposta"].ToString();
-            //      s.Telefonska = dr["Telefonska"].ToString();
-              //    s.Naslov = dr["Naslov"].ToString();
                 }
             }
             catch (Exception e)
             {
-                ex = e;
+                ex = e; return NotFound();
             }
             finally
             {
                 povezava.Close();
             }
-
-        return new Student(s,encrypted_password);
+            
+        return Ok(new Student(s,encrypted_password));
     }
         private string AEStoSHA(string encrypted_password)
         {
@@ -85,16 +84,7 @@ namespace ZaposleniREST_API.Controllers
             }
                 return decrypted_password.ToLower();
         }
-        [ResponseType(typeof(Student))]
-        public IHttpActionResult GetStudent(string credential, string type, string encrypted_password)
-        {
-            Student student = GetTheStudent( credential,  type,  encrypted_password);
-            if (student == null)
-                            return NotFound();
-            return Ok(student);
-        }
-
-     
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

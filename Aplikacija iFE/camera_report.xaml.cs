@@ -202,7 +202,7 @@ namespace Aplikacija_iFE
         }
         #endregion
 
-        private async Task Poslji_Click(object sender, RoutedEventArgs e)
+        /*private async Task Poslji_Click(object sender, RoutedEventArgs e)
         {
             var combobox_item = Prostori.Items[Prostori.SelectedIndex] as ComboBoxItem;
 
@@ -215,7 +215,7 @@ namespace Aplikacija_iFE
                 return;
             }
             a.MailAndFTP(combobox_item.Content.ToString(), text_box_for_description.Text, "Y" );
-        }
+        }*/
     }
 
 

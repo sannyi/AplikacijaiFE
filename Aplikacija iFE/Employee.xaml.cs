@@ -22,7 +22,7 @@ namespace Aplikacija_iFE
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {  
             Zaposlen employee = e.Parameter as Zaposlen;
-            string[] props = new string[] {employee.Eposta,employee.Telefonska, employee.GovorilneUre, employee.Prostor,employee.Naziv, employee.TipZaposlenega, employee.Laboratorij,employee.Tajnica,employee.Vloga};
+            string[] props = new string[] {employee.Eposta,employee.Telefonska, employee.GovorilneUre, employee.Prostor,employee.Naziv, employee.TipZaposlenega, employee.Laboratorij,employee.Vloga};
             TextBlock[] textblocks = new TextBlock [] {Eposta,Telefonska,GovorilneUre,Prostor,Naziv,TipZaposlenega,Laboratorij,Tajnica,Vloga};
 
             
