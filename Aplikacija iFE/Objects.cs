@@ -1,5 +1,6 @@
 ﻿namespace Aplikacija_iFE
 {
+    #region OSEBE
     class Oseba
     {
         public int ID { get; set; }
@@ -7,8 +8,7 @@
         public string Priimek { get; set; }
         public string Eposta { get; set; }
         public string Telefonska { get; set; }
-        public string DomaciNaslov { get; set; }
-        public int Posta { get; set; }
+     
 
 
     }
@@ -32,8 +32,11 @@
             this.ID = ID; this.Ime = Ime; this.Priimek=Priimek; this.Eposta = Eposta; this.Telefonska = "+386" + Telefonska; /*this.DomaciNaslov = DomaciNaslov; this.Posta = Posta;*/
         }
         private string Password { get; }
-      
+        // //  public string DomaciNaslov { get; set; }
+        // public int Posta { get; set; }
     }
+    #endregion
+    #region MENI
     class Menu
     {
         public string IDKosila { get; set; }
@@ -41,8 +44,9 @@
         public string Naziv { get; set; }
         public string TipZaposlenega { get; set; }
         public string Laboratorij { get; set; }
-        public string Tajnica { get; set; }
+     
         public string Vloga { get; set; }
 
     }
+    #endregion
 }

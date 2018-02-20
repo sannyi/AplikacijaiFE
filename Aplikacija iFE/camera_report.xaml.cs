@@ -28,9 +28,9 @@ namespace Aplikacija_iFE
         DisplayRequest _request_to_display;
         private bool _isPreviewing;
 
-        MessageDialog message;
+        // MessageDialog message;
         Tools a;
-        private bool phototaken = false;
+      //  private bool phototaken = false;
         #endregion       
         #region KONSTRUKTORJI
         public Camera_report()
@@ -165,7 +165,7 @@ namespace Aplikacija_iFE
                 
           //     await photo.CopyAsync(Aplication.,filename, NameCollisionOption.ReplaceExisting);
               //  File = Path.Combine(destination_folder.DisplayName, filename);
-                phototaken = true;
+                //phototaken = true;
               
             }
 

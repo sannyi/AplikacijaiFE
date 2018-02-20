@@ -4,7 +4,6 @@ using Windows.UI.Popups;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
 namespace Aplikacija_iFE
 {
     public sealed partial class MainPage : Page
@@ -38,28 +37,29 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region GUMBI
-        private void Camera_click(object sender, RoutedEventArgs e)       {           Navigiraj_po_straneh(1);        }
-        private void Menu_Click(object sender, RoutedEventArgs e)         {           Navigiraj_po_straneh(2);        }
-        private void Nastavitve_Click(object sender, RoutedEventArgs e)   {           Navigiraj_po_straneh(6);        }
-        private void Profesorji_Click(object sender, RoutedEventArgs e)   {           Navigiraj_po_straneh(3);        }
-        #endregion
+        private void Camera_click(object sender, RoutedEventArgs e) { Navigator(1); }
+        private void Menu_Click(object sender, RoutedEventArgs e) { Navigator(2); }
+        private void Nastavitve_Click(object sender, RoutedEventArgs e) { Navigator(6); }
+        private void Profesorji_Click(object sender, RoutedEventArgs e) { Navigator(3); }
+               #endregion
         #region FUNKCIJE IN METODE
-        private async void Navigiraj_po_straneh(byte stran)
+        private async void Navigator(byte stran)
         {
             if (new Tools().NetAndWiFi)
             {
                 messagedialog = new MessageDialog("0");
                 switch (stran)
                 {
+                    #region NAVIGACIJA MED DEJANSKIMI STRANMI
                     case 1:
-                        if(new Tools().IsCameraPresent)
-                                                       Frame.Navigate(typeof(Camera_report));
+                        if (new Tools().IsCameraPresent)
+                            Frame.Navigate(typeof(Camera_report));
                         else
                             messagedialog = new MessageDialog("Preverite ali je vaša kamera priključena.");
                         break;
                     case 2:
                         if (new Tools().SaturdaySundayOrHoliday)
-                                                 messagedialog = new MessageDialog("Danes kuhinja ne obratuje");
+                            messagedialog = new MessageDialog("Danes kuhinja ne obratuje");
                         else
                             Frame.Navigate(typeof(Todays_menu));
                         break;
@@ -75,10 +75,14 @@ namespace Aplikacija_iFE
                     case 6:
                         Frame.Navigate(typeof(Settings));
                         break;
+                    #endregion
+                    #region TEST CASE
+                
+                    #endregion
                     default: throw new NotImplementedException();
                 }
-                if(messagedialog.Content!="0")
-                await messagedialog.ShowAsync();
+                if (messagedialog.Content != "0")
+                    await messagedialog.ShowAsync();
             }
             else
             {
@@ -87,5 +91,7 @@ namespace Aplikacija_iFE
             }
         }
         #endregion
+
     }
-}
+    }
+

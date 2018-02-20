@@ -8,7 +8,7 @@ namespace Aplikacija_iFE
     {
         public Employee()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Employee_BackRequested;
         }
         private void Employee_BackRequested(object sender, BackRequestedEventArgs e)

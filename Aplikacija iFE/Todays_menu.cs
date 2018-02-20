@@ -21,7 +21,7 @@ namespace Aplikacija_iFE
             InitializeComponent();
             SystemNavigationManager.GetForCurrentView().BackRequested += Todays_menu_BackRequested;
          
-                List<string> type = new List<string>(), food = new List<string>();
+            /*    List<string> type = new List<string>(), food = new List<string>();
                 Parallel.Invoke(
                   
                     () =>          {                        type = tools_for_menu.GetSiteContent(1, "https://www.studentska-prehrana.si/sl/restaurant/Details/2521");                   },
@@ -29,7 +29,7 @@ namespace Aplikacija_iFE
                 if (tools_for_menu.Flag == -3)
                                         Frame.GoBack();
 
-                /*   foreach (string d in days) Dnevi_za_prikaz.Items.Add(d);*/
+                /*   foreach (string d in days) Dnevi_za_prikaz.Items.Add(d);
                 byte m = 0;
             foreach (string t in type)
             {
@@ -45,19 +45,16 @@ namespace Aplikacija_iFE
                 p.Content = sv;
                 jedilnik.Items.Add(p);
                 m++;
-            }
+            }*/
             
         }
         private bool ListDownLoaded = false;
 
-        private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true;}
-        }
+        private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)       { if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true;}}
         #region GUMBI
         private async void GoToWebSite_Click(object sender, RoutedEventArgs e)
         {
-                var URIlaunched = await Launcher.LaunchUriAsync(new Uri(@"https://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/"));
+                var URIlaunched = await Launcher.LaunchUriAsync(new Uri(@"https://www.studentska-prehrana.si/sl/restaurant/Details/2521"));
                 if(!URIlaunched)
                 {
                     URIlaunched = await Launcher.LaunchUriAsync(new Uri(@"http://www.fe.uni-lj.si/o_fakulteti/restavracija/tedenski_meni/"));

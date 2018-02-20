@@ -69,7 +69,7 @@ namespace Aplikacija_iFE
             finally { Connection.Close(); }
             return Counter;
         }
-        public Student ReturnStudent(sbyte CredentialType,string [] Parameters)
+   /*     public Student ReturnStudent(sbyte CredentialType,string [] Parameters)
         {
             MySqlCommand Commmand = new MySqlCommand();
             switch(CredentialType)
@@ -78,8 +78,8 @@ namespace Aplikacija_iFE
                    Command.CommandText = "SELECT * FROM student WHERE ID=@ID AND Geslo=@Geslo";
                     Command.Parameters.AddWithValue("@ID", int.Parse(Parameters[0]));
                     break;
-        /*        case 2: Ne vem kako je implementirano drugje - samo id sprejmememo
-                    break;*/
+             case 2: Ne vem kako je implementirano drugje - samo id sprejmememo
+                    break;
                 default: throw new Exception();
             }
             Command.Parameters.AddWithValue("@Geslo", new Tools().TextToHash("SHA256", Parameters[1]));
@@ -107,7 +107,7 @@ namespace Aplikacija_iFE
             return s;
 
 
-        }
+        }*/
         public List<Zaposlen> ReturnEmployees()
         {
             List<Zaposlen> Z = new List<Zaposlen>();
@@ -148,8 +148,9 @@ namespace Aplikacija_iFE
                 Conn.Open();
                 SqliteCommand command = new SqliteCommand(a, Conn);
                 try { command.ExecuteNonQuery(); }
-                catch (SqliteException e)
+                catch (SqliteException Exception)
                 {
+                   
                 }
                 finally
                 {
