@@ -72,4 +72,5 @@ $encryption_req=false;
   }
 
   mysqli_close($link);
+        $password="a_Password_for_data_3ncrypt10n$";
 ?>
