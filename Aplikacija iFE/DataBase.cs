@@ -1,15 +1,12 @@
-﻿using Microsoft.Data.Sqlite;
-using MySql.Data.MySqlClient;
+﻿
+using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aplikacija_iFE
 {
-    class MySQL
+    /*lass MySQL
     {
         public MySQL()
             {
@@ -49,12 +46,13 @@ namespace Aplikacija_iFE
                         }
                             Command.CommandText="SELECT COUNT(*) FROM student WHERE "
                             else { return 0; }
-                        }*/
-                         else { return 0; }
+                        }
+                      //   else { return 0; }
+                    /*
                     string hashed = new Tools().TextToHash("SHA265", Parameters[1]);
                     //naredi hash
                     Command.Parameters.AddWithValue("@Geslo",new Tools().TextToHash("SHA256", Parameters[1]).ToLower());
-
+                    
                     break;
                 default:
                     throw new Exception();
@@ -107,13 +105,13 @@ namespace Aplikacija_iFE
             return s;
 
 
-        }*/
+        }
         public List<Zaposlen> ReturnEmployees()
         {
             List<Zaposlen> Z = new List<Zaposlen>();
             return Z;
         }
-    }
+    }*/
 #region SQLITE
     class SQLite
     {
@@ -148,7 +146,7 @@ namespace Aplikacija_iFE
                 Conn.Open();
                 SqliteCommand command = new SqliteCommand(a, Conn);
                 try { command.ExecuteNonQuery(); }
-                catch (SqliteException Exception)
+                catch (SqliteException)
                 {
                    
                 }
@@ -209,4 +207,6 @@ namespace Aplikacija_iFE
         public string Password { get; set; }
     }
 #endregion
+
 }
+

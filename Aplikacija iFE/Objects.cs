@@ -17,7 +17,6 @@
 
         public string GovorilneUre { get; set; }
         public string Prostor { get; set; }
-        public string Naziv { get; set; }
         public string TipZaposlenega { get; set; }
         public string Laboratorij { get; set; } 
         public string Vloga { get; set; }
@@ -39,14 +38,27 @@
     #region MENI
     class Menu
     {
-        public string IDKosila { get; set; }
-        public string Prostor { get; set; }
-        public string Naziv { get; set; }
-        public string TipZaposlenega { get; set; }
-        public string Laboratorij { get; set; }
-     
-        public string Vloga { get; set; }
+        public Menu(){}
+        public Menu(string naslov,string juha,string glavnajed,string sladica,string tip)
+        {
+            Naslov = naslov;
+            Juha = juha;
+            GlavnaJed = glavnajed;
+            Tip = tip;
+            Sladica = sladica;
+
+        }
+           
+        
+            
+        public string Naslov { get; set; }
+        public string Juha { get; set; }
+        public string GlavnaJed { get; set;}
+        public string Sladica { get; set; }
+        public string Tip { get; set; }        
 
     }
+
+    
     #endregion
 }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using System.Net.Http;
-using Windows.UI.Xaml.Navigation;
 
+using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 
 
@@ -37,25 +36,10 @@ namespace Aplikacija_iFE
                 e.Handled = true;
             }
         }
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (fetch_lists.NetAndWiFi)
-            {
-                //vrni s pomočjo 
-
-                   zaposleni = JsonConvert.DeserializeObject<List<Zaposlen>>(await new HttpClient().GetStringAsync("https://ife.ddns.net/restApi.php?tip=zaposleni"));
-                    STAFF.ItemsSource = zaposleni;
-                //QUERY ZA PROFESORJE (ID, IME, PRIIMEK, EMAIL)
-            }
-            else
-            {
-                STAFF.ItemsSource = new Zaposlen
-                {
-                    ID = -1, Ime = "Napaka omrežne povezave"
-                };
-                TipZaposlenih.IsEnabled = false;
-                STAFF.IsEnabled = false;
-            }
+                zaposleni = JsonConvert.DeserializeObject<List<Zaposlen>>(((string)e.Parameter));
+                STAFF.ItemsSource = zaposleni;
         }
        private void STAFF_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

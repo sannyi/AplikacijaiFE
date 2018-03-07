@@ -37,10 +37,10 @@ namespace Aplikacija_iFE
         }
         #endregion
         #region GUMBI
-        private void Camera_click(object sender, RoutedEventArgs e) { Navigator(1); }
-        private void Menu_Click(object sender, RoutedEventArgs e) { Navigator(2); }
-        private void Nastavitve_Click(object sender, RoutedEventArgs e) { Navigator(6); }
-        private void Profesorji_Click(object sender, RoutedEventArgs e) { Navigator(3); }
+        private void Camera_click(object sender, RoutedEventArgs e) { Navigator(1);}
+        private void Menu_Click(object sender, RoutedEventArgs e) { Navigator(2);}
+        private void Nastavitve_Click(object sender, RoutedEventArgs e) { Navigator(6);}
+        private void Profesorji_Click(object sender, RoutedEventArgs e) { Navigator(3);}
                #endregion
         #region FUNKCIJE IN METODE
         private async void Navigator(byte stran)
@@ -64,7 +64,8 @@ namespace Aplikacija_iFE
                             Frame.Navigate(typeof(Todays_menu));
                         break;
                     case 3:
-                        Frame.Navigate(typeof(staff));
+                        string StaffJson = await (new Tools("https://83.212.126.172/restApi.php", new string[] { "tip" }, new string[] { "zaposleni" })).StringFromPost();
+                        Frame.Navigate(typeof(staff),StaffJson as string);
                         break;
                     case 4:
                         Frame.Navigate(typeof(profile));
@@ -77,7 +78,9 @@ namespace Aplikacija_iFE
                         break;
                     #endregion
                     #region TEST CASE
-                
+                    case 10:
+                       
+                        break;
                     #endregion
                     default: throw new NotImplementedException();
                 }

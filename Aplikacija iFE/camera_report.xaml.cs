@@ -115,8 +115,15 @@ namespace Aplikacija_iFE
                     if (_request_to_display != null)
                     {
                         //Opustimo prošnjo za predogled
-                       
-                        _request_to_display.RequestRelease();
+                        try
+                        {
+                            _request_to_display.RequestRelease();
+                        }
+                        catch
+                        {
+
+                        }
+
                     }
                         _capturingPreview.Dispose();
                         _capturingPreview = null;

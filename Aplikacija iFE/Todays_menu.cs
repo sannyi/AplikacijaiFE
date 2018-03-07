@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -46,10 +45,10 @@ namespace Aplikacija_iFE
                 jedilnik.Items.Add(p);
                 m++;
             }*/
-            
+           
         }
-        private bool ListDownLoaded = false;
-
+        //    private bool ListDownLoaded = false;
+     
         private void Todays_menu_BackRequested(object sender, BackRequestedEventArgs e)       { if (Frame.CanGoBack) { Frame.GoBack(); e.Handled = true;}}
         #region GUMBI
         private async void GoToWebSite_Click(object sender, RoutedEventArgs e)
@@ -66,11 +65,32 @@ namespace Aplikacija_iFE
                 }
         }
         #endregion
-        private async void Menu_Loaded(object sender, RoutedEventArgs e)
+        private  void Menu_Loaded(object sender, RoutedEventArgs e)
         {
         }
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override async  void OnNavigatedTo(NavigationEventArgs e)
         {
+            List < Menu > menus = await new Tools().GetSiteContent(1, "https://www.studentska-prehrana.si/sl/restaurant/Details/2521");
+            if(menus==null)
+            {
+                return;
+            }
+
+            foreach ( Menu m in menus)
+            {
+                PivotItem p = new PivotItem();
+                ScrollViewer s = new ScrollViewer();  s.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                TextBlock tBlock = new TextBlock();
+                p.Name = m.Naslov; p.Header = m.Naslov;
+                tBlock.Text = "a";
+
+
+                s.Content = tBlock.Text;
+                p.Content = s;
+                jedilnik.Items.Add(p);
+                
+
+            }
                 }
     }
 }

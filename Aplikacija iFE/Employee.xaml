@@ -12,13 +12,17 @@
         <TextBlock Name="Telefonska" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Name="GovorilneUre" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Name="Prostor" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!--
         <TextBlock Name="Naziv" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        -->
         <TextBlock Name="TipZaposlenega" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Name="Laboratorij" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!--
         <TextBlock Name="Tajnica" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        -->
         <TextBlock Name="Vloga" FontSize="26" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBox Name="Zadeva" PlaceholderText="Napišite zadevo vsebine" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="40" />
-        <TextBox Name="Hitro_sporocilo" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="169" />
-        <Button Name="Poslji_hitro_sporocilo" Content="Pošlji hitro sporočilo" FontSize="18" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="180" Height="35" />
+        <TextBox Name="HitroSporocilo" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="169" />
+        <Button Name="Poslji_hitro_sporocilo" Content="Pošlji hitro sporočilo" FontSize="18" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="180" Height="35" Click="Poslji_hitro_sporocilo_Click" />
     </StackPanel>
 </Page>

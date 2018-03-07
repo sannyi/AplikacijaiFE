@@ -1,4 +1,7 @@
-﻿using Windows.UI.Core;
+﻿using System;
+using System.IO;
+using Windows.UI.Popups;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -40,7 +43,7 @@ namespace Aplikacija_iFE
         private void LogIn_Click(object sender, RoutedEventArgs e)
         {
             Tools prijava = new Tools();
-            prijava.GetCredentialsAndUpdateDatabase(IDOrMail.Text, PasswordLogin.Password);
+  //          prijava.GetCredentialsAndUpdateDatabase(IDOrMail.Text, PasswordLogin.Password);
         }
 
         #endregion

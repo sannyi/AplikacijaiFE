@@ -3,12 +3,7 @@
 
 
 //SUPPORT  FUNCTIONS
-    function CountItems($link,$query)
-    {
-
-     //_DEBUG  printf("Result set has %d rows.\n", mysqli_num_rows(mysqli_query($link,$query)));
-    return mysqli_num_rows(mysqli_query($link,$query));
-    }
+    function CountItems($link,$query)    {return mysqli_num_rows(mysqli_query($link,$query));}
 
 
 
@@ -16,7 +11,7 @@
 //SCRIPT
   //  $tip =$_GET["tip"];
     $tip =$_POST["tip"];
-$encryption_req=false;
+	$encryption_req=false;
     $link = mysqli_connect("127.0.0.1","sannyi97","ife2017","ife");
 
     if(!$link)
@@ -47,7 +42,7 @@ $encryption_req=false;
     }
 
     $rows = array();
-    while($row = mysqli_fetch_assoc($queryLinkAndText))
+    while($row = mysqli_fetch_assoc($queryLinkAndText)) 
     {
         $rows[]=$row;
     }
@@ -72,5 +67,5 @@ $encryption_req=false;
   }
 
   mysqli_close($link);
-        $password="a_Password_for_data_3ncrypt10n$";
+        
 ?>

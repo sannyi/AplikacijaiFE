@@ -1,16 +1,15 @@
 ﻿using Microsoft.Data.Sqlite.Internal;
+
+using Nager.Date;
+using HtmlAgilityPack;
+
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using System.Linq;
-
-
 using System.Net.NetworkInformation;
-
-
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
-
 using Windows.Networking.Connectivity;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Certificates;
@@ -19,10 +18,6 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
-//od tu naprej  je vprašljiva licenca;
-using Nager.Date;
-using HtmlAgilityPack; //licenca
-using System.Globalization;
 
 
 
@@ -33,15 +28,35 @@ namespace Aplikacija_iFE
 {
     class Tools
     {
+        #region KONSTRUKTORJI
+        public Tools() { }
+        public Tools(string url, string[] keys, string[] values)
+        {
+            POSTvalues.Clear();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                POSTvalues.Add(keys[i], values[i]);
+            }
+            this.url = url;
+           
+        }
+        #endregion
         #region ATRIBUTI
         private static ConnectionCost connectionhost = NetworkInformation.GetInternetConnectionProfile().GetConnectionCost();
         private static DateTimeFormatInfo datetimeinfo = new CultureInfo("sl-SI").DateTimeFormat;
-        private static HttpClient client = new HttpClient();
-      
+        private static HttpClient client;
 
+        private string url;
+
+        #endregion
+        #region PROPERTIES
+        public Exception Ex { get ; set; }
+        public bool Success { get;set; }
+        public string Result { get; set; }
+        public StorageFile File { get; set; }
+        public sbyte Flag { get; set; }
         public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile || (connectionhost.NetworkCostType == NetworkCostType.Unknown || connectionhost.NetworkCostType == NetworkCostType.Unrestricted));
         public bool SaturdaySundayOrHoliday => (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday || DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI));
-
         public List<string> WorkingDays
         {
             get
@@ -53,27 +68,19 @@ namespace Aplikacija_iFE
                 {
                     WorkingDays.Add(DateTimeFormatInfo.CurrentInfo.GetDayName(Today.AddDays(i).DayOfWeek));
                     if (Today.AddDays(i + 1).DayOfWeek == DayOfWeek.Saturday)
-                        break;
+                        return WorkingDays;
                     i++;
                 }
-
                 return WorkingDays;
             }
         }
+
         public bool IsCameraPresent => (Camera_present().Result);
-        #endregion
-        #region PROPERTIES
-       
-        public Exception Ex { get ; set; }
-        public bool Success { get;set; }
-        public string Result { get; set; }
-        public StorageFile File { get; set; }
-        public sbyte Flag { get; set; }
+        public string POSTDATA => (StringFromPost().Result);
 
 
         #endregion
         #region SLOVARJI
-
         private static Dictionary<string, string> POSTvalues = new Dictionary<string, string>();
         private static Dictionary<string, byte> Days = new Dictionary<string, byte>
         {
@@ -82,11 +89,11 @@ namespace Aplikacija_iFE
         private static Dictionary<byte, string> ErrorDescriptions = new Dictionary<byte, string>
         {   {0, "OK"},
             {1, "Napake internetne povezave." },{2,"Vnos ni vpisna številka!" },
-            {5, "Zapisi o študentu v podatkovni bazi ne obstajajo!" },{6, "Uspešno prijavljen!" }, {7,"Dan v tednu (Sobota/Nedelja) ni veljavna izbira!"}
+            {5, "Zapisi o študentu v podatkovni bazi ne obstajajo!" },{6, "Uspešno prijavljen!" }, {7,"Dan v tednu (Sobota/Nedelja) ni veljavna izbira!"},
+            {127,"Napake ni zabelezene v bazi" }
         };
-       
-
         #endregion
+    
         #region USTVARI DATOTEKE
         public void CreateLocalDB()
         {
@@ -108,10 +115,9 @@ namespace Aplikacija_iFE
         {
             if (ErrorDescriptions.ContainsKey(Code))
                 return ErrorDescriptions[Code];
-            return "Opisa napake v slovarju napak (še) ni. V primeru, da se je zgodila napaka, razvijalcu aplikacije pošljite opis napake s screenshotom vred.";
+            return ErrorDescriptions[127];
         }
         #endregion
-
         #region VOID METODE
         public void GetCredentialsAndUpdateDatabase(string credential, string password)
         {
@@ -160,108 +166,26 @@ namespace Aplikacija_iFE
                  Flag = 1;
                  return null;
              }
-         }
-         public List<string> GetSiteContent(byte type, string uri)
-         {
-             if (!NetAndWiFi)
-             {
-                 Ex = new Exception("Preverite ali ste povezani z internetom preko povezave WiFi."); // ni interneta
-
-                 return null;
-             }
-             List<string> Content = new List<string>();
-
-             string result = "";
-
-             using (StreamReader sr = new StreamReader(GetResponse(uri).Result.GetResponseStream()))
-                 result = sr.ReadToEnd();
-
-             HtmlDocument MobileDocument = new HtmlDocument();
-             MobileDocument.LoadHtml(result);
-             try
-             {
-                 switch (type)
-                 {
-                     case 1:
-                        HtmlNodeCollection images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
-                         foreach (HtmlNode image in images)
-                             Content.Add(image.Attributes[@"title"].Value);
-                         break;
-                     case 2:
-                         List<string> headers = new List<string>(), soups = new List<string>(), meals = new List<string>();
-                         Parallel.Invoke(
-                             () =>
-                             {
-                                 HtmlNodeCollection h5 = MobileDocument.DocumentNode.SelectNodes("//strong[@class=' color-blue']");
-                                 foreach (HtmlNode h in h5)
-                                     headers.Add(h.InnerText);
-                             },
-                             () =>
-                             {
-                                 HtmlNodeCollection soup = MobileDocument.DocumentNode.SelectNodes("//ul[@class='list-unstyled']/li/i[@class='text-bold color-dark icon-food-090']");
-                                 foreach (HtmlNode s in soup)
-                                     soups.Add(s.InnerText);
-                             },
-                             () =>
-                             {
-                                 HtmlNodeCollection meal = MobileDocument.DocumentNode.SelectNodes("//i[@class='text-bold color-dark']");
-                                 foreach (HtmlNode m in meal)
-                                     if (m.InnerText != "")
-                                         meals.Add(m.InnerText);
-                             });
-                         sbyte legth = Convert.ToSByte(meals.Count);
-                         for (int i = 0; i < headers.Count; i++)
-                         {
-                             if (i + 1 == headers.Count)
-                                 Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
-                             else
-                                 Content.Add(headers[i] + Environment.NewLine + soups[i] + Environment.NewLine + meals[i]);
-                         }
-                         break;
-                     default: throw new NotImplementedException();
-                 }
-             }
-             catch (NullReferenceException e)
-             {
-                 Ex = new NullReferenceException();
-                 return null;
-             }
-             return Content;
          }*/
+       
         #endregion
         #region METODE TIPA ASYNC TASK
-        /*private async Task<WebResponse> GetResponse(string uri)
+      
+        private async Task<bool> Camera_present() { return ((await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture)).Count >= 1);}
+        //Naredi private
+        public async Task<string> StringFromPost()
         {
-            return await WebRequest.Create(uri).GetResponseAsync();
-        }*/
-        private async Task<bool> Camera_present()
-        {
-            DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-            return (devices.Count >= 1);
+            if(!NetAndWiFi)
+            {
+                return GetErrorDescription(1);
 
-        }
-        #endregion
-        #endregion
-        #region PODATKOVNI PRENOS
-        //funkcija za pridobitev JSON stringa za parsanje 
-        public async Task<string>StringFromPost(string url,string script, string [] keys, string [] values)
-        {
-            if(keys.Length!=values.Length)
-            {
-                return "Stevilo kljucev in vrednosti se morata ujemati!";
             }
-            POSTvalues.Clear();
-            for(int i=0;i<keys.Length; i++)
-            {
-                POSTvalues.Add(keys[i],values[i]);
-            }
-           
             HttpFormUrlEncodedContent content = new HttpFormUrlEncodedContent(POSTvalues);
             HttpResponseMessage response = new HttpResponseMessage();
             try
             {
-                client = new HttpClient();
-                response = await client.PostAsync(new Uri(url + script), content);
+             HttpClient   client = new HttpClient();
+                response = await client.PostAsync(new Uri(url), content);
             }
             catch (Exception e)
             {
@@ -283,7 +207,7 @@ namespace Aplikacija_iFE
                     {
                         filter.IgnorableServerCertificateErrors.Add(results[i]);
                         client = new HttpClient(filter);
-                        response = await client.PostAsync(new Uri(url + script), content);
+                        response = await client.PostAsync(new Uri(url), content);
                     }
                     catch
                     {
@@ -291,36 +215,74 @@ namespace Aplikacija_iFE
                     }
                 }
                 client = new HttpClient(filter);
-                response = await client.PostAsync(new Uri(url +script), content);
+                response = await client.PostAsync(new Uri(url), content);
             }
             finally
             {
                 client.Dispose();
             }
-            if(response.Content.ToString()!="NA")
-               return response.Content.ToString();
+            if (response.Content.ToString() != "N/A")
+                return response.Content.ToString();
             return "Vsebine ni mogoče prikazati! Preverite vašo WiFi povezavo!";
         }
-        /*   private async void SendToFTP(string photo)
+        //Naredi private, probaj vrnit objekt.
+        public async Task<List<Menu>> GetSiteContent(byte type, string url)
         {
-            Uri uri = new Uri("ftp://83.212.126.172");
-            FtpClient client = new FtpClient();
-            await client.ConnectAsync(new HostName(uri.Host), "1026", "Administrator", "8KINtGoV7s");
+            List<Menu> m = new List<Menu>();
+            if (!NetAndWiFi)
+            {
+                GetErrorDescription(1);
+                return null;
+            }
 
-            /*  byte [] data;
-              await Task.Run(() =>
-              {
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync(new Uri(url));
+            string HTML = await response.Content.ReadAsStringAsync();
 
 
+            HtmlDocument MobileDocument = new HtmlDocument();
+            MobileDocument.LoadHtml(HTML);
+            try
+            {
+                switch (type)
+                {
+                    default:
+                    case 1:
 
-              }
+                        HtmlNodeCollection images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
+                        HtmlNodeCollection headers = MobileDocument.DocumentNode.SelectNodes("//strong[@class=' color-blue']");
+                        HtmlNodeCollection soup = MobileDocument.DocumentNode.SelectNodes("//ul[@class='list-unstyled']/li/i[@class='text-bold color-dark icon-food-090']");
+                        HtmlNodeCollection meal = MobileDocument.DocumentNode.SelectNodes("//i[@class='text-bold color-dark']");
 
+                     
+                        List<string> meals = new List<string>();
+                        for (int k = 0; k < meal.Count;k++)
+                        {
+                            if(meal[k].InnerText!="")
+                                meals.Add(meal[k].InnerText);
+                        }
+                        for ( byte i = 0; i < images.Count; i++)
+                        {
+                            if (i + 1 == images.Count)
+                            {
+                               m.Add(new Menu(headers[i].InnerText.Remove(1, 7), soup[i].InnerText, meals[i], meal[images.Count + 1].InnerText, images[i].Attributes[@"title"].Value));
+                            }
+                            else
+                            {
+                                m.Add(new Menu(headers[i].InnerText.Remove(1, 7), soup[i].InnerText, meals[i], null, images[i].Attributes[@"title"].Value));
+                            }
+                        }
+                        break;
+                }
 
-              );
-
-            //await client.UploadAsync(uri.AbsolutePath, data);
-        }*/
+            }
+            catch (Exception e) {return null;} finally { client.Dispose(); }
+            return m;
+        }
+        }
         #endregion
+        #endregion
+
         #region KRIPTO
         /* private string Encrypt(string text)
          {
@@ -342,7 +304,7 @@ namespace Aplikacija_iFE
                  }
              }
              return text;
-         }*/
+         }
         public string TextToHash(string algorithm, string text)
         {
             IBuffer buffUTF8Msg = CryptographicBuffer.ConvertStringToBinary(text, BinaryStringEncoding.Utf8);
@@ -354,11 +316,11 @@ namespace Aplikacija_iFE
                 throw new Exception("Napaka pri kreiranju HASHA");
             }
             return CryptographicBuffer.EncodeToBase64String(buffHash).ToLower();
-        }
+        }*/
         #endregion
     }
 
-}
+
 
     
      
