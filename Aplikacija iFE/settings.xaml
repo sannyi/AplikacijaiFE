@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <RelativePanel ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="0" Height="Auto">
             <StackPanel   Height="Auto" Margin="10,10,-145.667,0"  HorizontalAlignment="Center" Width="340">
-                <TextBox x:Name="IDOrMail" Width="320" Height="Auto" PlaceholderText="Vpisna stevilka ali eposta" HorizontalAlignment="Center" Margin="10,0"  />
+                <TextBox x:Name="IDOrMail" Width="320" Height="Auto" PlaceholderText="Vpisna stevilka" HorizontalAlignment="Center" Margin="10,0"  />
                 <PasswordBox x:Name="PasswordLogin" Width="320" Height="Auto" PlaceholderText="Uporabnisko geslo"  HorizontalAlignment="Center" Margin="10,10,10,10" PasswordChar="$"/>
                 <Button x:Name="LogIn" Width="320" Height="Auto" Content="Prijava" HorizontalAlignment="Center" Margin="10,0,10,10" Click="LogIn_Click"/>
 
@@ -27,6 +27,9 @@
         <StackPanel Margin="0,0"  Grid.Row="1">
             <Button x:Name="Save" Content="Shrani nastavitve" Margin="10,10,10,0"  Height="Auto"  Width="340" HorizontalAlignment="Center" Click="Save_Click"/>
             <Button x:Name="Defaults" Content="Pobriši nastavitve" Margin="10"  Height="Auto" Width="340" HorizontalAlignment="Center"    Click="Defaults_Click"/>
+            <CommandBar>
+                <AppBarButton Icon="Back" Content="Nazaj" Click="GoBack_Click"/>
+            </CommandBar>
         </StackPanel>
     </Grid>
 

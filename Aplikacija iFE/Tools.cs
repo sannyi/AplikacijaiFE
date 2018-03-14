@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite.Internal;
 
-using Nager.Date;
+
 using HtmlAgilityPack;
 
 using System;
@@ -18,12 +18,13 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
+using Newtonsoft.Json;
 
 
 
 
 //FTP spisan po vzorčni kodi
-//https://github.com/kiewic/FtpClient/blob/master/FtpClientSample/FtpClient.cs
+
 namespace Aplikacija_iFE
 {
     class Tools
@@ -35,8 +36,13 @@ namespace Aplikacija_iFE
             POSTvalues.Clear();
             for (int i = 0; i < keys.Length; i++)
             {
+                if(keys[i]== "password")
+                {
+                    values[i] = ReturnSHA256(values[i]);
+                }
+                
                 POSTvalues.Add(keys[i], values[i]);
-            }
+            } 
             this.url = url;
            
         }
@@ -55,26 +61,39 @@ namespace Aplikacija_iFE
         public string Result { get; set; }
         public StorageFile File { get; set; }
         public sbyte Flag { get; set; }
-        public bool NetAndWiFi => (NetworkInterface.GetIsNetworkAvailable() && NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile || (connectionhost.NetworkCostType == NetworkCostType.Unknown || connectionhost.NetworkCostType == NetworkCostType.Unrestricted));
-        public bool SaturdaySundayOrHoliday => (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday || DateSystem.IsPublicHoliday(DateTime.Now, CountryCode.SI));
-        public List<string> WorkingDays
+        public bool NetAndWiFi => 
+            (NetworkInterface.GetIsNetworkAvailable() &&
+            NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile||
+            (connectionhost.NetworkCostType == NetworkCostType.Unknown ||
+            connectionhost.NetworkCostType == NetworkCostType.Unrestricted)
+            );
+        public bool SaturdaySundayOrHoliday
         {
             get
             {
-                byte i = 0;
-                DateTime Today = DateTime.Now;
-
-                while (DateTime.Today.DayOfWeek != DayOfWeek.Saturday || DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
                 {
-                    WorkingDays.Add(DateTimeFormatInfo.CurrentInfo.GetDayName(Today.AddDays(i).DayOfWeek));
-                    if (Today.AddDays(i + 1).DayOfWeek == DayOfWeek.Saturday)
-                        return WorkingDays;
-                    i++;
+                    return true;
                 }
-                return WorkingDays;
+                else
+                {
+                    //manjka še velikonočni ponedeljek
+                    byte[] dnevi = new byte[] { 1,2,8,27,1,2,25,31,1,25,26 };
+                    byte[] meseci = new byte[] {1,1,2,4,5,5,6,10,11,12,12 };
+                    int todayDayNumber = DateTime.Now.Day;
+                    int currentMonth = DateTime.Now.Month;
+                    for(byte i=0;i<dnevi.Length;i++)
+                    {
+                        if(dnevi[i]==todayDayNumber && meseci[i]==currentMonth)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
         }
-
+      
         public bool IsCameraPresent => (Camera_present().Result);
         public string POSTDATA => (StringFromPost().Result);
 
@@ -82,15 +101,12 @@ namespace Aplikacija_iFE
         #endregion
         #region SLOVARJI
         private static Dictionary<string, string> POSTvalues = new Dictionary<string, string>();
-        private static Dictionary<string, byte> Days = new Dictionary<string, byte>
-        {
-            {"Ponedeljek",1 }, {"Torek",2}, {"Sreda",3},{"Četrtek",4},{"Petek",5}
-        };
-        private static Dictionary<byte, string> ErrorDescriptions = new Dictionary<byte, string>
-        {   {0, "OK"},
-            {1, "Napake internetne povezave." },{2,"Vnos ni vpisna številka!" },
-            {5, "Zapisi o študentu v podatkovni bazi ne obstajajo!" },{6, "Uspešno prijavljen!" }, {7,"Dan v tednu (Sobota/Nedelja) ni veljavna izbira!"},
-            {127,"Napake ni zabelezene v bazi" }
+       
+        private static Dictionary<ushort, string> ErrorDescriptions = new Dictionary<ushort, string>
+        {   {0x0000, "OK"},
+            {0x0001, "Napake internetne povezave." },{0x0002,"Vnos ni vpisna številka!" },
+            {0x0005, "Zapisi o študentu v podatkovni bazi ne obstajajo!" },{0x0006, "Uspešno prijavljen!" }, {7,"Dan v tednu (Sobota/Nedelja) ni veljavna izbira!"},
+            {0xffff,"Napake ni zabelezene v bazi" }
         };
         #endregion
     
@@ -105,40 +121,29 @@ namespace Aplikacija_iFE
         #endregion
         #region SPLOŠNE METODE
         #region NON VOID METODE
+       /*
         public byte GetDayNumber(string Day)
         {
             if (Days.ContainsKey(Day))
                 return Days[Day];
             return 7;
-        }
+        }*/
         public string GetErrorDescription(byte Code)
         {
             if (ErrorDescriptions.ContainsKey(Code))
                 return ErrorDescriptions[Code];
-            return ErrorDescriptions[127];
+            return ErrorDescriptions[0xffff];
         }
+       
+
         #endregion
         #region VOID METODE
-        public void GetCredentialsAndUpdateDatabase(string credential, string password)
+        public void GetCredentials( string [] Credentials)
         {
-            /*
-            // string original_passoword = password;
-            //string SHA1password = TextToHash("SHA1", password);
-            // string AES = Encrypt(SHA1password.ToUpper());
-            MySQL prijava = new MySQL();
-            tester = prijava.Count("student", new string[]  { credential, password });
-            if (tester == 0)  {Flag = 5;return;}
-            else if (tester == -1) { Flag = 2; }
-            else
-            {
-                Student s;
-             /*   if(credential.Length==24 || credential.Length==6)                  
-                        credential = credential[2].ToString() + credential[3].ToString() + credential[4].ToString() + credential[5].ToString();
-
-             //   s = prijava.ReturnStudent(1, new string[] { credential, password });
-            }*/
-
-
+            string[] keys = new string [] { "tip","id","geslo" };
+            string p2 = ReturnSHA256(Credentials[1]);
+            for (byte i = 0; i < keys.Length; i++)
+                POSTvalues.Add(keys[i], Credentials[i]);
 
 
 
@@ -158,15 +163,7 @@ namespace Aplikacija_iFE
             return all_employees;
         }//DELA
 
-        /* public List<string>[] GetLunchForDayOfWeek(byte day)
-         {
-             List<string>[]  = new List<string>[]; // 
-             if(!NetAndWiFi)
-             {
-                 Flag = 1;
-                 return null;
-             }
-         }*/
+       
        
         #endregion
         #region METODE TIPA ASYNC TASK
@@ -178,7 +175,6 @@ namespace Aplikacija_iFE
             if(!NetAndWiFi)
             {
                 return GetErrorDescription(1);
-
             }
             HttpFormUrlEncodedContent content = new HttpFormUrlEncodedContent(POSTvalues);
             HttpResponseMessage response = new HttpResponseMessage();
@@ -246,7 +242,7 @@ namespace Aplikacija_iFE
             {
                 switch (type)
                 {
-                    default:
+                    
                     case 1:
 
                         HtmlNodeCollection images = MobileDocument.DocumentNode.SelectNodes("//img[@class='pull-right']");
@@ -272,53 +268,66 @@ namespace Aplikacija_iFE
                                 m.Add(new Menu(headers[i].InnerText.Remove(1, 7), soup[i].InnerText, meals[i], null, images[i].Attributes[@"title"].Value));
                             }
                         }
+             
                         break;
+                    default: throw new NotImplementedException(); 
+                      
                 }
 
             }
-            catch (Exception e) {return null;} finally { client.Dispose(); }
+            catch (Exception e)
+            {
+                return null;
+            }
+            finally
+            {
+                client.Dispose();
+            }
             return m;
         }
-        }
-        #endregion
-        #endregion
+        
+    #endregion
+    #endregion
 
-        #region KRIPTO
-        /* private string Encrypt(string text)
+    #region KRIPTO
+    /*
+     *private string Encrypt(string text)
+     {
+         string CRYPTOPASS = "E8CA77DA07CB749474775F5ADACFF45A771E16D2C7566544EF2AAE81BE1ADAAF";
+         byte[] clearBytes = Encoding.Unicode.GetBytes(text);
+         using (Aes encryptor = Aes.Create())
          {
-             string CRYPTOPASS = "E8CA77DA07CB749474775F5ADACFF45A771E16D2C7566544EF2AAE81BE1ADAAF";
-             byte[] clearBytes = Encoding.Unicode.GetBytes(text);
-             using (Aes encryptor = Aes.Create())
+             Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(CRYPTOPASS, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+             encryptor.Key = pdb.GetBytes(32);
+             encryptor.IV = pdb.GetBytes(16);
+             using (MemoryStream ms = new MemoryStream())
              {
-                 Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(CRYPTOPASS, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
-                 encryptor.Key = pdb.GetBytes(32);
-                 encryptor.IV = pdb.GetBytes(16);
-                 using (MemoryStream ms = new MemoryStream())
+                 using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
                  {
-                     using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
-                     {
-                         cs.Write(clearBytes, 0, clearBytes.Length);
-                         cs.Dispose();
-                     }
-                     text = Convert.ToBase64String(ms.ToArray());
+                     cs.Write(clearBytes, 0, clearBytes.Length);
+                     cs.Dispose();
                  }
+                 text = Convert.ToBase64String(ms.ToArray());
              }
-             return text;
          }
-        public string TextToHash(string algorithm, string text)
+         return text;
+     }*/
+    public string ReturnSHA256(string text)
+    {
+        string Algorithm = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256).AlgorithmName;
+        IBuffer buffHash = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256).HashData(CryptographicBuffer.ConvertStringToBinary(text, BinaryStringEncoding.Utf8));
+        if (buffHash.Length != HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256).HashLength)
         {
-            IBuffer buffUTF8Msg = CryptographicBuffer.ConvertStringToBinary(text, BinaryStringEncoding.Utf8);
-            HashAlgorithmProvider objAlgProv = HashAlgorithmProvider.OpenAlgorithm(algorithm);
-            string algorithmUsed = objAlgProv.AlgorithmName;
-            IBuffer buffHash = objAlgProv.HashData(buffUTF8Msg);
-            if (buffHash.Length != objAlgProv.HashLength)
-            {
-                throw new Exception("Napaka pri kreiranju HASHA");
-            }
-            return CryptographicBuffer.EncodeToBase64String(buffHash).ToLower();
-        }*/
-        #endregion
+            throw new Exception("Napaka pri kreiranju hasha!");
+        }
+        string HEX = CryptographicBuffer.EncodeToHexString(buffHash);
+        return HEX;
     }
+    #endregion
+}
+
+    }
+
 
 
 

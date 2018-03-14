@@ -17,7 +17,7 @@ namespace Aplikacija_iFE
             if (!File.Exists(path))
             {
 
-                //create sqlitefile
+                
             }
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
         }

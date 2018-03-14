@@ -35,5 +35,9 @@
                 <ComboBoxItem Content="Tehniški sodelavci"/>
             </ComboBox>
         </StackPanel>
+        <CommandBar>
+            <AppBarButton Icon="Back" Label="Nazaj" Click="GoBack_Click"/>
+        </CommandBar>
     </Grid>
+   
 </Page>

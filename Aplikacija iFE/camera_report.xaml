@@ -21,7 +21,7 @@
                     <ComboBoxItem Content="Net Lab"/>
                     <ComboBoxItem Content="Studio"/>
                     <ComboBoxItem Content="App Lab"/>
-                    <ComboBoxItem Content="Predavalnica10"/>
+                    <ComboBoxItem Content="P3"/>
                 </ComboBox>
                 <TextBlock x:Name="description" TextWrapping="Wrap" Text="Vnesi opis škode" Margin="10,10,50,0"/>
 

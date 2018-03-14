@@ -54,8 +54,8 @@ namespace Aplikacija_iFE
                         default:
                             throw new NotImplementedException();
                     }
-                }
             }
+                }
         }
         public override string ToString()
         {

@@ -6,112 +6,7 @@ using System.IO;
 
 namespace Aplikacija_iFE
 {
-    /*lass MySQL
-    {
-        public MySQL()
-            {
-            Connection = new MySqlConnection(ConnectionString);
-            }
-        private const string ConnectionString = "server=83.212.126.172;user=root;database=ife;password=iFE2017";
-        private MySqlConnection Connection = new MySqlConnection();
-    
-        public int Count(string TableName,string [] Parameters)
-        {
-            MySqlCommand Command = new MySqlCommand();
-           
-            int Counter = 0;
-            
-            switch (TableName)
-            {
-                
-                case "student":
-                    if (Parameters[0].Length == 8 && (int.TryParse(Parameters[0], out Counter)))
-                    {
-                        if(int.TryParse(Parameters[0],out Counter)) { return -1; }
-                        Command.CommandText = "SELECT COUNT(*) FROM student WHERE ID=@ID" ;
-                        Command.Parameters.AddWithValue("@ID", int.Parse(Parameters[0]));
-                    }
-                   /* else if ((Parameters[0].Length == 24 && Parameters[0].Contains("@")) || 
-                        (Parameters[0].Length==6 && int.TryParse(Parameters[0].Substring(2,4),out Counter))|| 
-                        (Parameters[0].Length == 4 && (int.TryParse(Parameters[0], out Counter))))
-                        {
-                            
-                            if (Parameters[0].Length == 24 && Parameters[0].Contains("@"))
-                            {
-                            Parameters[0] = Parameters[0].Substring(2, 4);
-                        }
-                            else if(Parameters[0].Length == 6 && int.TryParse(Parameters[0].Substring(0, 4), out Counter))
-                            {
-                            Parameters[0] = Parameters[0].Substring(2, 4);
-                        }
-                            Command.CommandText="SELECT COUNT(*) FROM student WHERE "
-                            else { return 0; }
-                        }
-                      //   else { return 0; }
-                    /*
-                    string hashed = new Tools().TextToHash("SHA265", Parameters[1]);
-                    //naredi hash
-                    Command.Parameters.AddWithValue("@Geslo",new Tools().TextToHash("SHA256", Parameters[1]).ToLower());
-                    
-                    break;
-                default:
-                    throw new Exception();
-
-            }
-            Command.Connection = Connection;
-            try { Connection.Open(); Counter = int.Parse(Command.ExecuteScalar().ToString());}
-            catch(Exception e) {
-                Counter = 0; e.ToString();
-
-            }
-            finally { Connection.Close(); }
-            return Counter;
-        }
-   /*     public Student ReturnStudent(sbyte CredentialType,string [] Parameters)
-        {
-            MySqlCommand Commmand = new MySqlCommand();
-            switch(CredentialType)
-            {
-                case 1: //id
-                   Command.CommandText = "SELECT * FROM student WHERE ID=@ID AND Geslo=@Geslo";
-                    Command.Parameters.AddWithValue("@ID", int.Parse(Parameters[0]));
-                    break;
-             case 2: Ne vem kako je implementirano drugje - samo id sprejmememo
-                    break;
-                default: throw new Exception();
-            }
-            Command.Parameters.AddWithValue("@Geslo", new Tools().TextToHash("SHA256", Parameters[1]));
-            Command.Connection = Connection;
-            Student s;
-            s = null; //!!!!!!!!!!!!!!!!!!!!!!!
-            
-            try
-            {
-                Connection.Open();
-                MySqlDataReader reader = Command.ExecuteReader();
-                while(reader.Read())
-                                 s = new Student(reader.GetInt32("ID"), reader.GetString("Ime"), reader.GetString("Priimek"), reader.GetString("StudentskiMail"), reader.GetString("Telefonska"),reader.GetString("Geslo"));
-                
-            }
-            catch
-            {
-                s = null;
-               //ERRORHANDLING !!!!!!!!!!!!!!
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return s;
-
-
-        }
-        public List<Zaposlen> ReturnEmployees()
-        {
-            List<Zaposlen> Z = new List<Zaposlen>();
-            return Z;
-        }
-    }*/
+  
 #region SQLITE
     class SQLite
     {
@@ -125,12 +20,7 @@ namespace Aplikacija_iFE
         {
 
 
-            string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "iFE.sqlite");
-            if (!File.Exists(SQLitePath))
-            {
-                CreateDatabase();
-
-            }
+          
         }
         #endregion
         #region METODE

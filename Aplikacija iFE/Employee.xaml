@@ -24,5 +24,9 @@
         <TextBox Name="Zadeva" PlaceholderText="Napišite zadevo vsebine" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="40" />
         <TextBox Name="HitroSporocilo" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="340" Height="169" />
         <Button Name="Poslji_hitro_sporocilo" Content="Pošlji hitro sporočilo" FontSize="18" Margin="10,10,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="180" Height="35" Click="Poslji_hitro_sporocilo_Click" />
+        <CommandBar>
+            <AppBarButton Icon="Back" Label="Nazaj" Click="GoBack_Click"/>
+        </CommandBar>
     </StackPanel>
+    
 </Page>

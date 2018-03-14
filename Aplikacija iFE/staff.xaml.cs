@@ -27,7 +27,7 @@ namespace Aplikacija_iFE
                 e.Handled = true;
             }
         }
-        #endregion
+        #endregion 
         private void staff_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if (Frame.CanGoBack)
@@ -56,6 +56,15 @@ namespace Aplikacija_iFE
                 return;
             }
             STAFF.ItemsSource = zaposleni;
+        }
+
+        private void GoBack_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+               
+            }
         }
     }
 }
