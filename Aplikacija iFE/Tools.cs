@@ -60,10 +60,10 @@ namespace Aplikacija_iFE
         public bool Success { get;set; }
         public string Result { get; set; }
         public StorageFile File { get; set; }
-        public sbyte Flag { get; set; }
+        private static ushort Flag;
         public bool NetAndWiFi => 
             (NetworkInterface.GetIsNetworkAvailable() &&
-            NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile||
+             NetworkInformation.GetInternetConnectionProfile().IsWlanConnectionProfile||
             (connectionhost.NetworkCostType == NetworkCostType.Unknown ||
             connectionhost.NetworkCostType == NetworkCostType.Unrestricted)
             );
@@ -77,17 +77,34 @@ namespace Aplikacija_iFE
                 }
                 else
                 {
-                    //manjka še velikonočni ponedeljek
-                    byte[] dnevi = new byte[] { 1,2,8,27,1,2,25,31,1,25,26 };
-                    byte[] meseci = new byte[] {1,1,2,4,5,5,6,10,11,12,12 };
-                    int todayDayNumber = DateTime.Now.Day;
-                    int currentMonth = DateTime.Now.Month;
-                    for(byte i=0;i<dnevi.Length;i++)
+                    #region VELIKONOCNI PONEDELJEK
+                    int VPdan, VPmesec; short leto = Convert.ToInt16(DateTime.Today.Year);
+                    int gregorian = leto % 19;
+                    int cikel = leto / 100;
+                    int h=  (cikel - (int)(cikel / 4) - (int)((8 * cikel + 13) / 25) + 19 * gregorian + 15) % 30;
+                    int i = h - (int)(h / 28) * (1 - (int)(h / 28) * (int)(29 / (h + 1)) * (int)((21 - gregorian) / 11));
+
+                    VPdan = i - ((leto + (int)(cikel / 4) + i + 2 - cikel + (int)(cikel / 4)) % 7) + 28;
+                    VPmesec = 3;
+
+                    if (VPdan> 31)
+                    {
+                        VPmesec++;
+                        VPdan -= 31;
+                    }
+                    #endregion
+                    byte todayDayNumber = Convert.ToByte(DateTime.Now.Day);
+                    byte currentMonth = Convert.ToByte(DateTime.Now.Month);
+                    if(todayDayNumber==VPdan-1 && currentMonth == VPmesec) { return true; }
+                    
+                    byte[] dnevi = new byte[] { 1,2,8,27,1,2,25,31,1,25,26};
+                    byte[] meseci = new byte[] {1,1,2,4,5,5,6,10,11,12,12};
+                   
+                    for(byte j=0;j<dnevi.Length;j++)
                     {
                         if(dnevi[i]==todayDayNumber && meseci[i]==currentMonth)
-                        {
-                            return true;
-                        }
+                                                                        return true;
+                        
                     }
                 }
                 return false;
@@ -121,14 +138,8 @@ namespace Aplikacija_iFE
         #endregion
         #region SPLOŠNE METODE
         #region NON VOID METODE
-       /*
-        public byte GetDayNumber(string Day)
-        {
-            if (Days.ContainsKey(Day))
-                return Days[Day];
-            return 7;
-        }*/
-        public string GetErrorDescription(byte Code)
+     
+        public string GetErrorDescription(ushort Code)
         {
             if (ErrorDescriptions.ContainsKey(Code))
                 return ErrorDescriptions[Code];
@@ -144,10 +155,6 @@ namespace Aplikacija_iFE
             string p2 = ReturnSHA256(Credentials[1]);
             for (byte i = 0; i < keys.Length; i++)
                 POSTvalues.Add(keys[i], Credentials[i]);
-
-
-
-
 
         }
 
