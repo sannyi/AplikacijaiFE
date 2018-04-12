@@ -1,0 +1,26 @@
+﻿<Page
+    x:Class="Aplikacija_iFE.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <StackPanel>
+        <StackPanel Height="559">
+            <Grid  Height="30" Margin="10,20,0,5">
+                <Button x:Name="Menu" Content="Jedilnik" Click="Menu_Click" Width="120" Height="101" Margin="0,0,0,-71"/>
+                <Button Content="Profesorji" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="220,0,10,-71" Width="120" Click="Profesorji_Click"/>
+                <Button Content="E-FE" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="220,106,10,-183" Width="120" Click="Profesorji_Click"/>
+            </Grid>
+            <Grid  Height="30" Margin="10,20,0,5">
+                <Button Content="Nastavitve" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3,55,229,-128" Click="Nastavitve_Click"/>
+            </Grid>
+            <Grid  Margin="10,5,0,5"/>
+            <Grid  Height="260" Margin="10,20,10,0">
+                <Button x:Name="Camerareport" Content="Camera_report" Margin="0,110,0,54" Click="Camera_click" Width="120" Height="96"/>
+                <Button x:Name="Navigacija" Content="Navigacija" HorizontalAlignment="Left"  Margin="220,0,0,16" Width="120" Height="30"/>
+            </Grid>
+        </StackPanel>
+        <Frame/>
+    </StackPanel>
+</Page>
