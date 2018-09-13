@@ -1,0 +1,15 @@
+﻿INSERT INTO Predmet
+(Ime,Akronim,KreditneTocke,Letnik,IDSteber)
+VALUES('Uvod v multimedijske sisteme','UMMS',6,'OST');
+
+INSERT INTO ltTipIzpit
+VALUES ('K','Kolovij');
+
+INSERT INTO ltTipIzpit
+VALUES ('PK','Popravni kolovij');
+INSERT INTO ltTipIzpit
+VALUES ('T','Teoretični izpit');
+INSERT INTO ltTipIzpit
+VALUES ('P','Prektični');
+
+
